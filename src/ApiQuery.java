@@ -22,7 +22,8 @@ public class ApiQuery {
       Website, Response}
 
   By Search:
-  {Search:[{Title, Year, imdbID, Type, Poster}, {Title...       ...}]
+  {Search:[{Title, Year, imdbID, Type, Poster}, {Title...       ...}, {Title...       ...}]
+      each page contains 3 entries
    */
 
   /**
@@ -33,12 +34,13 @@ public class ApiQuery {
    * @throws ParseException if encounters malformed JSON
    */
   public void searchMovie(String titleSearch) throws IOException, ParseException {
-    URL url = new URL(omdbUrl + omdbApiKey + "&s=" + titleSearch + "&page=1");
+    titleSearch = formatStringForURL(titleSearch);
+    URL url = new URL(omdbUrl + omdbApiKey + "&s=" + titleSearch + "&type=movie");
     if (isResponseCode200(url)) {
       JSONObject json = convertStringToJSON(readTextFromURL(url));
 
       for (int i = 0; i < json.size(); i++) {
-        System.out.println(((JSONObject) ((JSONArray) json.get("Search")).get(i)).get("Title"));
+        System.out.println(((JSONArray) json.get("Search")).get(i));
       }
     } else {
       System.out.println("error");
@@ -68,8 +70,15 @@ public class ApiQuery {
     return (JSONObject) parser.parse(text);
   }
 
+  private String formatStringForURL(String input){
+    input = input.strip();
+    return input.replaceAll("\\s", "+");
+  }
+
   public static void main(String[] args) throws IOException, ParseException {
     ApiQuery query = new ApiQuery();
-    query.searchMovie("lord+of+the+rings");
+    query.searchMovie("blade runner");
   }
+
+
 }
