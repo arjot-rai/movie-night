@@ -11,6 +11,6 @@ class ApiQueryTest {
   void getMovie() throws IOException, ParseException {
     ApiQuery apiQuery = new ApiQuery();
     Movie movie = apiQuery.getMovie("star wars");
-    Assertions.assertEquals(movie.getMovieName(), "Star Wars");
+    Assertions.assertEquals(movie.getMovieName(), "Star Wars: Episode IV - A New Hope");
   }
 }
