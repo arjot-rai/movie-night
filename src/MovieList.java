@@ -4,7 +4,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class MovieList {
-  public Dictionary<Integer, Float> movieRatings;
+  public Dictionary<Integer, Float> movieRatings; // dictionary to map movie to its rating
 
   public ArrayList<Integer> movies;
 
