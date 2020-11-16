@@ -14,6 +14,7 @@ public class ApiQuery {
 
   private String omdbUrl = "http://www.omdbapi.com/?apikey="; // need '&' after API key
   private String omdbApiKey = "1eafea25";
+  private String error = "";
 
   /*
   JSON format:
@@ -32,80 +33,126 @@ public class ApiQuery {
    *
    * @param titleSearch String: the user-inputted string to search for matches
    * @param pages int: the number of pages of results to return - each page contains 3 results
-   * @throws IOException if fails to open connection or read filestream
-   * @throws ParseException if encounters malformed JSON
    */
-  public ArrayList<Object> searchMovies(String titleSearch, int pages)
-      throws IOException, ParseException {
+  public ArrayList<Object> searchMovies(String titleSearch, int pages) {
     titleSearch = formatStringForURL(titleSearch);
 
     ArrayList<Object> results = new ArrayList<>();
 
     for (int i = 1; i <= pages; i++) {
-      URL url = new URL(omdbUrl + omdbApiKey + "&s=" + titleSearch + "&type=movie&page=" + i);
-      // check if the URL works
-      if (isResponseCode200(url)) {
-        JSONObject json = convertStringToJSON(readTextFromURL(url));
+      try{
+        URL url = new URL(omdbUrl + omdbApiKey + "&s=" + titleSearch + "&type=movie&page=" + i);
+        // check if the URL works
+        if (isResponseCode200(url)) {
+          JSONObject json = convertStringToJSON(readTextFromURL(url));
 
-        // search returns an array, add all of them
-        results.addAll((JSONArray) json.get("Search"));
+          // search returns an array, add all of them
+          if (json != null){
+            results.addAll((JSONArray) json.get("Search"));
+          }
+          else{
+            error = "Error: could not read JSON";
+            return null;
+          }
 
-      } else {
-        System.out.println("error");
+        } else {
+          error = "Error: bad response from URL";
+          System.out.println(error);
+        }
       }
+      catch(IOException e){
+        error = "Error: malformed URL";
+        return null;
+      }
+
     }
     return results;
-    }
-
-  /**
-   * retrieve information on a specific movie
-   * @param titleInput String: the title of the movie to retrieve
-   * @return a Movie object containing all the relevant information about the movie
-   * @throws IOException if fails to open connection or read filestream
-   * @throws ParseException if encounters malformed JSON
-   */
-  public Movie getMovie(String titleInput) throws IOException, ParseException {
-    titleInput = formatStringForURL(titleInput);
-    //&t for title, &type=movie to only return movies
-    URL url = new URL(omdbUrl + omdbApiKey + "&t=" + titleInput + "&type=movie");
-
-    //response code 200 means the URL is valid
-    if (isResponseCode200(url)) {
-      JSONObject json = convertStringToJSON(readTextFromURL(url));
-      return formatMovie(json);
-    }
-    else return null;
   }
 
   /**
-   * retrieve information on a specific movie
+   * Retrieve information on a specific movie
+   *
+   * @param titleInput String: the title of the movie to retrieve
+   * @return a Movie object containing all the relevant information about the movie
+   */
+  public Movie getMovie(String titleInput) {
+    titleInput = formatStringForURL(titleInput);
+
+    try {
+      // &t for title, &type=movie to only return movies
+      URL url = new URL(omdbUrl + omdbApiKey + "&t=" + titleInput + "&type=movie");
+
+      // response code 200 means the URL is valid
+      if (isResponseCode200(url)) {
+        JSONObject json = convertStringToJSON(readTextFromURL(url));
+        if(json != null){
+          return formatMovie(json);
+        }
+        else{
+          error = "Error: could not read JSON";
+          return null;
+        }
+      } else return null;
+    } catch (IOException e) {
+      error = "Error: malformed URL";
+      return null;
+    }
+  }
+
+  /**
+   * Retrieve information on a specific movie
+   *
    * @param imdbID int: the IMDB ID of the movie to retrieve
    * @return a Movie object containing all the relevant information about the movie
-   * @throws IOException if fails to open connection or read filestream
-   * @throws ParseException if encounters malformed JSON
    */
-  public Movie getMovie(int imdbID) throws IOException, ParseException {
+  public Movie getMovie(int imdbID) {
     String id;
-    //some 8 digit IDs exist, but all other IDs need to be padded to 7 digits
-    if(imdbID < 10000000){
+    // some 8 digit IDs exist, but all other IDs need to be padded to 7 digits
+    if (imdbID < 10000000) {
       id = String.format("%07d", imdbID);
-    }
-    else{
+    } else if(imdbID > 99999999){
+      error = "Error: invalid IMDB ID";
+      return null;
+    } else {
       id = ((Integer) imdbID).toString();
     }
 
-    //&i for ID, &type=movie to only return movies
-    URL url = new URL(omdbUrl + omdbApiKey + "&i=tt" + id + "&type=movie");
+    // &i for ID, &type=movie to only return movies
+    try {
+      URL url = new URL(omdbUrl + omdbApiKey + "&i=tt" + id + "&type=movie");
 
-    //response code 200 means the URL is valid
-    if (isResponseCode200(url)) {
-      JSONObject json = convertStringToJSON(readTextFromURL(url));
-      return formatMovie(json);
+      // response code 200 means the URL is valid
+      if (isResponseCode200(url)) {
+        JSONObject json = convertStringToJSON(readTextFromURL(url));
+        if(json != null){
+          return formatMovie(json);
+        }
+        else {
+          error = "Error: could not read JSON";
+          return null;
+        }
+
+      } else return null;
+    } catch (IOException e) {
+      error = "Error: malformed URL";
+      return null;
     }
-    else return null;
   }
 
-  private Movie formatMovie(JSONObject json){
+  /**
+   * Get the last error thrown by the ApiRequest
+   * @return error - the string of the error message
+   */
+  public String getError(){
+    return error;
+  }
+
+  private Movie formatMovie(JSONObject json) {
+    System.out.println(json.size());
+    if(json.get("Title") == null){
+      error = error = "Error: could not read JSON";
+      return null;
+    }
     String title = (String) json.get("Title");
     int id = Integer.parseInt(((String) json.get("imdbID")).replaceAll("t", ""));
     String director = (String) json.get("Director");
@@ -122,36 +169,48 @@ public class ApiQuery {
     return movie;
   }
 
-  private boolean isResponseCode200(URL url) throws IOException {
-    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-    urlConnection.setRequestMethod("GET");
-    int responseCode = urlConnection.getResponseCode();
-    return (responseCode == 200);
-  }
-
-  private String readTextFromURL(URL url) throws IOException {
-    String inline = "";
-    Scanner scanner = new Scanner(url.openStream());
-    while (scanner.hasNext()) {
-      inline += scanner.nextLine();
+  private boolean isResponseCode200(URL url) {
+    try {
+      HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+      urlConnection.setRequestMethod("GET");
+      int responseCode = urlConnection.getResponseCode();
+      return (responseCode == 200);
+    } catch (IOException e) {
+      error = "Error: Could not open connection to URL";
+      return false;
     }
-    scanner.close();
-
-    return inline;
   }
 
-  private JSONObject convertStringToJSON(String text) throws ParseException {
+  private String readTextFromURL(URL url) {
+    String inline = "";
+    try {
+      Scanner scanner = new Scanner(url.openStream());
+      while (scanner.hasNext()) {
+        inline += scanner.nextLine();
+      }
+      scanner.close();
+
+      return inline;
+    } catch (IOException e) {
+      error = "Error: Could not open connection to URL";
+      return null;
+    }
+  }
+
+  private JSONObject convertStringToJSON(String text) {
     JSONParser parser = new JSONParser();
-    return (JSONObject) parser.parse(text);
+    try {
+      return (JSONObject) parser.parse(text);
+    } catch (ParseException e) {
+      error = "Error: Could not convert string to JSON";
+      return null;
+    }
   }
 
-  private String formatStringForURL(String input){
+  private String formatStringForURL(String input) {
     input = input.strip();
     return input.replaceAll("\\s", "+");
   }
 
-  public static void main(String[] args) throws IOException, ParseException {
-  }
-
-
+  public static void main(String[] args) {}
 }
