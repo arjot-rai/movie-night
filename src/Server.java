@@ -11,12 +11,6 @@ public class Server {
 
   /**
    * To Do list:
-   *  -create method for friends invitations
-   *  -create events
-   *  -remove events
-   *  -invite to events
-   *  -remove from events
-   *  -vote on movies in events
    *  -user's profile pictures, set and get
    */
 
@@ -86,6 +80,7 @@ public class Server {
     return new LogInReturn(false, null);
   }
 
+  //Person functions
 
   /**
    * this function returns all the attributes excluding passwords
@@ -113,13 +108,13 @@ public class Server {
    * @return true if completed, false otherwise
    */
   public static boolean addPerson(String username, String password, String first_name,
-                  String last_name, String age) {
+                  String last_name) {
     if (checkUsernameAvailability(username)) {
       try (Session session = driver.session()) {
         session.writeTransaction(transaction -> transaction.run("MERGE (a:Person " +
-                "{username:$x1, password:$x2, first_name:$x3, last_name:$x4, age:$x5})",
+                "{username:$x1, password:$x2, first_name:$x3, last_name:$x4})",
             parameters("x1", username, "x2", password, "x3", first_name,
-                "x4", last_name, "x5", age)));
+                "x4", last_name)));
         return true;
       }
     }
@@ -141,7 +136,125 @@ public class Server {
     }
   }
 
+  /**
+   * get all the events a user is attending, not including the ones they organized
+   * @param username the user to search for their events
+   * @return a hash map with the event id as the first string, then the internal map with all the attributes
+   */
+  public static HashMap<String, Map<String, Object>> getUsersEvents(String username) {
+    HashMap<String, Map<String, Object>> events = new HashMap<>();
 
+    try (Session session = driver.session()) {
+      Result attending = session.run("Match (a:Person)-[:ATTENDINGEVENT]->(b:Event) " +
+          "WHERE toLower(a.username)=$x1 Return properties(b) ", parameters("x1", username.toLowerCase()));
+      while (attending.hasNext()) {
+        Record attendRecord = attending.next();
+        Map<String, Object> attend = attendRecord.get("properties(b)").asMap();
+        events.put(attendRecord.get("properties(b)").get("id").asString(),
+            attend);
+      }
+    }
+    return events;
+  }
+
+  /**
+   * get all the events a user is organizing, not including the ones they are just attending
+   * @param username the user to search for their events
+   * @return a hash map with the event id as the first string, then the internal map with all the attributes
+   */
+  public static HashMap<String, Map<String, Object>> getUsersOrganizingEvents(String username) {
+    HashMap<String, Map<String, Object>> events = new HashMap<>();
+
+    try (Session session = driver.session()) {
+      Result organizing = session.run("Match (a:Person)-[:EVENTORGANIZER]->(b:Event) " +
+          "WHERE toLower(a.username)=$x1 Return properties(b) ", parameters("x1", username.toLowerCase()));
+      while (organizing.hasNext()) {
+        Record orgRecord = organizing.next();
+        Map<String, Object> organize = orgRecord.get("properties(b)").asMap();
+        events.put(orgRecord.get("properties(b)").get("id").asString(),
+            organize);
+      }
+    }
+    return events;
+  }
+
+  /**
+   * get all of the current live invites for a user
+   * @param username the user
+   * @return a hash map with the event id as the first string, then the internal map with all the attributes
+   */
+  public static HashMap<String, Map<String, Object>> getUsersPendingInvites(String username){
+    HashMap<String, Map<String, Object>> events = new HashMap<>();
+
+    try (Session session = driver.session()) {
+      Result organizing = session.run("Match (a:Person)-[:INVITEPENDING]->(b:Event) " +
+        "WHERE toLower(a.username)=$x1 Return properties(b) ", parameters("x1", username.toLowerCase()));
+      while (organizing.hasNext()) {
+        Record orgRecord = organizing.next();
+        Map<String, Object> organize = orgRecord.get("properties(b)").asMap();
+        events.put(orgRecord.get("properties(b)").get("id").asString(),
+          organize);
+      }
+    }
+    return events;
+  }
+
+  //streaming service functions
+
+  /**
+   * connects to a main service node to add to streaming services
+   * @param newService the name of the new service to connect to
+   * @param username the user to connect to the service
+   */
+  public static void addStreamingService(String newService, String username){
+    try (Session session = driver.session()) {
+      session.writeTransaction(transaction -> transaction.run("MERGE (a:StreamingService {name:toLower($x1)})",
+        parameters("x1", newService)));
+      session.writeTransaction(transaction -> transaction.run("MATCH (a:StreamingService), (b:Person) " +
+        "WHERE toLower(a.name)=$x2 AND toLower(b.username)=$x1 " +
+        "CREATE (b)-[:STREAMINGSERVICE]->(a) " +
+        "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", newService.toLowerCase())));
+    }
+  }
+
+  /**
+   * removes a specific streaming service from the user
+   * @param removeService the service to remove
+   * @param username the user to remove the service from
+   */
+  public static void removeStreamingService(String removeService, String username){
+    try(Session session = driver.session()){
+      session.writeTransaction(transaction -> transaction.run(
+        "MATCH (a:Person)-[e:STREAMINGSERVICE]->(b:StreamingService) " +
+          "WHERE toLower(a.username)=$x1 AND toLower(b.name)=$x2 " +
+          "DELETE e",
+        parameters("x1", username.toLowerCase(), "x2", removeService.toLowerCase())));
+    }
+  }
+
+  /**
+   * get a hashmap of all the user's streaming services
+   * @param username the user to get the streaming services from
+   * @return the streaming services
+   */
+  public static HashMap<String, Map<String, Object>> getUsersStreamingServices(String username){
+    HashMap<String, Map<String, Object>> services = new HashMap<>();
+
+    try(Session session = driver.session()){
+      Result result = session.run("Match (a:Person)-[:STREAMINGSERVICE]->(b:StreamingService) " +
+        "WHERE toLower(a.username)=$x1 Return properties(b) ", parameters("x1", username.toLowerCase()));
+      while(result.hasNext()){
+        Record record = result.next();
+        Map<String, Object> service = record.get("properties(b)").asMap();
+        services.put(record.get("properties(b)").get("name").asString(),
+          service);
+      }
+    }
+    System.out.println(services);
+    return services;
+  }
+
+  //Friendship functions
   /**
    * Create a two way friendship between two nodes
    * @param username1: name of the first new friend
@@ -200,6 +313,384 @@ public class Server {
               "MATCH (b)-[f:FRIENDS]->(a) " +
               "DELETE f",
           parameters("x1", username1, "x2", username2)));
+    }
+  }
+
+  //Friend request functions
+  /**
+   * username1 sends a friend request to username2, with a pending relationship in the other
+   * direction
+   * @param sender the user sending the request
+   * @param receiver the user getting the request
+   */
+  public static void sendFriendRequest(String sender, String receiver){
+    try(Session session = driver.session()){
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Person) " +
+          "WHERE toLower(a.username)=$x1 and toLower(b.username)=$x2 " +
+          "CREATE (a)-[f:FRIENDREQUEST]->(b) " +
+          "RETURN a,b", parameters("x1", sender.toLowerCase(),
+          "x2", receiver.toLowerCase())));
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Person) " +
+          "WHERE toLower(a.username)=$x1 AND toLower(b.username)=$x2 " +
+          "CREATE (a)-[f:REQUESTPENDING]->(b) " +
+          "RETURN a,b", parameters("x1", receiver.toLowerCase(),
+          "x2", sender.toLowerCase())));
+    }
+  }
+
+  /**
+   * remove a friend request, either when accepted to upgrade to friendship or when denied
+   * @param sender the user who sent the request
+   * @param receiver the user who received the request
+   */
+  public static void removeFriendRequest(String sender, String receiver){
+    try(Session session = driver.session()) {
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Person) " +
+              "WHERE toLower(a.username)=$x1 AND toLower(b.username)=$x2 " +
+              "MATCH (a)-[r:FRIENDREQUEST]->(b) " +
+              "DELETE r",
+          parameters("x1", sender.toLowerCase(), "x2", receiver.toLowerCase())));
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Person) " +
+              "WHERE toLower(a.username)=$x1 AND toLower(b.username)=$x2 " +
+              "MATCH (b)-[p:REQUESTPENDING]->(a) " +
+              "DELETE p",
+          parameters("x1", sender.toLowerCase(), "x2", receiver.toLowerCase())));
+    }
+  }
+
+  /**
+   * gets all of a user's requests, with all of their attributes
+   * @param username the user to get their requests
+   * @return this will return a hashmap with all the request's usernames as the keys, and
+   * their properties as the value map, with this keys as the attribute and value as the values
+   */
+  public static HashMap<String, Map<String, Object>> getFriendRequests(String username){
+    HashMap<String, Map<String, Object>> requests = new HashMap<>();
+    try(Session session = driver.session()){
+      Result result = session.run("Match (a:Person)<-[:FRIENDREQUEST]-(b:Person) " +
+          "WHERE toLower(a.username)=$x1 Return properties(b) ", parameters("x1", username.toLowerCase()));
+      while(result.hasNext()){
+        Record record = result.next();
+        Map<String, Object> friend = record.get("properties(b)").asMap();
+        requests.put(record.get("properties(b)").get("username").asString(),
+            friend);
+      }
+    }
+    return requests;
+  }
+
+  /**
+   * get the people this user has sent requests to
+   * @param username the user to find the requests from
+   * @return this will return a hashmap with all the pending request's usernames as the keys, and
+   * their properties as the value map, with this keys as the attribute and value as the values
+   */
+  public static HashMap<String, Map<String, Object>> getPendingRequests(String username){
+    HashMap<String, Map<String, Object>> requests = new HashMap<>();
+    try(Session session = driver.session()){
+      Result result = session.run("Match (a:Person)<-[:REQUESTPENDING]-(b:Person) " +
+          "WHERE toLower(a.username)=$x1 Return properties(b) ", parameters("x1", username.toLowerCase()));
+      while(result.hasNext()){
+        Record record = result.next();
+        Map<String, Object> friend = record.get("properties(b)").asMap();
+        requests.put(record.get("properties(b)").get("username").asString(),
+            friend);
+      }
+    }
+    return requests;
+  }
+
+  /**
+   * this function removes the friend request and upgrades it to a friendship
+   * @param sender the user that sent the friend request
+   * @param receiver the user that received the request
+   */
+  public static void acceptFriendRequest(String sender, String receiver){
+    removeFriendRequest(sender, receiver);
+    createFriendship(sender, receiver);
+  }
+
+  //Event id functions
+
+  /**
+   * this node gives a count of how many events there are, gives a specific id to every node
+   */
+  public static void createEventIdCounter(){
+    try (Session session = driver.session()) {
+      session.writeTransaction(transaction -> transaction.run("MERGE (a:EventCounter {count:0})"));
+    }
+  }
+
+  /**
+   * gets the next available event id
+   * @return the string for the next available id
+   */
+  public static String getNextEventId() {
+    try (Session session = driver.session()) {
+      Result result = session.run("Match (a:EventCounter) Return properties(a)");
+      while (result.hasNext()) {
+        String eventCount = result.next().get("properties(a)").asMap().get("count").toString();
+        return eventCount;
+      }
+    }
+    return "";
+  }
+
+  /**
+   * increases the value of the event id for a unique id
+   */
+  public static void increaseEventId(){
+    try (Session session = driver.session()) {
+      Result result = session.run("Match (a:EventCounter) Return properties(a)");
+      int intCount = Integer.parseInt(result.next().get("properties(a)").asMap().get("count").toString()) + 1;
+      session.writeTransaction(transaction -> transaction.run("Match (a:EventCounter) Set a.count=$x1",
+          parameters("x1", Integer.toString(intCount))));
+    }
+  }
+
+  //Event functions
+
+  /**
+   * creates a new event from a specific organizer
+   * @param organizer the user that created this event
+   * @param eventName the name of the event
+   * @param location the location for the movie night
+   * @param date the date of the event
+   */
+  public static void createEvent(String organizer, String eventName, String location, String date){
+    try (Session session = driver.session()) {
+      session.writeTransaction(transaction -> transaction.run("MERGE (a:Event " +
+              "{eventName:$x1, location:$x2, date:$x3, organizer:$x4, id:$x5})",
+          parameters("x1", eventName, "x2", location, "x3", date, "x4", organizer,
+              "x5", getNextEventId())));
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
+          "WHERE toLower(a.username)=$x1 and toLower(b.eventName)=$x2 " +
+          "CREATE (a)-[:EVENTORGANIZER]->(b) " +
+          "RETURN a,b", parameters("x1", organizer.toLowerCase(),
+          "x2", eventName.toLowerCase())));
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
+          "WHERE toLower(a.username)=$x1 and toLower(b.eventName)=$x2 " +
+          "CREATE (b)-[:EVENTATTENDEE]->(a) " +
+          "RETURN a,b", parameters("x1", organizer.toLowerCase(),
+          "x2", eventName.toLowerCase())));
+      increaseEventId();
+    }
+  }
+
+  /**
+   * remove an event
+   * @param eventId the event to remove
+   */
+  public static void removeEvent(String eventId){
+    try(Session session = driver.session()){
+      session.writeTransaction(transaction -> transaction.run(
+        "MATCH (a:Event) WHERE a.id=$x1 DETACH DELETE a",
+        parameters("x1", eventId)));
+    }
+  }
+
+  /**
+   * gets all of an event's attributes in a map
+   * @param eventId the event id to collect the attributes from
+   * @return the map of attributes
+   */
+  public static Map<String, Object> getEventAttributes(String eventId){
+    try(Session session = driver.session()){
+      Result result = session.run("MATCH (a:Event) WHERE a.id=$x1" +
+              " RETURN properties(a)",
+          parameters("x1",eventId));
+      if(result.hasNext()){
+        //find a way to remove the password, or never query it at all
+        return result.next().get("properties(a)").asMap();
+
+      }
+    }
+    return null;
+  }
+
+  /**
+   * get all the attendees of an event
+   * @param eventId the event id
+   * @return a Hashmap with the first string as the user's username with a map of their attributes,
+   * with that string being the attribute's name and the object is the value
+   */
+  public static HashMap<String, Map<String, Object>> getEventAttendees(String eventId){
+      HashMap<String, Map<String, Object>> attendees = new HashMap<>();
+
+      try(Session session = driver.session()){
+        Result result = session.run("Match (a:Event)-[:EVENTATTENDEE]->(b:Person) " +
+            "WHERE a.id=$x1 Return properties(b) ", parameters("x1", eventId));
+        while(result.hasNext()){
+          Record record = result.next();
+          Map<String, Object> friend = record.get("properties(b)").asMap();
+          attendees.put(record.get("properties(b)").get("username").asString(),
+              friend);
+        }
+      }
+      return attendees;
+    }
+
+
+  //Event invite functions
+
+  /**
+   * send a user an invite to the event with the event id
+   * @param username the user to invite
+   * @param eventId the id of the event
+   */
+  public static void sendEventInvite(String username, String eventId){
+    try(Session session = driver.session()){
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
+          "WHERE toLower(a.username)=$x1 and b.id=$x2 " +
+          "CREATE (a)-[f:INVITEPENDING]->(b) " +
+          "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", eventId)));
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Event),(b:Person) " +
+          "WHERE a.id=$x1 AND toLower(b.username)=$x2 " +
+          "CREATE (a)-[f:EVENTINVITE]->(b) " +
+          "RETURN a,b", parameters("x1", eventId, "x2", username.toLowerCase())));
+    }
+  }
+
+  /**
+   * confirms an event invite by updating the relationships to be attendee
+   * @param username the user accepting the invite
+   * @param eventId the event the user will be attending
+   */
+  public static void acceptEventInvite(String username, String eventId){
+    removeEventInvite(username, eventId);
+    try(Session session = driver.session()){
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
+        "WHERE toLower(a.username)=$x1 and b.id=$x2 " +
+        "CREATE (a)-[f:ATTENDINGEVENT]->(b) " +
+        "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", eventId)));
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Event),(b:Person) " +
+        "WHERE a.id=$x1 AND toLower(b.username)=$x2 " +
+        "CREATE (a)-[f:EVENTATTENDEE]->(b) " +
+        "RETURN a,b", parameters("x1", eventId, "x2", username.toLowerCase())));
+    }
+  }
+
+  /**
+   * remove an event invite between the given user and the event id
+   * @param username the username of the user
+   * @param eventId the id of the event
+   */
+  public static void removeEventInvite(String username, String eventId){
+    try(Session session = driver.session()) {
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
+          "WHERE toLower(a.username)=$x1 AND b.id=$x2 " +
+          "MATCH (a)-[r:INVITEPENDING]->(b) " +
+          "DELETE r",
+        parameters("x1", username.toLowerCase(), "x2", eventId)));
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
+          "WHERE toLower(a.username)=$x1 AND b.id=$x2 " +
+          "MATCH (b)-[p:EVENTINVITE]->(a) " +
+          "DELETE p",
+        parameters("x1", username.toLowerCase(), "x2", eventId)));
+    }
+  }
+
+  /**
+   * remove an event the user is currently attending
+   * @param username the user leaving the event
+   * @param eventId the event id
+   */
+  public static void removeAttendingEvent(String username, String eventId){
+    try(Session session = driver.session()) {
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
+          "WHERE toLower(a.username)=$x1 AND b.id=$x2 " +
+          "MATCH (a)-[r:ATTENDINGEVENT]->(b) " +
+          "DELETE r",
+        parameters("x1", username.toLowerCase(), "x2", eventId)));
+      session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
+          "WHERE toLower(a.username)=$x1 AND b.id=$x2 " +
+          "MATCH (b)-[p:EVENTATTENDEE]->(a) " +
+          "DELETE p",
+        parameters("x1", username.toLowerCase(), "x2", eventId)));
+    }
+  }
+
+  //Set event movies
+
+  /**
+   * adds a movie to the runnings for a movie event
+   * @param movieTitle the title of the movie
+   * @param eventId the event to add the movie to
+   */
+  public static void addEventMovie(String movieTitle, String eventId){
+    try (Session session = driver.session()) {
+      session.writeTransaction(transaction -> transaction.run("MERGE (a:EventMovie {name:$x1, vote:0, eventId:$x2})",
+        parameters("x1", movieTitle, "x2", eventId)));
+      session.writeTransaction(transaction -> transaction.run("MATCH (a:EventMovie), (b:Event) " +
+        "WHERE toLower(a.name)=$x1 AND a.eventId=$x2 AND b.id=$x2 " +
+        "CREATE (b)-[:EVENTMOVIE]->(a) " +
+        "RETURN a,b", parameters("x1", movieTitle.toLowerCase(), "x2", eventId)));
+    }
+  }
+
+  /**
+   * add a single vote to one of the movies of a movie event
+   * @param movieTitle the movie that got the vote
+   * @param eventId the event id where someone voted
+   */
+  public static void addMovieVote(String movieTitle, String eventId){
+    try (Session session = driver.session()) {
+      Result result = session.run("Match (a:Event)-[m:EVENTMOVIE]->(b:EventMovie) " +
+        "Where a.id=$x1 and toLower(b.name)=$x2 AND b.eventId=$x1  " +
+        "Return properties(b)", parameters("x1", eventId, "x2", movieTitle.toLowerCase()));
+      int intCount = Integer.parseInt(result.next().get("properties(b)").asMap().get("vote").toString()) + 1;
+      session.writeTransaction(transaction -> transaction.run("Match (a:Event)-[m:EVENTMOVIE]->(b:EventMovie) " +
+          "Where a.id=$x1 and toLower(b.name)=$x2 AND b.eventId=$x1 Set b.vote=$x3",
+        parameters("x1", eventId, "x2", movieTitle.toLowerCase(), "x3", Integer.toString(intCount))));
+    }
+  }
+
+  /**
+   * gets all the potential movies for an event and their vote count
+   * @param eventId the event to find the movies from
+   * @return a hashmap with the titles as their key, and the value is a map with two attributes "vote" and "eventId",
+   * which eventId can be ignored as it is to prevent multiple events voting on a single movie
+   */
+  public static HashMap<String, Map<String, Object>> getEventMovies(String eventId){
+    HashMap<String, Map<String, Object>> movies = new HashMap<>();
+
+    try(Session session = driver.session()){
+      Result result = session.run("Match (a:Event)-[:EVENTMOVIE]->(b:EventMovie) " +
+        "WHERE a.id=$x1 Return properties(b) ", parameters("x1", eventId));
+      while(result.hasNext()){
+        Record record = result.next();
+        Map<String, Object> movie = record.get("properties(b)").asMap();
+        movies.put(record.get("properties(b)").get("name").asString(),
+          movie);
+      }
+    }
+    return movies;
+  }
+
+  /**
+   * remove a potential movie from a event
+   * @param eventId the event to remove the movie from
+   * @param movieTitle the movie to remove
+   */
+  public static void removeEventMovie(String eventId, String movieTitle){
+    try(Session session = driver.session()){
+      session.writeTransaction(transaction -> transaction.run(
+        "MATCH (a:Event)-[:EVENTMOVIE]->(b:EventMovie) " +
+          "WHERE a.id=$x1 and toLower(b.name)=$x2 AND b.eventId=$x1 DETACH DELETE b",
+        parameters("x1", eventId, "x2", movieTitle.toLowerCase())));
+    }
+  }
+
+  /**
+   * removes all movies connected to an event
+   * @param eventId the event to remove all movies from
+   */
+  public static void removeAllEventMovies(String eventId){
+    try(Session session = driver.session()){
+      session.writeTransaction(transaction -> transaction.run(
+        "MATCH (a:Event)-[:EVENTMOVIE]->(b:EventMovie) " +
+          "WHERE a.id=$x1 DETACH DELETE b",
+        parameters("x1", eventId)));
     }
   }
 
