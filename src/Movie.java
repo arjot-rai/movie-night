@@ -17,8 +17,14 @@ public class Movie {
 
   private ArrayList<String> movieGenre;
 
-  public Movie(String movieName, int id, String director,
-      String release, String rating, ArrayList<String> genre){
+  private String moviePlot;
+
+  private int movieRuntime; //minutes
+
+  private String moviePosterUrl;
+
+  public Movie(String movieName, int id, String director, String release, String rating,
+      ArrayList<String> genre, String plot, int runtime, String posterUrl){
       this.movieName = movieName;
       this.movieID = id;
       this.movieDirector = director;
@@ -27,6 +33,9 @@ public class Movie {
       this.movieGenre = genre;
       this.movieStreamingSite = new ArrayList<>();
       this.movieActor = new ArrayList<>();
+      this.moviePlot = plot;
+      this.movieRuntime = runtime;
+      this.moviePosterUrl = posterUrl;
   }
 
   public String getMovieName() {
@@ -91,5 +100,29 @@ public class Movie {
 
   public void setMovieGenre(ArrayList<String> movieGenre) {
     this.movieGenre = movieGenre;
+  }
+
+  public String getMoviePlot() {
+    return moviePlot;
+  }
+
+  public void setMoviePlot(String moviePlot) {
+    this.moviePlot = moviePlot;
+  }
+
+  public int getMovieRuntime() {
+    return movieRuntime;
+  }
+
+  public void setMovieRuntime(int movieRuntime) {
+    this.movieRuntime = movieRuntime;
+  }
+
+  public String getMoviePosterUrl() {
+    return moviePosterUrl;
+  }
+
+  public void setMoviePosterUrl(String moviePosterUrl) {
+    this.moviePosterUrl = moviePosterUrl;
   }
 }
