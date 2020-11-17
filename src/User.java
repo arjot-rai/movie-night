@@ -1,92 +1,95 @@
 import java.util.ArrayList;
 
-public class User {
-  private String userName;
+public class User{
 
-  private String userPassword;
+  private static String userName = "";
 
-  private int userID;
+  private static int userID = 0;
 
-  private ArrayList<String> streamingServices;
+  private static String userPassword = "";
 
-  private FriendList friendList;
+  private static ArrayList<String> streamingServices = new ArrayList<>();
 
-  private MovieList movieList;
+  private static FriendList friendList = new FriendList();
 
-  private EventList eventList;
+  private static MovieList movieList = new MovieList();
 
-  public User(String userName, String password, int id){
-    this.userName = userName;
-    this.userPassword = password;
-    this.userID = id;
-    this.streamingServices = new ArrayList<>();
-    this.friendList = new FriendList();
-    this.movieList = new MovieList();
-    this.eventList = new EventList();
+  private static EventList eventList = new EventList();
+
+  public User(){
+
   }
 
-  public void changePassword(String newPassword){
-    this.userPassword = newPassword;
+  /**
+   *
+   * @param userName: String; the user name of the user
+   * @param password: String; password the user is using
+   * @param id: int; a unique identifier for the user
+   */
+  public static void initialize(String userName, String password, int id){
+    User.userID = id;
+    User.userName = userName;
+    User.userPassword = password;
   }
 
-  public void addStream(String streamName){
-    this.streamingServices.add(streamName);
+  public static void setUserID(int id){
+    User.userID = id;
   }
 
-  public boolean removeStream(String streamName){
-    return this.streamingServices.remove(streamName);
+  public static int getUserID(){
+    return User.userID;
   }
 
-  public String getUserName() {
-    return userName;
+  public static String getUserName() {
+    return User.userName;
   }
 
-  public void setUserName(String userName) {
-    this.userName = userName;
+  public static void setUserName(String userName) {
+    User.userName = userName;
   }
 
-  public String getUserPassword() {
-    return userPassword;
+  public static void changePassword(String newPassword){
+    User.userPassword = newPassword;
   }
 
-  public void setUserPassword(String userPassword) {
-    this.userPassword = userPassword;
+  public static void addStream(String streamName){
+    User.streamingServices.add(streamName);
   }
 
-  public ArrayList<String> getStreamingServices(){
-    return streamingServices;
+  public static boolean removeStream(String streamName){
+    return User.streamingServices.remove(streamName);
   }
 
-  public int getUserID() {
-    return userID;
+  public static String getUserPassword() {
+    return User.userPassword;
   }
 
-  public FriendList getFriendList() {
+  public static void setUserPassword(String userPassword) {
+    User.userPassword = userPassword;
+  }
+
+  public static ArrayList<String> getStreamingServices(){
+    return User.streamingServices;
+  }
+
+  public static FriendList getFriendList() {
     return friendList;
   }
 
-  public MovieList getMovieList() {
+  public static MovieList getMovieList() {
     return movieList;
   }
 
-  public EventList getEventList() {
+  public static EventList getEventList() {
     return eventList;
   }
 
   public static void main(String[] args) {
-    // test for changePassword()
-    User user = new User("me", "12345", 1);
-
-    user.changePassword("new");
-    System.out.println(user.getUserPassword());
-
-    // test for addStream
-    user.addStream("netflix");
-    user.addStream("prime");
-    System.out.println(user.getStreamingServices().toString());
-
-    // test for removeStream
-    System.out.println(user.removeStream("netflix")); // should be true
+    User.initialize("soro", "cmpt370", 1);
+    FriendList f = User.getFriendList();
+    f.addFriend(2);
+    f.addFriend(3);
+    System.out.println(User.getFriendList().confirmedFriends.toString());
   }
 
 }

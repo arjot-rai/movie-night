@@ -15,10 +15,10 @@ public class Movie {
 
   private String movieRating;
 
-  private String movieGenre;
+  private ArrayList<String> movieGenre;
 
   public Movie(String movieName, int id, String director,
-      String release, String rating, String genre){
+      String release, String rating, ArrayList<String> genre){
       this.movieName = movieName;
       this.movieID = id;
       this.movieDirector = director;
@@ -85,11 +85,11 @@ public class Movie {
     this.movieRating = movieRating;
   }
 
-  public String getMovieGenre() {
+  public ArrayList<String> getMovieGenre() {
     return movieGenre;
   }
 
-  public void setMovieGenre(String movieGenre) {
+  public void setMovieGenre(ArrayList<String> movieGenre) {
     this.movieGenre = movieGenre;
   }
 }

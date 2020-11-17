@@ -9,7 +9,7 @@ public class Event {
 
   private User eventOrganizer;
 
-  private ArrayList<User> eventGuestList;
+  private ArrayList<Integer> eventGuestList;
 
   private int eventID;
 
@@ -78,29 +78,19 @@ public class Event {
     this.eventMovies.remove((Object)movieID);
   }
 
-  public ArrayList<User> getEventGuestList() {
+  public ArrayList<Integer> getEventGuestList() {
     return eventGuestList;
   }
 
-  public void addEventGuest(User guest) {
-    this.eventGuestList.add(guest);
+  public void addEventGuest(int id) {
+    this.eventGuestList.add(id);
   }
 
-  public void removeEventGuest(User guest) {
-    this.eventGuestList.remove(guest);
+  public void removeEventGuest(int id) {
+    this.eventGuestList.remove(id);
   }
 
   public static void main(String[] args){
-    // testing the event class
-    User u = new User("me", "12345", 1);
-    Event e = new Event("gettogether", "myplace", "2016-08-01", u, 1);
-    e.addMovie(2);
-    System.out.println(e.getEventMovies().toString());
-    e.removeMovie(2);
-    System.out.println(e.getEventMovies().toString());
-    e.addEventGuest(u);
-    System.out.println(e.getEventGuestList().toString());
-    e.removeEventGuest(u);
-    System.out.println(e.getEventGuestList().toString());
+
   }
 }
