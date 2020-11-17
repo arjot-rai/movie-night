@@ -81,4 +81,37 @@ class ApiQueryTest {
     Movie movie = apiQuery.getMovie(10001870);
     Assertions.assertEquals("Disrupted Land", movie.getMovieName());
   }
+
+  @Test
+  void testMovieRuntime() {
+    ApiQuery apiQuery = new ApiQuery();
+    Movie movie = apiQuery.getMovie("star wars");
+    Assertions.assertEquals(121, movie.getMovieRuntime());
+  }
+
+  @Test
+  void testMovieRelease() {
+    ApiQuery apiQuery = new ApiQuery();
+    Movie movie = apiQuery.getMovie("star wars");
+    Assertions.assertEquals("25 May 1977", movie.getMovieReleaseDate());
+  }
+
+  @Test
+  void testMoviePlot() {
+    ApiQuery apiQuery = new ApiQuery();
+    Movie movie = apiQuery.getMovie("star wars");
+    Assertions.assertEquals("The Imperial Forces, under orders from cruel Darth Vader, "
+        + "hold Princess Leia hostage in their efforts to quell the rebellion against the Galactic "
+        + "Empire. Luke Skywalker and Han Solo, captain of the Millennium Falcon, work together"
+        + " with the companionable droid duo R2-D2 and C-3PO to rescue the beautiful princess,"
+        + " help the Rebel Alliance and restore freedom and justice to the Galaxy.",
+        movie.getMoviePlot());
+  }
+
+  @Test
+  void testMoviePosterUrl() {
+    ApiQuery apiQuery = new ApiQuery();
+    Movie movie = apiQuery.getMovie("star wars");
+    Assertions.assertEquals("https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg", movie.getMoviePosterUrl());
+  }
 }

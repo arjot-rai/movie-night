@@ -58,7 +58,6 @@ public class ApiQuery {
 
         } else {
           error = "Error: bad response from URL";
-          System.out.println(error);
         }
       }
       catch(IOException e){
@@ -81,7 +80,7 @@ public class ApiQuery {
 
     try {
       // &t for title, &type=movie to only return movies
-      URL url = new URL(omdbUrl + omdbApiKey + "&t=" + titleInput + "&type=movie");
+      URL url = new URL(omdbUrl + omdbApiKey + "&t=" + titleInput + "&type=movie&plot=full");
 
       // response code 200 means the URL is valid
       if (isResponseCode200(url)) {
@@ -118,9 +117,9 @@ public class ApiQuery {
       id = ((Integer) imdbID).toString();
     }
 
-    // &i for ID, &type=movie to only return movies
+    // &i for ID, &type=movie to only return movies, &plot=full to get full description
     try {
-      URL url = new URL(omdbUrl + omdbApiKey + "&i=tt" + id + "&type=movie");
+      URL url = new URL(omdbUrl + omdbApiKey + "&i=tt" + id + "&type=movie&plot=full");
 
       // response code 200 means the URL is valid
       if (isResponseCode200(url)) {
@@ -149,7 +148,6 @@ public class ApiQuery {
   }
 
   private Movie formatMovie(JSONObject json) {
-    System.out.println(json.size());
     if(json.get("Title") == null){
       error = error = "Error: could not read JSON";
       return null;
@@ -159,6 +157,10 @@ public class ApiQuery {
     String director = (String) json.get("Director");
     String releaseDate = (String) json.get("Released");
     String rating = (String) json.get("Rated");
+    String plot = (String) json.get("Plot");
+    String posterUrl = (String) json.get("Poster");
+    String runtimeString = (String) json.get("Runtime");
+    int runtime = Integer.parseInt(runtimeString.substring(0, runtimeString.length() - 4));
     String[] genres = ((String) json.get("Genre")).split(",");
     ArrayList<String> genreList = new ArrayList<String>();
 
@@ -167,7 +169,8 @@ public class ApiQuery {
       genreList.add(genre);
     }
 
-    Movie movie = new Movie(title, id, director, releaseDate, rating, genreList);
+    Movie movie = new Movie(title, id, director, releaseDate, rating, genreList, plot, runtime,
+        posterUrl);
 
     String[] actors = ((String) json.get("Actors")).split(",");
     for (String actor : actors) {
