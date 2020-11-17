@@ -85,11 +85,7 @@ public class User{
   }
 
   public static void main(String[] args) {
-    User.initialize("soro", "cmpt370", 1);
-    FriendList f = User.getFriendList();
-    f.addFriend(2);
-    f.addFriend(3);
-    System.out.println(User.getFriendList().confirmedFriends.toString());
+
   }
 
 }
