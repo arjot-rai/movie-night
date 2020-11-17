@@ -25,8 +25,9 @@ public class ApiQuery {
       Website, Response}
 
   By Search:
-  {Search:[{Title, Year, imdbID, Type, Poster}, {Title...       ...}, {Title...       ...}]
-      each page contains 3 entries
+  {Search:[{Title, Year, imdbID, Type, Poster}, {Title...       ...}, ... {Title...       ...}],
+      totalResults, Response}
+    Each page contains 10 results
    */
 
   /**
@@ -35,23 +36,32 @@ public class ApiQuery {
    * @param titleSearch String: the user-inputted string to search for matches
    * @param pages int: the number of pages of results to return - each page contains 3 results
    */
-  public ArrayList<Object> searchMovies(String titleSearch, int pages) {
+  public ArrayList<SearchResult> searchMovies(String titleSearch, int pages) {
     titleSearch = formatStringForURL(titleSearch);
 
-    ArrayList<Object> results = new ArrayList<>();
+    ArrayList<SearchResult> results = new ArrayList<>();
 
     for (int i = 1; i <= pages; i++) {
-      try{
+      try {
         URL url = new URL(omdbUrl + omdbApiKey + "&s=" + titleSearch + "&type=movie&page=" + i);
         // check if the URL works
         if (isResponseCode200(url)) {
           JSONObject json = convertStringToJSON(readTextFromURL(url));
 
           // search returns an array, add all of them
-          if (json != null){
-            results.addAll((JSONArray) json.get("Search"));
-          }
-          else{
+          if (json != null) {
+            JSONArray jsonArray = (JSONArray) json.get("Search");
+            for (int j = 0; j < 10; j++) {
+              String title = (String) ((JSONObject) jsonArray.get(j)).get("Title");
+              String year = (String) ((JSONObject) jsonArray.get(j)).get("Year");
+              int id =
+                  Integer.parseInt(
+                      ((String) ((JSONObject) jsonArray.get(j)).get("imdbID")).replaceAll("t", ""));
+              String posterUrl = (String) json.get("Poster");
+              SearchResult result = new SearchResult(title, year, id, posterUrl);
+              results.add(result);
+            }
+          } else {
             error = "Error: could not read JSON";
             return null;
           }
@@ -59,12 +69,10 @@ public class ApiQuery {
         } else {
           error = "Error: bad response from URL";
         }
-      }
-      catch(IOException e){
+      } catch (IOException e) {
         error = "Error: malformed URL";
         return null;
       }
-
     }
     return results;
   }
@@ -85,10 +93,9 @@ public class ApiQuery {
       // response code 200 means the URL is valid
       if (isResponseCode200(url)) {
         JSONObject json = convertStringToJSON(readTextFromURL(url));
-        if(json != null){
+        if (json != null) {
           return formatMovie(json);
-        }
-        else{
+        } else {
           error = "Error: could not read JSON";
           return null;
         }
@@ -110,7 +117,7 @@ public class ApiQuery {
     // some 8 digit IDs exist, but all other IDs need to be padded to 7 digits
     if (imdbID < 10000000) {
       id = String.format("%07d", imdbID);
-    } else if(imdbID > 99999999){
+    } else if (imdbID > 99999999) {
       error = "Error: invalid IMDB ID";
       return null;
     } else {
@@ -124,10 +131,9 @@ public class ApiQuery {
       // response code 200 means the URL is valid
       if (isResponseCode200(url)) {
         JSONObject json = convertStringToJSON(readTextFromURL(url));
-        if(json != null){
+        if (json != null) {
           return formatMovie(json);
-        }
-        else {
+        } else {
           error = "Error: could not read JSON";
           return null;
         }
@@ -141,14 +147,15 @@ public class ApiQuery {
 
   /**
    * Get the last error thrown by the ApiRequest
+   *
    * @return error - the string of the error message
    */
-  public String getError(){
+  public String getError() {
     return error;
   }
 
   private Movie formatMovie(JSONObject json) {
-    if(json.get("Title") == null){
+    if (json.get("Title") == null) {
       error = error = "Error: could not read JSON";
       return null;
     }
@@ -169,8 +176,8 @@ public class ApiQuery {
       genreList.add(genre);
     }
 
-    Movie movie = new Movie(title, id, director, releaseDate, rating, genreList, plot, runtime,
-        posterUrl);
+    Movie movie =
+        new Movie(title, id, director, releaseDate, rating, genreList, plot, runtime, posterUrl);
 
     String[] actors = ((String) json.get("Actors")).split(",");
     for (String actor : actors) {

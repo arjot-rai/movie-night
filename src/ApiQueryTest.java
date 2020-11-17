@@ -100,11 +100,12 @@ class ApiQueryTest {
   void testMoviePlot() {
     ApiQuery apiQuery = new ApiQuery();
     Movie movie = apiQuery.getMovie("star wars");
-    Assertions.assertEquals("The Imperial Forces, under orders from cruel Darth Vader, "
-        + "hold Princess Leia hostage in their efforts to quell the rebellion against the Galactic "
-        + "Empire. Luke Skywalker and Han Solo, captain of the Millennium Falcon, work together"
-        + " with the companionable droid duo R2-D2 and C-3PO to rescue the beautiful princess,"
-        + " help the Rebel Alliance and restore freedom and justice to the Galaxy.",
+    Assertions.assertEquals(
+        "The Imperial Forces, under orders from cruel Darth Vader, "
+            + "hold Princess Leia hostage in their efforts to quell the rebellion against the Galactic "
+            + "Empire. Luke Skywalker and Han Solo, captain of the Millennium Falcon, work together"
+            + " with the companionable droid duo R2-D2 and C-3PO to rescue the beautiful princess,"
+            + " help the Rebel Alliance and restore freedom and justice to the Galaxy.",
         movie.getMoviePlot());
   }
 
@@ -112,6 +113,28 @@ class ApiQueryTest {
   void testMoviePosterUrl() {
     ApiQuery apiQuery = new ApiQuery();
     Movie movie = apiQuery.getMovie("star wars");
-    Assertions.assertEquals("https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg", movie.getMoviePosterUrl());
+    Assertions.assertEquals(
+        "https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg",
+        movie.getMoviePosterUrl());
+  }
+
+  @Test
+  void testMovieSearchOnePage() {
+    ApiQuery apiQuery = new ApiQuery();
+    ArrayList<SearchResult> results = apiQuery.searchMovies("star wars", 1);
+    Assertions.assertEquals(10, results.size());
+    Assertions.assertEquals("Star Wars: Episode IV - A New Hope", results.get(0).getTitle());
+    Assertions.assertEquals(
+        "Star Wars: Episode IX - The Rise of Skywalker", results.get(9).getTitle());
+  }
+
+  @Test
+  void testMovieSearchMultiPage() {
+    ApiQuery apiQuery = new ApiQuery();
+    ArrayList<SearchResult> results = apiQuery.searchMovies("star wars", 4);
+    Assertions.assertEquals(40, results.size());
+    Assertions.assertEquals("Star Wars: Episode IV - A New Hope", results.get(0).getTitle());
+    Assertions.assertEquals(
+        "Lego Star Wars: The Yoda Chronicles - Menace of the Sith", results.get(39).getTitle());
   }
 }
