@@ -1,4 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +25,30 @@ class ApiQueryTest {
     ApiQuery apiQuery = new ApiQuery();
     Movie movie = apiQuery.getMovie("star wars");
     Assertions.assertEquals("George Lucas", movie.getMovieDirector());
+  }
+
+  @Test
+  void testMovieGenres() {
+    ApiQuery apiQuery = new ApiQuery();
+    Movie movie = apiQuery.getMovie("star wars");
+    ArrayList<String> expected = new ArrayList<>();
+    expected.add("Action");
+    expected.add("Adventure");
+    expected.add("Fantasy");
+    expected.add("Sci-Fi");
+    Assertions.assertEquals(expected, movie.getMovieGenre());
+  }
+
+  @Test
+  void testMovieActors() {
+    ApiQuery apiQuery = new ApiQuery();
+    Movie movie = apiQuery.getMovie("star wars");
+    ArrayList<String> expected = new ArrayList<>();
+    expected.add("Mark Hamill");
+    expected.add("Harrison Ford");
+    expected.add("Carrie Fisher");
+    expected.add("Peter Cushing");
+    Assertions.assertEquals(expected, movie.getMovieActor());
   }
 
   @Test

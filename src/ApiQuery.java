@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -158,12 +159,19 @@ public class ApiQuery {
     String director = (String) json.get("Director");
     String releaseDate = (String) json.get("Released");
     String rating = (String) json.get("Rated");
-    String genre = (String) json.get("Genre");
+    String[] genres = ((String) json.get("Genre")).split(",");
+    ArrayList<String> genreList = new ArrayList<String>();
 
-    Movie movie = new Movie(title, id, director, releaseDate, rating, genre);
+    for (String genre : genres) {
+      genre = genre.trim();
+      genreList.add(genre);
+    }
+
+    Movie movie = new Movie(title, id, director, releaseDate, rating, genreList);
 
     String[] actors = ((String) json.get("Actors")).split(",");
     for (String actor : actors) {
+      actor = actor.trim();
       movie.addMovieActor(actor);
     }
     return movie;
