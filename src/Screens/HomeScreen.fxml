@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-  xmlns:fx="http://javafx.com/fxml"
-  fx:controller="Screens.HomeScreen"
-  prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Screens.HomeScreen">
+   <children>
+      <VBox prefHeight="720.0" prefWidth="200.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="80.0" prefWidth="200.0" text="Profile" />
+         </children>
+      </VBox>
+      <VBox layoutX="1080.0" prefHeight="720.0" prefWidth="200.0">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Friends" />
+                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Events" />
+               </children>
+            </HBox>
+            <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="200.0" text="Button" />
+         </children>
+      </VBox>
+      <VBox layoutX="200.0" prefHeight="720.0" prefWidth="880.0">
+         <children>
+            <VBox prefHeight="150.0" prefWidth="100.0">
+               <children>
+                  <TextField />
+               </children>
+            </VBox>
+            <VBox prefHeight="420.0" prefWidth="100.0" />
+            <VBox prefHeight="150.0" prefWidth="100.0" />
+         </children>
+      </VBox>
+   </children>
 </AnchorPane>
