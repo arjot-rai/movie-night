@@ -9,20 +9,32 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class CreateAccountScene {
+    private Model model;
+
     @FXML
     private Button back_button;
 
     @FXML
     private Button enter_button;
 
+    public CreateAccountScene(Model newModel) {
+        model = newModel;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CreateAccountScene.fxml"));
+
+            loader.setController(this);
+
+            model.stage.setScene(new Scene(loader.load()));
+
+            model.stage.setTitle("MovieNight - CreateAccountScene");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void pressedBack(ActionEvent event) throws IOException {
-        Parent pane = FXMLLoader.load(getClass().getResource("OpeningScene.fxml"));
-
-        Scene scene = new Scene(pane);
-
-        Stage window = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
+        OpeningScene openingScene = new OpeningScene(model);
     }
 
     public void pressedEnter(ActionEvent event) throws  IOException {

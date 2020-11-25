@@ -39,17 +39,10 @@ public class OpeningScene {
 
     public void pressedLogIn(ActionEvent event) throws IOException {
         LogInScene logInScene = new LogInScene(model);
-        //logInScene.showStage();
     }
 
     public void pressedCreateAccount(ActionEvent event) throws IOException {
-        Parent pane = FXMLLoader.load(getClass().getResource("CreateAccountScene.fxml"));
-
-        Scene scene = new Scene(pane);
-
-        Stage window = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
+        CreateAccountScene createAccountScene = new CreateAccountScene(model);
     }
 
     public void showStage() {
