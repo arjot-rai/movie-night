@@ -43,12 +43,7 @@ public class LogInScene implements SceneModelListener {
     }
 
     public void pressedEnter(ActionEvent event) throws  IOException {
-        Parent pane = FXMLLoader.load(getClass().getResource("MainScene.fxml"));
-
-        Scene scene = new Scene(pane);
-        Stage window = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
+        MainScene mainScene = new MainScene(model);
     }
 
     @Override
