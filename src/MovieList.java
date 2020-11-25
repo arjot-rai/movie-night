@@ -26,6 +26,19 @@ public class MovieList {
     return false;
   }
 
+  public MovieList compareMovies(MovieList other){
+    MovieList commonMovies = new MovieList();
+    for (Integer thisMovieID: this.movies) {
+      for (Integer otherMovieID : other.movies) {
+        if (thisMovieID.equals(otherMovieID)) {
+          commonMovies.addMovie(thisMovieID);
+          break;
+        }
+      }
+    }
+    return commonMovies;
+  }
+
   public static void main(String[] args){
     //testing MovieList class
     MovieList movieList = new MovieList();

@@ -7,6 +7,7 @@ public class Person {
   String password;
   int userID;
   ArrayList<String> streamingServices;
+  MovieList movieList;
 
   /**
    * this is used for creating a new person
@@ -18,25 +19,9 @@ public class Person {
    */
   public Person(String username, String password, int userID, ArrayList<String> streamingServices){
     this.username = username;
-    this.password = password;
     this.userID = userID;
     this.streamingServices = streamingServices;
-  }
-
-  /**
-   * lets the user change their password
-   * @param newPassword
-   */
-  public void changePassword(String newPassword){
-    this.password = newPassword;
-  }
-
-  /**
-   * returns the password from the user, mainly used for test purposes as of now
-   * @return the password
-   */
-  public String getPassword(){
-    return this.password;
+    this.movieList = new MovieList();
   }
 
   /**
@@ -64,4 +49,15 @@ public class Person {
     return this.streamingServices;
   }
 
+  public MovieList getMovieList(){
+    return this.movieList;
+  }
+
+  public void setMovieList(MovieList mList){
+    this.movieList = mList;
+  }
+
+  public void addMovie(int movieID){
+    movieList.addMovie(movieID);
+  }
 }
