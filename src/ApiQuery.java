@@ -146,6 +146,45 @@ public class ApiQuery {
   }
 
   /**
+   * Retrieve information on a specific movie in JSON format
+   *
+   * @param imdbID int: the IMDB ID of the movie to retrieve
+   * @return a Movie object containing all the relevant information about the movie
+   */
+  public JSONObject getMovieJSON(int imdbID) {
+    String id;
+    // some 8 digit IDs exist, but all other IDs need to be padded to 7 digits
+    if (imdbID < 10000000) {
+      id = String.format("%07d", imdbID);
+    } else if (imdbID > 99999999) {
+      error = "Error: invalid IMDB ID";
+      return null;
+    } else {
+      id = ((Integer) imdbID).toString();
+    }
+
+    // &i for ID, &type=movie to only return movies, &plot=full to get full description
+    try {
+      URL url = new URL(omdbUrl + omdbApiKey + "&i=tt" + id + "&type=movie&plot=full");
+
+      // response code 200 means the URL is valid
+      if (isResponseCode200(url)) {
+        JSONObject json = convertStringToJSON(readTextFromURL(url));
+        if (json != null) {
+          return json;
+        } else {
+          error = "Error: could not read JSON";
+          return null;
+        }
+
+      } else return null;
+    } catch (IOException e) {
+      error = "Error: malformed URL";
+      return null;
+    }
+  }
+
+  /**
    * Get the last error thrown by the ApiRequest
    *
    * @return error - the string of the error message

@@ -1,6 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -136,5 +137,12 @@ class ApiQueryTest {
     Assertions.assertEquals("Star Wars: Episode IV - A New Hope", results.get(0).getTitle());
     Assertions.assertEquals(
         "Lego Star Wars: The Yoda Chronicles - Menace of the Sith", results.get(39).getTitle());
+  }
+
+  @Test
+  void testGetMovieJSON(){
+    ApiQuery apiQuery = new ApiQuery();
+    JSONObject json = apiQuery.getMovieJSON(76759);
+    System.out.println(json);
   }
 }
