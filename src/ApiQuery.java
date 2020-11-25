@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.json.simple.parser.JSONParser;
@@ -184,6 +187,52 @@ public class ApiQuery {
     }
   }
 
+  public void writeJSON(JSONObject json){
+    String filePath = new File("").getAbsolutePath();
+    String path = "/out/prefetchedMovies/";
+    String fileName = (String) json.get("Title");
+    fileName = fileName.replaceAll("\\W", "");
+    fileName = filePath + path + fileName + ".json";
+    System.out.println(fileName);
+
+    try {
+      File newFile = new File(fileName);
+      if (newFile.createNewFile()) {
+        System.out.println("File created: " + newFile.getName());
+      } else {
+        System.out.println("File already exists.");
+      }
+
+      FileWriter myWriter = new FileWriter(fileName);
+      myWriter.write(json.toString() + "\n");
+      myWriter.close();
+
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+  }
+
+  public Movie getMovieFromFile(String filePath){
+    try {
+      File file = new File(filePath);
+      Scanner scanner = new Scanner(file);
+      JSONObject json = new JSONObject();
+      while (scanner.hasNextLine()) {
+        String data = scanner.nextLine();
+        JSONParser parser = new JSONParser();
+        json = (JSONObject) parser.parse(data);
+      }
+      scanner.close();
+
+      return formatMovie(json);
+    } catch (FileNotFoundException | ParseException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+    return null;
+  }
+
   /**
    * Get the last error thrown by the ApiRequest
    *
@@ -237,6 +286,8 @@ public class ApiQuery {
       return false;
     }
   }
+
+
 
   private String readTextFromURL(URL url) {
     String inline = "";
