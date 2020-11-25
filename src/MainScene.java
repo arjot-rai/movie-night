@@ -11,8 +11,10 @@ import java.io.IOException;
 public class MainScene {
 
   private Model model;
-
+  @FXML
   private Button logout_button;
+  @FXML
+  private Button profile_button;
 
   public MainScene(Model newModel) {
     model = newModel;
@@ -32,5 +34,9 @@ public class MainScene {
   public void pressedLogoutButton(ActionEvent event) throws IOException {
     //TODO: Drop user information, either set user to null or pass in a new model
     OpeningScene openingScene = new OpeningScene(model);
+  }
+
+  public void pressedProfileButton(ActionEvent event) throws IOException {
+    ProfileScene profileScene = new ProfileScene(model);
   }
 }
