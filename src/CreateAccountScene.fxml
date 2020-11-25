@@ -30,13 +30,13 @@
                <children>
                   <Label alignment="TOP_LEFT" prefHeight="33.0" prefWidth="289.0" text="Sign Up" />
                   <Pane prefHeight="40.0" prefWidth="301.0" />
-                  <TextField prefHeight="25.0" prefWidth="297.0" promptText="Email" />
+                  <TextField fx:id="email_field" prefHeight="25.0" prefWidth="297.0" promptText="Email" />
                   <Pane prefHeight="40.0" prefWidth="289.0" />
-                  <TextField prefHeight="25.0" prefWidth="307.0" promptText="Username" />
+                  <TextField fx:id="username_field" prefHeight="25.0" prefWidth="307.0" promptText="Username" />
                   <Pane prefHeight="40.0" prefWidth="289.0" />
-                  <PasswordField prefHeight="25.0" prefWidth="340.0" promptText="Password" />
+                  <PasswordField fx:id="password_field" prefHeight="25.0" prefWidth="340.0" promptText="Password" />
                   <Pane prefHeight="40.0" prefWidth="289.0" />
-                  <PasswordField prefHeight="25.0" prefWidth="338.0" promptText="Confirm Password" />
+                  <PasswordField fx:id="confirm_password_field" prefHeight="25.0" prefWidth="338.0" promptText="Confirm Password" />
                   <Pane prefHeight="40.0" prefWidth="289.0" />
                </children>
                <padding>

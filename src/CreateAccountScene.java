@@ -1,3 +1,5 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,6 +40,30 @@ public class CreateAccountScene {
     }
 
     public void pressedEnter(ActionEvent event) throws  IOException {
+        //TODO: Check e-mail availability
+
         MainScene mainScene = new MainScene(model);
+    }
+
+
+    /*
+    * Given a string, this function will return true if the email is a valid email address, false else
+     */
+    private boolean isEmailValid(String email) {
+        String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+        return isValidEntry(email, regex);
+    }
+
+    private boolean isUsernameValid(String userName) {
+        String regex = "";
+        return isValidEntry(userName, regex);
+    }
+
+    //private boolean isPasswordValid(String password, )
+
+    private boolean isValidEntry(String toBeTested, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher match = pattern.matcher(toBeTested);
+        return match.matches();
     }
 }
