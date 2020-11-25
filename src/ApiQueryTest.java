@@ -1,6 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -128,7 +129,7 @@ class ApiQueryTest {
         "Star Wars: Episode IX - The Rise of Skywalker", results.get(9).getTitle());
   }
 
-  @Test
+  /*@Test
   void testMovieSearchMultiPage() {
     ApiQuery apiQuery = new ApiQuery();
     ArrayList<SearchResult> results = apiQuery.searchMovies("star wars", 4);
@@ -136,5 +137,21 @@ class ApiQueryTest {
     Assertions.assertEquals("Star Wars: Episode IV - A New Hope", results.get(0).getTitle());
     Assertions.assertEquals(
         "Lego Star Wars: The Yoda Chronicles - Menace of the Sith", results.get(39).getTitle());
+  }*/
+
+  @Test
+  void testGetMovieJSON(){
+    ApiQuery apiQuery = new ApiQuery();
+    JSONObject json = apiQuery.getMovieJSON(76759);
+    apiQuery.writeJSON(json);
+  }
+
+  @Test
+  void testReadJSON(){
+    ApiQuery apiQuery = new ApiQuery();
+    Movie movie =
+        apiQuery.getMovieFromFile(
+            "D:\\CMPT 370\\group8/out/prefetchedMovies/StarWarsEpisodeIVANewHope.json");
+    System.out.println(movie.getMovieName());
   }
 }

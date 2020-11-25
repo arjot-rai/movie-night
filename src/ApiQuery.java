@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.json.simple.parser.JSONParser;
@@ -146,6 +149,91 @@ public class ApiQuery {
   }
 
   /**
+   * Retrieve information on a specific movie in JSON format
+   *
+   * @param imdbID int: the IMDB ID of the movie to retrieve
+   * @return a Movie object containing all the relevant information about the movie
+   */
+  public JSONObject getMovieJSON(int imdbID) {
+    String id;
+    // some 8 digit IDs exist, but all other IDs need to be padded to 7 digits
+    if (imdbID < 10000000) {
+      id = String.format("%07d", imdbID);
+    } else if (imdbID > 99999999) {
+      error = "Error: invalid IMDB ID";
+      return null;
+    } else {
+      id = ((Integer) imdbID).toString();
+    }
+
+    // &i for ID, &type=movie to only return movies, &plot=full to get full description
+    try {
+      URL url = new URL(omdbUrl + omdbApiKey + "&i=tt" + id + "&type=movie&plot=full");
+
+      // response code 200 means the URL is valid
+      if (isResponseCode200(url)) {
+        JSONObject json = convertStringToJSON(readTextFromURL(url));
+        if (json != null) {
+          return json;
+        } else {
+          error = "Error: could not read JSON";
+          return null;
+        }
+
+      } else return null;
+    } catch (IOException e) {
+      error = "Error: malformed URL";
+      return null;
+    }
+  }
+
+  public void writeJSON(JSONObject json){
+    String filePath = new File("").getAbsolutePath();
+    String path = "/out/prefetchedMovies/";
+    String fileName = (String) json.get("Title");
+    fileName = fileName.replaceAll("\\W", "");
+    fileName = filePath + path + fileName + ".json";
+    System.out.println(fileName);
+
+    try {
+      File newFile = new File(fileName);
+      if (newFile.createNewFile()) {
+        System.out.println("File created: " + newFile.getName());
+      } else {
+        System.out.println("File already exists.");
+      }
+
+      FileWriter myWriter = new FileWriter(fileName);
+      myWriter.write(json.toString() + "\n");
+      myWriter.close();
+
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+  }
+
+  public Movie getMovieFromFile(String filePath){
+    try {
+      File file = new File(filePath);
+      Scanner scanner = new Scanner(file);
+      JSONObject json = new JSONObject();
+      while (scanner.hasNextLine()) {
+        String data = scanner.nextLine();
+        JSONParser parser = new JSONParser();
+        json = (JSONObject) parser.parse(data);
+      }
+      scanner.close();
+
+      return formatMovie(json);
+    } catch (FileNotFoundException | ParseException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  /**
    * Get the last error thrown by the ApiRequest
    *
    * @return error - the string of the error message
@@ -198,6 +286,8 @@ public class ApiQuery {
       return false;
     }
   }
+
+
 
   private String readTextFromURL(URL url) {
     String inline = "";
