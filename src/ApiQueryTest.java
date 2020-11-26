@@ -159,7 +159,7 @@ class ApiQueryTest {
     ApiQuery apiQuery = new ApiQuery();
     ArrayList<Movie> movies = apiQuery.getAllCachedMovies();
     for (Movie movie : movies) {
-      System.out.println(movie.getMovieName());
+      assertNotEquals(null, movie.getMovieName());
     }
   }
 }

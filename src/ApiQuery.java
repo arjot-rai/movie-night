@@ -97,6 +97,7 @@ public class ApiQuery {
       if (isResponseCode200(url)) {
         JSONObject json = convertStringToJSON(readTextFromURL(url));
         if (json != null) {
+          writeJSON(json);
           return formatMovie(json);
         } else {
           error = "Error: could not read JSON";
@@ -135,6 +136,7 @@ public class ApiQuery {
       if (isResponseCode200(url)) {
         JSONObject json = convertStringToJSON(readTextFromURL(url));
         if (json != null) {
+          writeJSON(json);
           return formatMovie(json);
         } else {
           error = "Error: could not read JSON";
@@ -204,13 +206,12 @@ public class ApiQuery {
       File newFile = new File(fileName);
       if (newFile.createNewFile()) {
         System.out.println("File created: " + newFile.getName());
+        FileWriter myWriter = new FileWriter(fileName);
+        myWriter.write(json.toString() + "\n");
+        myWriter.close();
       } else {
         System.out.println("File already exists.");
       }
-
-      FileWriter myWriter = new FileWriter(fileName);
-      myWriter.write(json.toString() + "\n");
-      myWriter.close();
 
     } catch (IOException e) {
       System.out.println("An error occurred.");
@@ -382,5 +383,6 @@ public class ApiQuery {
     System.out.println(failedids);
   }
 
-  public static void main(String[] args) {}
+  public static void main(String[] args) {
+  }
 }
