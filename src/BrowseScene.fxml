@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BrowseScene">
+   <children>
+      <HBox layoutX="14.0" layoutY="14.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox prefHeight="400.0" prefWidth="152.0">
+               <children>
+                  <Accordion>
+                    <panes>
+                      <TitledPane animated="false" text="Genre">
+                           <content>
+                              <VBox prefHeight="400.0" prefWidth="151.0">
+                                 <children>
+                                    <ScrollPane prefHeight="354.0" prefWidth="130.0">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="508.0" prefWidth="111.0">
+                                             <children>
+                                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                                   <children>
+                                                      <CheckBox mnemonicParsing="false" text="Action" />
+                                                      <CheckBox mnemonicParsing="false" text="Adventure" />
+                                                      <CheckBox mnemonicParsing="false" text="Animation" />
+                                                      <CheckBox mnemonicParsing="false" text="Biography" />
+                                                      <CheckBox mnemonicParsing="false" text="Comedy" />
+                                                      <CheckBox mnemonicParsing="false" text="Crime" />
+                                                      <CheckBox mnemonicParsing="false" text="Documentary" />
+                                                      <CheckBox mnemonicParsing="false" text="Drama" />
+                                                      <CheckBox mnemonicParsing="false" text="Family" />
+                                                      <CheckBox mnemonicParsing="false" text="Fantasy" />
+                                                      <CheckBox mnemonicParsing="false" text="Film-Noir" />
+                                                      <CheckBox mnemonicParsing="false" text="Game-Show" />
+                                                      <CheckBox mnemonicParsing="false" text="History" />
+                                                      <CheckBox mnemonicParsing="false" text="Horror" />
+                                                      <CheckBox mnemonicParsing="false" text="Music" />
+                                                      <CheckBox mnemonicParsing="false" text="Musical" />
+                                                      <CheckBox mnemonicParsing="false" text="Mystery" />
+                                                      <CheckBox mnemonicParsing="false" text="News" />
+                                                      <CheckBox mnemonicParsing="false" text="Reality-TV" />
+                                                      <CheckBox mnemonicParsing="false" text="Romance" />
+                                                      <CheckBox mnemonicParsing="false" text="Sci-Fi" />
+                                                      <CheckBox mnemonicParsing="false" text="Sport" />
+                                                      <CheckBox mnemonicParsing="false" text="Talk-Show" />
+                                                      <CheckBox mnemonicParsing="false" text="Thriller" />
+                                                      <CheckBox mnemonicParsing="false" text="War" />
+                                                      <CheckBox mnemonicParsing="false" text="Western" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </ScrollPane>
+                                 </children>
+                              </VBox>
+                           </content></TitledPane>
+                      <TitledPane animated="false" prefHeight="52.0" prefWidth="152.0" text="Year">
+                           <content>
+                              <VBox prefHeight="78.0" prefWidth="152.0">
+                                 <children>
+                                    <TextField promptText="Enter a year" />
+                                 </children>
+                              </VBox>
+                           </content></TitledPane>
+                        <TitledPane animated="false" prefHeight="130.0" prefWidth="152.0" text="Rating">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="150.0">
+                                 <children>
+                                    <VBox layoutX="19.6" layoutY="19.6" prefHeight="125.0" prefWidth="131.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <CheckBox mnemonicParsing="false" text="G" />
+                                          <CheckBox mnemonicParsing="false" text="PG" />
+                                          <CheckBox mnemonicParsing="false" text="PG-13" />
+                                          <CheckBox mnemonicParsing="false" text="R" />
+                                          <CheckBox mnemonicParsing="false" text="NC-17" />
+                                       </children>
+                                    </VBox>
+                                 </children></AnchorPane>
+                          </content>
+                        </TitledPane>
+                    </panes>
+                  </Accordion>
+               </children></VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
