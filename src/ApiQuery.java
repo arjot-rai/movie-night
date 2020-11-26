@@ -97,6 +97,7 @@ public class ApiQuery {
       if (isResponseCode200(url)) {
         JSONObject json = convertStringToJSON(readTextFromURL(url));
         if (json != null) {
+          writeJSON(json);
           return formatMovie(json);
         } else {
           error = "Error: could not read JSON";
@@ -135,6 +136,7 @@ public class ApiQuery {
       if (isResponseCode200(url)) {
         JSONObject json = convertStringToJSON(readTextFromURL(url));
         if (json != null) {
+          writeJSON(json);
           return formatMovie(json);
         } else {
           error = "Error: could not read JSON";
@@ -187,9 +189,14 @@ public class ApiQuery {
     }
   }
 
-  public void writeJSON(JSONObject json){
+  /**
+   * write JSON data to a file
+   *
+   * @param json the JSON data to write
+   */
+  public void writeJSON(JSONObject json) {
     String filePath = new File("").getAbsolutePath();
-    String path = "/out/prefetchedMovies/";
+    String path = "/movieCache/";
     String fileName = (String) json.get("Title");
     fileName = fileName.replaceAll("\\W", "");
     fileName = filePath + path + fileName + ".json";
@@ -199,13 +206,12 @@ public class ApiQuery {
       File newFile = new File(fileName);
       if (newFile.createNewFile()) {
         System.out.println("File created: " + newFile.getName());
+        FileWriter myWriter = new FileWriter(fileName);
+        myWriter.write(json.toString() + "\n");
+        myWriter.close();
       } else {
         System.out.println("File already exists.");
       }
-
-      FileWriter myWriter = new FileWriter(fileName);
-      myWriter.write(json.toString() + "\n");
-      myWriter.close();
 
     } catch (IOException e) {
       System.out.println("An error occurred.");
@@ -213,7 +219,13 @@ public class ApiQuery {
     }
   }
 
-  public Movie getMovieFromFile(String filePath){
+  /**
+   * Read in JSON data from a file and convert it into a Movie object
+   *
+   * @param filePath the path to the JSON file
+   * @return a Movie object containing the movie data
+   */
+  public Movie getMovieFromFile(String filePath) {
     try {
       File file = new File(filePath);
       Scanner scanner = new Scanner(file);
@@ -233,6 +245,19 @@ public class ApiQuery {
     return null;
   }
 
+  public ArrayList<Movie> getAllCachedMovies() {
+    String filePath = new File("").getAbsolutePath();
+    File folder = new File(filePath + "/movieCache/");
+    File[] listOfFiles = folder.listFiles();
+
+    ArrayList<Movie> cachedMovies = new ArrayList<>();
+
+    for (File json : listOfFiles) {
+      cachedMovies.add(getMovieFromFile(json.getAbsolutePath()));
+    }
+    return cachedMovies;
+  }
+
   /**
    * Get the last error thrown by the ApiRequest
    *
@@ -248,7 +273,7 @@ public class ApiQuery {
       return null;
     }
     String title = (String) json.get("Title");
-    int id = Integer.parseInt(((String) json.get("imdbID")).replaceAll("t", ""));
+    int id = idStringToInt((String) json.get("imdbID"));
     String director = (String) json.get("Director");
     String releaseDate = (String) json.get("Released");
     String rating = (String) json.get("Rated");
@@ -275,6 +300,10 @@ public class ApiQuery {
     return movie;
   }
 
+  private int idStringToInt(String idString) {
+    return Integer.parseInt((idString).replaceAll("t", ""));
+  }
+
   private boolean isResponseCode200(URL url) {
     try {
       HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -286,8 +315,6 @@ public class ApiQuery {
       return false;
     }
   }
-
-
 
   private String readTextFromURL(URL url) {
     String inline = "";
@@ -320,5 +347,42 @@ public class ApiQuery {
     return input.replaceAll("\\s", "+");
   }
 
-  public static void main(String[] args) {}
+  private void generateMassJSON() {
+    ApiQuery apiQuery = new ApiQuery();
+    ArrayList<String> idStrings = new ArrayList<>();
+    try {
+      File file = new File("D:/CMPT 370/group8/src/movieIDs.txt");
+      Scanner scanner = new Scanner(file);
+
+      while (scanner.hasNextLine()) {
+        idStrings.add(scanner.nextLine());
+      }
+      scanner.close();
+
+    } catch (FileNotFoundException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+
+    ArrayList<Integer> ids = new ArrayList<>();
+    ArrayList<Integer> failedids = new ArrayList<>();
+
+    for (String idstring : idStrings) {
+      ids.add(apiQuery.idStringToInt(idstring));
+    }
+
+    for (Integer id : ids) {
+      try {
+        JSONObject json = apiQuery.getMovieJSON(id);
+        apiQuery.writeJSON(json);
+      } catch (Exception e) {
+        failedids.add(id);
+      }
+    }
+
+    System.out.println(failedids);
+  }
+
+  public static void main(String[] args) {
+  }
 }

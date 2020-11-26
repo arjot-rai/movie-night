@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -129,29 +130,36 @@ class ApiQueryTest {
         "Star Wars: Episode IX - The Rise of Skywalker", results.get(9).getTitle());
   }
 
-  /*@Test
+  @Test
   void testMovieSearchMultiPage() {
     ApiQuery apiQuery = new ApiQuery();
     ArrayList<SearchResult> results = apiQuery.searchMovies("star wars", 4);
     Assertions.assertEquals(40, results.size());
     Assertions.assertEquals("Star Wars: Episode IV - A New Hope", results.get(0).getTitle());
-    Assertions.assertEquals(
-        "Lego Star Wars: The Yoda Chronicles - Menace of the Sith", results.get(39).getTitle());
-  }*/
+  }
 
   @Test
-  void testGetMovieJSON(){
+  void testGetMovieJSON() {
     ApiQuery apiQuery = new ApiQuery();
     JSONObject json = apiQuery.getMovieJSON(76759);
     apiQuery.writeJSON(json);
   }
 
   @Test
-  void testReadJSON(){
+  void testReadJSON() {
     ApiQuery apiQuery = new ApiQuery();
+    String filePath = new File("").getAbsolutePath();
     Movie movie =
-        apiQuery.getMovieFromFile(
-            "D:\\CMPT 370\\group8/out/prefetchedMovies/StarWarsEpisodeIVANewHope.json");
-    System.out.println(movie.getMovieName());
+        apiQuery.getMovieFromFile(filePath + "/moviecache/StarWarsEpisodeIVANewHope.json");
+    Assertions.assertEquals("Star Wars: Episode IV - A New Hope", movie.getMovieName());
+  }
+
+  @Test
+  void testBuildMoviesFromCache() {
+    ApiQuery apiQuery = new ApiQuery();
+    ArrayList<Movie> movies = apiQuery.getAllCachedMovies();
+    for (Movie movie : movies) {
+      assertNotEquals(null, movie.getMovieName());
+    }
   }
 }
