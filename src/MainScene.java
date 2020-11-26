@@ -55,4 +55,8 @@ public class MainScene {
   public void pressedProfileButton(ActionEvent event) throws IOException {
     ProfileScene profileScene = new ProfileScene(model);
   }
+
+  public void pressedBrowseButton(ActionEvent event) throws IOException {
+    BrowseScene browseScene = new BrowseScene(model);
+  }
 }
