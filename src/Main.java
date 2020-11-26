@@ -11,18 +11,6 @@ public class Main extends Application {
 
         Server.connectServer("bolt://174.2.15.198:7687", "neo4j", "cmpt370");
 
-        /*Parent root = FXMLLoader.load(getClass().getResource("OpeningScene.fxml"));
-        Scene scene = new Scene(root, 600, 400);
-        Model model = new Model();
-
-        LogInScene logInScene = new LogInScene();
-        logInScene.setModel(model);
-
-        primaryStage.setTitle("Movie Night");
-
-        primaryStage.setScene(scene);
-        primaryStage.show();*/
-
         Model model = new Model();
         OpeningScene openingScene = new OpeningScene(model);
         openingScene.showStage();

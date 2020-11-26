@@ -30,9 +30,9 @@
                <children>
                   <Label alignment="TOP_LEFT" prefHeight="18.0" prefWidth="301.0" text="Login" />
                   <Pane prefHeight="51.0" prefWidth="301.0" />
-                  <TextField prefHeight="25.0" prefWidth="307.0" promptText="Username" />
+                  <TextField fx:id="username_field" prefHeight="25.0" prefWidth="307.0" promptText="Username" />
                   <Pane prefHeight="51.0" prefWidth="301.0" />
-                  <PasswordField prefHeight="25.0" prefWidth="340.0" promptText="Password" />
+                  <PasswordField fx:id="password_field" prefHeight="25.0" prefWidth="340.0" promptText="Password" />
                   <Pane prefHeight="29.0" prefWidth="301.0" />
                </children>
                <padding>

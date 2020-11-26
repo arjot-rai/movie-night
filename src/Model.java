@@ -10,7 +10,6 @@ public class Model {
 
   public Model() {
     apiQuery = new ApiQuery();
-    user = new User();
     subscribers = new ArrayList<>();
     stage = new Stage();
   }
