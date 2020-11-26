@@ -3,14 +3,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestDriver {
+public class ServerTestDriver {
 
 
   @Before
   public void serverTestSetUp(){
-  Server.connectServer("bolt://174.2.15.198:7687", "neo4j", "cmpt370");
+  //Server.connectServer("bolt://174.2.15.198:7687", "neo4j", "cmpt370");
   //this line is for my local testing, use my external IP above
-  //Server.connectServer("bolt://localhost:7687", "neo4j", "password");
+  Server.connectServer("bolt://localhost:7687", "neo4j", "password");
 
   //this top line is temporary as it will literally delete all
   // nodes but the source before beginning
@@ -192,6 +192,17 @@ public class TestDriver {
   System.out.println("Testing remove event...");
   Server.removeEvent("1");
   Assert.assertEquals(false, Server.getUsersEvents("BobUN").keySet().contains("1"));
+  System.out.println("Passed");
+
+  System.out.println("Testing add favourite movie...");
+  Server.addFavouriteMovie("Superbad", "BobUN");
+  Assert.assertEquals(true, Server.getUsersFavouriteMovies("BobUN").keySet().contains("Superbad"));
+  Assert.assertEquals(false, Server.getUsersFavouriteMovies("BobUN").keySet().contains("Scream"));
+  System.out.println("Passed");
+
+  System.out.println("Testing remove favourite movie...");
+  Server.removeFavouriteMovie("Superbad", "BobUN");
+  Assert.assertEquals(false, Server.getUsersFavouriteMovies("BobUN").keySet().contains("Superbad"));
   System.out.println("Passed");
 
   System.out.println("Great Success");

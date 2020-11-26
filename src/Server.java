@@ -65,20 +65,25 @@ public class Server {
    * and if it was all the attributes along side it
    */
   public static LogInReturn attemptLogIn(String username, String password){
-    try(Session session = driver.session()){
-      Result result = session.run("MATCH (a:Person) WHERE toLower(a.username)=$x1 AND a.password=$x2" +
-              " RETURN properties(a)",
-          parameters("x1",username.toLowerCase(), "x2", password));
-      if(result.hasNext()){
-        Map<String, Object> returnable = result.next().get("properties(a)").asMap();
-        //returnable.remove(password);
-        //find a way to remove the password, or never query it at all
-        return new LogInReturn(true, returnable);
+      try(Session session = driver.session()){
+        Result result = session.run("MATCH (a:Person) WHERE toLower(a.username)=$x1" +
+            " RETURN properties(a)",
+          parameters("x1",username.toLowerCase()));
+        if(result.hasNext()){
+          Map<String, Object> returnable = result.next().get("properties(a)").asMap();
 
+          if(PasswordHashing.checkHashedPassword(password, (byte[])returnable.get("password"),
+            (byte[])returnable.get("salt"))) {
+            return new LogInReturn(true, returnable);
+          }
+          else{
+            return new LogInReturn(false, null);
+          }
+
+        }
       }
+      return new LogInReturn(false, null);
     }
-    return new LogInReturn(false, null);
-  }
 
   //Person functions
 
@@ -110,11 +115,16 @@ public class Server {
   public static boolean addPerson(String username, String password, String first_name,
                   String last_name) {
     if (checkUsernameAvailability(username)) {
+
+      Map<String, byte[]> hashingInfo = PasswordHashing.hashNewPassword(password);
+
       try (Session session = driver.session()) {
         session.writeTransaction(transaction -> transaction.run("MERGE (a:Person " +
-                "{username:$x1, password:$x2, first_name:$x3, last_name:$x4})",
-            parameters("x1", username, "x2", password, "x3", first_name,
-                "x4", last_name)));
+            "{username:$x1, password:$x2, first_name:$x3, last_name:$x4, " +
+            "pic:\"https://gymblebucket.s3.ca-central-1.amazonaws.com/default_profile_pic.png\"," +
+            "salt:$x5})",
+          parameters("x1", username, "x2", hashingInfo.get("hashedPassword"),
+            "x3", first_name, "x4", last_name,  "x5", hashingInfo.get("salt"))));
         return true;
       }
     }
@@ -253,6 +263,62 @@ public class Server {
     System.out.println(services);
     return services;
   }
+
+  //Favourite movie functions
+
+  /**
+   * adds a favourite movie to the user's profile, without creating duplicates
+   * @param newMovie the title of the new movie
+   * @param username the user looking to add a movie
+   */
+  public static void addFavouriteMovie(String newMovie, String username){
+    try (Session session = driver.session()) {
+      session.writeTransaction(transaction -> transaction.run("MERGE (a:Movie {name:$x1})",
+        parameters("x1", newMovie)));
+      session.writeTransaction(transaction -> transaction.run("MATCH (a:Movie), (b:Person) " +
+        "WHERE toLower(a.name)=$x2 AND toLower(b.username)=$x1 " +
+        "CREATE (b)-[:FAVMOVIE]->(a) " +
+        "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", newMovie.toLowerCase())));
+    }
+  }
+
+  /**
+   * removes a favourite movie from a user's profile, without removing the movie from the database
+   * @param remove_movie the name of the movie to remove
+   * @param username the user to remove the movie from
+   */
+  public static void removeFavouriteMovie(String remove_movie, String username){
+    try(Session session = driver.session()){
+      session.writeTransaction(transaction -> transaction.run(
+        "MATCH (a:Person)-[e:FAVMOVIE]->(b:Movie) " +
+          "WHERE toLower(a.username)=$x1 AND toLower(b.name)=$x2 " +
+          "DELETE e",
+        parameters("x1", username.toLowerCase(), "x2", remove_movie.toLowerCase())));
+    }
+  }
+
+  /**
+   * Gets a hashmap of all the user's favourite movies
+   * @param username the user to get the movies from
+   * @return the movies
+   */
+  public static HashMap<String, Map<String, Object>> getUsersFavouriteMovies(String username){
+    HashMap<String, Map<String, Object>> movies = new HashMap<>();
+
+    try(Session session = driver.session()){
+      Result result = session.run("Match (a:Person)-[:FAVMOVIE]->(b:Movie) " +
+        "WHERE toLower(a.username)=$x1 Return properties(b) ", parameters("x1", username.toLowerCase()));
+      while(result.hasNext()){
+        Record record = result.next();
+        Map<String, Object> service = record.get("properties(b)").asMap();
+        movies.put(record.get("properties(b)").get("name").asString(),
+          service);
+      }
+    }
+    System.out.println(movies);
+    return movies;
+  }
+
 
   //Friendship functions
   /**
@@ -642,6 +708,30 @@ public class Server {
       session.writeTransaction(transaction -> transaction.run("Match (a:Event)-[m:EVENTMOVIE]->(b:EventMovie) " +
           "Where a.id=$x1 and toLower(b.name)=$x2 AND b.eventId=$x1 Set b.vote=$x3",
         parameters("x1", eventId, "x2", movieTitle.toLowerCase(), "x3", Integer.toString(intCount))));
+    }
+  }
+
+  /**
+   * remove a single vote from one of the movies
+   * @param movieTitle the movie that got the removal
+   * @param eventId the event id where someone removed a voted
+   */
+  public static void reduceMovieVote(String movieTitle, String eventId){
+    try (Session session = driver.session()) {
+      Result result = session.run("Match (a:Event)-[m:EVENTMOVIE]->(b:EventMovie) " +
+        "Where a.id=$x1 and toLower(b.name)=$x2 AND b.eventId=$x1  " +
+        "Return properties(b)", parameters("x1", eventId, "x2", movieTitle.toLowerCase()));
+      int intCount = Integer.parseInt(result.next().get("properties(b)").asMap().get("vote").toString()) - 1;
+      int vote;
+      if(intCount < 0){
+        vote = 0;
+      }
+      else{
+        vote = intCount;
+      }
+      session.writeTransaction(transaction -> transaction.run("Match (a:Event)-[m:EVENTMOVIE]->(b:EventMovie) " +
+          "Where a.id=$x1 and toLower(b.name)=$x2 AND b.eventId=$x1 Set b.vote=$x3",
+        parameters("x1", eventId, "x2", movieTitle.toLowerCase(), "x3", Integer.toString(vote))));
     }
   }
 
