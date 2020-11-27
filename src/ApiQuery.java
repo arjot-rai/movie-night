@@ -64,7 +64,7 @@ public class ApiQuery {
                       Integer.parseInt(
                           ((String) ((JSONObject) jsonArray.get(j)).get("imdbID"))
                               .replaceAll("t", ""));
-                  String posterUrl = (String) json.get("Poster");
+                  String posterUrl = (String) ((JSONObject) jsonArray.get(j)).get("Poster");
                   SearchResult result = new SearchResult(title, year, id, posterUrl);
                   results.add(result);
                 }
@@ -113,7 +113,7 @@ public class ApiQuery {
                 int id =
                     Integer.parseInt(
                         ((String) ((JSONObject) jsonArray.get(j)).get("imdbID")).replaceAll("t", ""));
-                String posterUrl = (String) json.get("Poster");
+                String posterUrl = (String) ((JSONObject) jsonArray.get(j)).get("Poster");
                 SearchResult result = new SearchResult(title, year, id, posterUrl);
                 results.add(result);
               }
