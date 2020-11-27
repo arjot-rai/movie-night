@@ -1,37 +1,42 @@
 import java.util.ArrayList;
 
 public class FriendList {
-  public ArrayList<Integer> confirmedFriends;
+  public ArrayList<String> confirmedFriends;
 
-  public ArrayList<Integer> friendInvites;
+  public ArrayList<String> friendInvites;
+
+  public ArrayList<String> pendingInvites;
 
   public FriendList(){
     confirmedFriends = new ArrayList<>();
     friendInvites = new ArrayList<>();
+    pendingInvites = new ArrayList<>();
   }
 
-  public void addFriend(int userID){
-    confirmedFriends.add(userID);
+  public void addFriend(String username){
+    confirmedFriends.add(username);
   }
 
-  public void removeFriend(int userID){
-    confirmedFriends.remove((Object)userID);
+  public void removeFriend(String username){
+    confirmedFriends.remove((Object)username);
   }
 
-  public void acceptInvite(int userID){
+  public void acceptInvite(String username){
     // userID has to be casted to Object, otherwise treated as an index
-    friendInvites.remove((Object)userID);
-    confirmedFriends.add(userID);
+    friendInvites.remove((Object)username);
+    confirmedFriends.add(username);
   }
 
-  public void rejectInvite(int userID){
+  public void rejectInvite(String username){
     // userID has to be casted to Object, otherwise treated as an index
-    friendInvites.remove((Object)userID);
+    friendInvites.remove((Object)username);
   }
 
-  public void addInvitation(int userID){
-    friendInvites.add(userID);
+  public void addInvitation(String username){
+    friendInvites.add(username);
   }
+
+  public void addPending(String username){pendingInvites.add(username); }
 
   public static void main(String[] args){
 
