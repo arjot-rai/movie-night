@@ -1,12 +1,14 @@
 import java.util.ArrayList;
+import java.util.Map;
+import jdk.jfr.Frequency;
 
 public class User{
 
   private static String userName = "";
 
-  private static int userID = 0;
+  private static String first_name;
 
-  private static String userPassword = "";
+  private static String last_name;
 
   private static ArrayList<String> streamingServices = new ArrayList<>();
 
@@ -22,22 +24,23 @@ public class User{
 
   /**
    *
-   * @param userName: String; the user name of the user
-   * @param password: String; password the user is using
-   * @param id: int; a unique identifier for the user
+   * @param attributes:
    */
-  public static void initialize(String userName, String password, int id){
-    User.userID = id;
+  public static void initialize(Map<String, Object> attributes){
     User.userName = userName;
-    User.userPassword = password;
-  }
+    if(attributes.containsKey("username")){
+      userName = attributes.get("username").toString();
+    }
+    if(attributes.containsKey("first_name")){
+      first_name = attributes.get("first_name").toString();
+    }
+    if(attributes.containsKey("last_name")){
+      last_name = attributes.get("last_name").toString();
+    }
 
-  public static void setUserID(int id){
-    User.userID = id;
-  }
-
-  public static int getUserID(){
-    return User.userID;
+    updateFriends();
+    updateFriendRequests();
+    updatePendingRequests();
   }
 
   public static String getUserName() {
@@ -48,24 +51,14 @@ public class User{
     User.userName = userName;
   }
 
-  public static void changePassword(String newPassword){
-    User.userPassword = newPassword;
-  }
-
   public static void addStream(String streamName){
     User.streamingServices.add(streamName);
   }
 
   public static boolean removeStream(String streamName){
     return User.streamingServices.remove(streamName);
-  }
 
-  public static String getUserPassword() {
-    return User.userPassword;
-  }
 
-  public static void setUserPassword(String userPassword) {
-    User.userPassword = userPassword;
   }
 
   public static ArrayList<String> getStreamingServices(){
@@ -84,12 +77,39 @@ public class User{
     return eventList;
   }
 
+  public static void updateFriends(){
+    Object[] friendsNames = Server.getAllFriends(userName).keySet().toArray();
+    for (Object name : friendsNames) {
+      friendList.addFriend(name.toString());
+    }
+  }
+
+  public static void updateFriendRequests(){
+    Object[] friendRequests = Server.getFriendRequests(userName).keySet().toArray();
+    for (Object name : friendRequests) {
+      friendList.addInvitation(name.toString());
+    }
+  }
+
+  public static void updatePendingRequests(){
+    Object[] pendingRequests = Server.getPendingRequests(userName).keySet().toArray();
+    for (Object name : pendingRequests) {
+      friendList.addPending((name.toString()));
+    }
+  }
+
+  public static void clearAttributes(){
+    userName = "";
+    first_name = "";
+    last_name = "";
+  }
+
   public static void main(String[] args) {
-    User.initialize("soro", "cmpt370", 1);
-    FriendList f = User.getFriendList();
-    f.addFriend(2);
-    f.addFriend(3);
-    System.out.println(User.getFriendList().confirmedFriends.toString());
+    //User.initialize("soro");
+    //FriendList f = User.getFriendList();
+    //f.addFriend(userName);
+    //f.addFriend(userName);
+    //System.out.println(User.getFriendList().confirmedFriends.toString());
   }
 
 }
