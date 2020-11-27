@@ -8,6 +8,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -77,7 +79,12 @@
                            <content>
                               <VBox prefHeight="78.0" prefWidth="152.0">
                                  <children>
-                                    <TextField fx:id="year_textfield" promptText="Enter a year" />
+                                    <TextField fx:id="startyear_textfield" promptText="Start Year" />
+                                    <TextField fx:id="endyear_textfield" promptText="End Year">
+                                       <VBox.margin>
+                                          <Insets top="10.0" />
+                                       </VBox.margin>
+                                    </TextField>
                                  </children>
                               </VBox>
                            </content></TitledPane>
@@ -102,16 +109,27 @@
                </children></VBox>
             <VBox prefHeight="400.0" prefWidth="450.0">
                <children>
-                  <TextField fx:id="searchbar_textfield">
+                  <TextField fx:id="searchbar_textfield" promptText="Enter a movie title...">
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>
                   </TextField>
-                  <ScrollPane prefHeight="365.0" prefWidth="450.0">
+                  <ScrollPane fx:id="movie_scrollpane" prefHeight="365.0" prefWidth="450.0">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="363.0" prefWidth="447.0">
+                      <AnchorPane fx:id="movie_anchorpane" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="435.0">
                            <children>
-                              <VBox prefHeight="200.0" prefWidth="450.0" />
+                              <GridPane fx:id="movie_gridpane" hgap="10.0" prefHeight="0.0" prefWidth="435.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="75.0" prefWidth="75.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                 <padding>
+                                    <Insets left="5.0" right="5.0" />
+                                 </padding>
+                              </GridPane>
                            </children>
                         </AnchorPane>
                     </content>
