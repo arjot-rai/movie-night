@@ -57,7 +57,6 @@ public class MainScene {
     ApiQuery apiQuery = new ApiQuery();
     featuredMovies = getFeaturedMovies(apiQuery.getAllCachedMovies(), FEATURED_MOVIE_LIST_SIZE);
     initializeFeatureMovieScreen();
-    User.getFriendList().friendInvites.add("arjot");
     setFriends_scroll_space();
     setRequest_scroll_space();
   }
@@ -171,12 +170,14 @@ public class MainScene {
 
   private void onFriendRequestAccept(Button button, String userName){
     User.getFriendList().acceptInvite(userName);
+    Server.acceptFriendRequest(userName, User.getUserName());
     setRequest_scroll_space();
     setFriends_scroll_space();
   }
 
   private void onFriendRequestReject(Button button, String userName){
     User.getFriendList().rejectInvite(userName);
+    Server.removeFriendRequest(userName, User.getUserName());
     setRequest_scroll_space();
   }
 }
