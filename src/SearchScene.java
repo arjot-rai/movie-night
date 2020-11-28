@@ -18,7 +18,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
-
 public class SearchScene {
   private Model model;
   private ApiQuery apiQuery;
@@ -27,18 +26,41 @@ public class SearchScene {
   private int pagesQueried = 0;
   private String searchText;
 
-  //private ImageView movieImage;
+  // private ImageView movieImage;
 
-  @FXML private CheckBox action_checkbox, adventure_checkbox, animation_checkbox,
-      biography_checkbox, comedy_checkbox, crime_checkbox, documentary_checkbox, drama_checkbox,
-      family_checkbox, fantasy_checkbox, filmnoir_checkbox, gameshow_checkbox, history_checkbox,
-      horror_checkbox, music_checkbox, musical_checkbox, mystery_checkbox, news_checkbox,
-      reality_checkbox, romance_checkbox, scifi_checkbox, sport_checkbox, talkshow_checkbox,
-      thriller_checkbox, war_checkbox, western_checkbox;
-
-  @FXML private CheckBox g_rating_checkbox, pg_rating_checkbox, pg13_rating_checkbox,
-      r_rating_checkbox, nc17_rating_checkbox;
-
+  @FXML
+  private CheckBox action_checkbox,
+      adventure_checkbox,
+      animation_checkbox,
+      biography_checkbox,
+      comedy_checkbox,
+      crime_checkbox,
+      documentary_checkbox,
+      drama_checkbox,
+      family_checkbox,
+      fantasy_checkbox,
+      filmnoir_checkbox,
+      gameshow_checkbox,
+      history_checkbox,
+      horror_checkbox,
+      music_checkbox,
+      musical_checkbox,
+      mystery_checkbox,
+      news_checkbox,
+      reality_checkbox,
+      romance_checkbox,
+      scifi_checkbox,
+      sport_checkbox,
+      talkshow_checkbox,
+      thriller_checkbox,
+      war_checkbox,
+      western_checkbox;
+  @FXML
+  private CheckBox g_rating_checkbox,
+      pg_rating_checkbox,
+      pg13_rating_checkbox,
+      r_rating_checkbox,
+      nc17_rating_checkbox;
   @FXML private TextField startyear_textfield, endyear_textfield, searchbar_textfield;
 
   @FXML private GridPane movie_gridpane;
@@ -46,7 +68,6 @@ public class SearchScene {
   @FXML private AnchorPane movie_anchorpane;
 
   @FXML private ScrollPane movie_scrollpane;
-
 
   public SearchScene(Model newModel, String searchText) {
     model = newModel;
@@ -66,12 +87,15 @@ public class SearchScene {
       searchbar_textfield.setText(searchText);
 
       ScrollBar scrollBar = (ScrollBar) movie_scrollpane.lookup(".scroll-bar:vertical");
-      scrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
-        if ((Double) newValue == 1.0) {
-          System.out.println("Bottom!");
-          getResults();
-        }
-      });
+      scrollBar
+          .valueProperty()
+          .addListener(
+              (observable, oldValue, newValue) -> {
+                if ((Double) newValue == 1.0) {
+                  System.out.println("Bottom!");
+                  getResults();
+                }
+              });
 
       getResults();
     } catch (IOException e) {
@@ -87,27 +111,34 @@ public class SearchScene {
     SearchScene newSearchScene = new SearchScene(model, searchbar_textfield.getText());
   }
 
-  public void getResults(){
+  /** tries to fetch the next page of search results and display them in the window */
+  public void getResults() {
     searchList.addAll(apiQuery.searchMovies(searchText, pagesQueried + 1, pagesQueried + 2));
-    pagesQueried += 2;
+    pagesQueried += 2; // 2x10 movies to fill the screen
     for (int rowIndex = rowsDisplayed; rowIndex < rowsDisplayed + 4; rowIndex++) {
-      if(rowIndex * 5 < searchList.size()){
-        movie_anchorpane.setMinSize(movie_anchorpane.getMinWidth(), movie_anchorpane.getMinHeight() + 122);
+      if (rowIndex * 5 < searchList.size()) { // check if there are more movies to add
+        movie_anchorpane.setMinSize(
+            movie_anchorpane.getMinWidth(), movie_anchorpane.getMinHeight() + 122);
       }
       for (int columnIndex = 0; columnIndex < 5; columnIndex++) {
-        if(rowIndex * 5 + columnIndex < searchList.size()){
+        if (rowIndex * 5 + columnIndex
+            < searchList.size()) { // check that you havent run out of results
           Image image;
-          try{
-            image = new Image(searchList.get(rowIndex * 5 + columnIndex).getPosterUrl(), 75, 112, false, false);
-          }
-          catch (Exception e){
+          try {
+            image =
+                new Image(
+                    searchList.get(rowIndex * 5 + columnIndex).getPosterUrl(),
+                    75,
+                    112,
+                    false,
+                    false);
+          } catch (Exception e) {
             String filePath = new File("").getAbsolutePath();
             FileInputStream inputstream;
-            try{
-               inputstream = new FileInputStream(filePath + "/img/placeholder.png");
-            }
-            catch (FileNotFoundException fnfe)
-            {
+            try {
+              // use placeholder image if failed to retrieve from url
+              inputstream = new FileInputStream(filePath + "/img/placeholder.png");
+            } catch (FileNotFoundException fnfe) {
               break;
             }
             image = new Image(inputstream, 75, 112, false, false);
@@ -121,9 +152,8 @@ public class SearchScene {
           movie_gridpane.add(button, columnIndex, rowIndex);
           GridPane.setHalignment(button, HPos.CENTER);
         }
-        }
+      }
     }
     rowsDisplayed = rowsDisplayed + 4;
   }
-
 }
