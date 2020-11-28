@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -16,6 +17,8 @@ import java.io.IOException;
 public class MainScene {
 
   private Model model;
+
+  @FXML private TextField movie_search;
   @FXML private Button logout_button;
   @FXML private Button profile_button;
   @FXML private TextArea featured_Text_Area;
@@ -62,8 +65,12 @@ public class MainScene {
     BrowseScene browseScene = new BrowseScene(model);
   }
 
+  public void pressedSearch(ActionEvent event) throws IOException {
+    SearchScene searchScene = new SearchScene(model, movie_search.getText());
+  }
   /**
    * Helper function to obtain a number of movies randomly from a larger list of movies
+   *
    * @param cachedMovies: ArrayList<Movie>; the list of all cached movies
    * @param size: int; the number of random movies needed
    * @return a randomly generated list of movies
@@ -71,16 +78,14 @@ public class MainScene {
   private ArrayList<Movie> getFeaturedMovies(ArrayList<Movie> cachedMovies, int size) {
     Collections.shuffle(cachedMovies);
     ArrayList<Movie> featuredList = new ArrayList<>();
-    for(int i =0; i < size; ++i){
+    for (int i = 0; i < size; ++i) {
       featuredList.add(cachedMovies.get(i));
     }
     return featuredList;
   }
 
-  /**
-   *  Initializes elements for the featured movie section
-   */
-  private void initializeFeatureMovieScreen(){
+  /** Initializes elements for the featured movie section */
+  private void initializeFeatureMovieScreen() {
     featured1_button.setOnAction(event -> featuredButtonOnClick(featured1_button));
     featured2_button.setOnAction(event -> featuredButtonOnClick(featured2_button));
     featured3_button.setOnAction(event -> featuredButtonOnClick(featured3_button));
@@ -91,26 +96,41 @@ public class MainScene {
 
   /**
    * helper function that gets fired on a click of a button
+   *
    * @param button: button element
    */
-  private void featuredButtonOnClick(Button button){
-    Movie movie = featuredMovies.get(Character.getNumericValue(button.getId()
-        .charAt(FEATURED_TEXT_LENGTH))-1);
+  private void featuredButtonOnClick(Button button) {
+    Movie movie =
+        featuredMovies.get(
+            Character.getNumericValue(button.getId().charAt(FEATURED_TEXT_LENGTH)) - 1);
     setElements(movie);
   }
 
   /**
    * helper function to set up the image view and text area for a movie
+   *
    * @param movie: Movie; the movie that needs to be displayed
    */
-  private void setElements(Movie movie){
-    Image image = new Image(movie.getMoviePosterUrl(), movie_Poster.getFitWidth(),
-        movie_Poster.getFitHeight(), false, false);
+  private void setElements(Movie movie) {
+    Image image =
+        new Image(
+            movie.getMoviePosterUrl(),
+            movie_Poster.getFitWidth(),
+            movie_Poster.getFitHeight(),
+            false,
+            false);
     movie_Poster.setImage(image);
 
-    String text = movie.getMovieName() + "\n" + movie.getMoviePlot() + "\n" + "Director(s): " +
-        movie.getMovieDirector() + "\n" + "Actors: " + movie.getMovieActor().toString()
-        .replace("[", "").replace("]", "");
+    String text =
+        movie.getMovieName()
+            + "\n"
+            + movie.getMoviePlot()
+            + "\n"
+            + "Director(s): "
+            + movie.getMovieDirector()
+            + "\n"
+            + "Actors: "
+            + movie.getMovieActor().toString().replace("[", "").replace("]", "");
     featured_Text_Area.setText(text);
   }
 }

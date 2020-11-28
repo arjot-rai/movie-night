@@ -76,7 +76,7 @@ public class BrowseScene {
   }
 
   public void onSearch(ActionEvent event) throws IOException {
-
+    SearchScene newSearchScene = new SearchScene(model, searchbar_textfield.getText());
   }
 
 
