@@ -39,7 +39,7 @@
                </children></VBox>
             <VBox prefHeight="400.0" prefWidth="450.0">
                <children>
-                  <TextField fx:id="searchbar_textfield" promptText="Enter a movie title...">
+                  <TextField fx:id="searchbar_textfield" onAction="#onSearch" promptText="Enter a movie title...">
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>
