@@ -162,4 +162,11 @@ class ApiQueryTest {
       assertNotEquals(null, movie.getMovieName());
     }
   }
+
+  @Test
+  void testInvalidSearch() {
+    ApiQuery apiQuery = new ApiQuery();
+    ArrayList<SearchResult> movies = apiQuery.searchMovies("a");
+    assertEquals(0, movies.size());
+  }
 }
