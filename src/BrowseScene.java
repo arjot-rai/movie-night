@@ -88,13 +88,16 @@ public class BrowseScene {
     for (int rowIndex = rowsDisplayed; rowIndex < rowsDisplayed + 3; rowIndex++) {
       movie_anchorpane.setMinSize(movie_anchorpane.getMinWidth(), movie_anchorpane.getMinHeight() + 122);
       for (int columnIndex = 0; columnIndex < 5; columnIndex++) {
-        Image image = new Image(movieArrayList.get(rowIndex * 5 + columnIndex).getMoviePosterUrl(),
+        Movie movie = movieArrayList.get(rowIndex * 5 + columnIndex);
+        Image image = new Image(movie.getMoviePosterUrl(),
             75, 112, false, false);
         ImageView movieImage = new ImageView(image);
 
         Button button = new Button();
         button.setGraphic(movieImage);
         button.setMaxSize(75, 112);
+        button.setOnAction(actionEvent -> {MovieScene movieScene = new MovieScene(model,
+            movie, model.stage.getScene());});
         movie_gridpane.add(button, columnIndex, rowIndex);
         GridPane.setHalignment(button, HPos.CENTER);
       }

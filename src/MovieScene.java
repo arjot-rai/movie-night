@@ -4,20 +4,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 
 public class MovieScene {
   private Model model;
   private Movie movie;
   private Scene scene;
-  @FXML private TextField movie_name_textfield, movie_desc, release_date, director, streaming_services;
+  @FXML private Label movie_name, movie_desc, release_date, director, streaming_services;
 
   @FXML private Button back_button;
 
   public MovieScene(Model newModel, Movie newMovie, Scene oldScene) {
     model = newModel;
     movie = newMovie;
-    scene = oldScene;
+    //scene = oldScene;
 
     try {
       FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieScene.fxml"));
@@ -45,7 +45,7 @@ public class MovieScene {
    * Sets the text fields to the information given by the Movie object passed in.
    */
   private void setUpMovieDetails() {
-    movie_name_textfield.setText(movie.getMovieName());
+    movie_name.setText(movie.getMovieName());
     movie_desc.setText(movie.getMoviePlot());
     director.setText(movie.getMovieDirector());
     release_date.setText(movie.getMovieReleaseDate());
