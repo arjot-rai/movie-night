@@ -221,7 +221,7 @@ public class Server {
         parameters("x1", newService)));
       session.writeTransaction(transaction -> transaction.run("MATCH (a:StreamingService), (b:Person) " +
         "WHERE toLower(a.name)=$x2 AND toLower(b.username)=$x1 " +
-        "CREATE (b)-[:STREAMINGSERVICE]->(a) " +
+        "MERGE (b)-[:STREAMINGSERVICE]->(a) " +
         "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", newService.toLowerCase())));
     }
   }
@@ -276,7 +276,7 @@ public class Server {
         parameters("x1", newMovie)));
       session.writeTransaction(transaction -> transaction.run("MATCH (a:Movie), (b:Person) " +
         "WHERE toLower(a.name)=$x2 AND toLower(b.username)=$x1 " +
-        "CREATE (b)-[:FAVMOVIE]->(a) " +
+        "MERGE (b)-[:FAVMOVIE]->(a) " +
         "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", newMovie.toLowerCase())));
     }
   }
@@ -329,12 +329,12 @@ public class Server {
     try(Session session = driver.session()){
       session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Person) " +
           "WHERE toLower(a.username)=$x1 and toLower(b.username)=$x2 " +
-          "CREATE (a)-[f:FRIENDS]->(b) " +
+          "MERGE (a)-[f:FRIENDS]->(b) " +
           "RETURN a,b", parameters("x1", username1.toLowerCase(),
           "x2", username2.toLowerCase())));
       session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Person) " +
           "WHERE toLower(a.username)=$x1 AND toLower(b.username)=$x2 " +
-          "CREATE (a)-[f:FRIENDS]->(b) " +
+          "MERGE (a)-[f:FRIENDS]->(b) " +
           "RETURN a,b", parameters("x1", username2.toLowerCase(),
           "x2", username1.toLowerCase())));
     }
@@ -392,12 +392,12 @@ public class Server {
     try(Session session = driver.session()){
       session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Person) " +
           "WHERE toLower(a.username)=$x1 and toLower(b.username)=$x2 " +
-          "CREATE (a)-[f:FRIENDREQUEST]->(b) " +
+          "MERGE (a)-[f:FRIENDREQUEST]->(b) " +
           "RETURN a,b", parameters("x1", sender.toLowerCase(),
           "x2", receiver.toLowerCase())));
       session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Person) " +
           "WHERE toLower(a.username)=$x1 AND toLower(b.username)=$x2 " +
-          "CREATE (a)-[f:REQUESTPENDING]->(b) " +
+          "MERGE (a)-[f:REQUESTPENDING]->(b) " +
           "RETURN a,b", parameters("x1", receiver.toLowerCase(),
           "x2", sender.toLowerCase())));
     }
@@ -530,12 +530,12 @@ public class Server {
               "x5", getNextEventId())));
       session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
           "WHERE toLower(a.username)=$x1 and toLower(b.eventName)=$x2 " +
-          "CREATE (a)-[:EVENTORGANIZER]->(b) " +
+          "MERGE (a)-[:EVENTORGANIZER]->(b) " +
           "RETURN a,b", parameters("x1", organizer.toLowerCase(),
           "x2", eventName.toLowerCase())));
       session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
           "WHERE toLower(a.username)=$x1 and toLower(b.eventName)=$x2 " +
-          "CREATE (b)-[:EVENTATTENDEE]->(a) " +
+          "MERGE (b)-[:EVENTATTENDEE]->(a) " +
           "RETURN a,b", parameters("x1", organizer.toLowerCase(),
           "x2", eventName.toLowerCase())));
       increaseEventId();
@@ -607,11 +607,11 @@ public class Server {
     try(Session session = driver.session()){
       session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
           "WHERE toLower(a.username)=$x1 and b.id=$x2 " +
-          "CREATE (a)-[f:INVITEPENDING]->(b) " +
+          "MERGE (a)-[f:INVITEPENDING]->(b) " +
           "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", eventId)));
       session.writeTransaction(transaction -> transaction.run("MATCH(a:Event),(b:Person) " +
           "WHERE a.id=$x1 AND toLower(b.username)=$x2 " +
-          "CREATE (a)-[f:EVENTINVITE]->(b) " +
+          "MERGE (a)-[f:EVENTINVITE]->(b) " +
           "RETURN a,b", parameters("x1", eventId, "x2", username.toLowerCase())));
     }
   }
@@ -626,11 +626,11 @@ public class Server {
     try(Session session = driver.session()){
       session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
         "WHERE toLower(a.username)=$x1 and b.id=$x2 " +
-        "CREATE (a)-[f:ATTENDINGEVENT]->(b) " +
+        "MERGE (a)-[f:ATTENDINGEVENT]->(b) " +
         "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", eventId)));
       session.writeTransaction(transaction -> transaction.run("MATCH(a:Event),(b:Person) " +
         "WHERE a.id=$x1 AND toLower(b.username)=$x2 " +
-        "CREATE (a)-[f:EVENTATTENDEE]->(b) " +
+        "MERGE (a)-[f:EVENTATTENDEE]->(b) " +
         "RETURN a,b", parameters("x1", eventId, "x2", username.toLowerCase())));
     }
   }
@@ -688,7 +688,7 @@ public class Server {
         parameters("x1", movieTitle, "x2", eventId)));
       session.writeTransaction(transaction -> transaction.run("MATCH (a:EventMovie), (b:Event) " +
         "WHERE toLower(a.name)=$x1 AND a.eventId=$x2 AND b.id=$x2 " +
-        "CREATE (b)-[:EVENTMOVIE]->(a) " +
+        "MERGE (b)-[:EVENTMOVIE]->(a) " +
         "RETURN a,b", parameters("x1", movieTitle.toLowerCase(), "x2", eventId)));
     }
   }
