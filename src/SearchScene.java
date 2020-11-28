@@ -3,10 +3,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -22,45 +24,13 @@ public class SearchScene {
   private Model model;
   private ApiQuery apiQuery;
   private ArrayList<SearchResult> searchList = new ArrayList<>();
+  private ArrayList<Button> displayedMovies = new ArrayList<>();
+  private ArrayList<Button> filteredMovies = new ArrayList<>();
   private int rowsDisplayed;
   private int pagesQueried = 0;
   private String searchText;
+  private int checkPages = 0;
 
-  // private ImageView movieImage;
-
-  @FXML
-  private CheckBox action_checkbox,
-      adventure_checkbox,
-      animation_checkbox,
-      biography_checkbox,
-      comedy_checkbox,
-      crime_checkbox,
-      documentary_checkbox,
-      drama_checkbox,
-      family_checkbox,
-      fantasy_checkbox,
-      filmnoir_checkbox,
-      gameshow_checkbox,
-      history_checkbox,
-      horror_checkbox,
-      music_checkbox,
-      musical_checkbox,
-      mystery_checkbox,
-      news_checkbox,
-      reality_checkbox,
-      romance_checkbox,
-      scifi_checkbox,
-      sport_checkbox,
-      talkshow_checkbox,
-      thriller_checkbox,
-      war_checkbox,
-      western_checkbox;
-  @FXML
-  private CheckBox g_rating_checkbox,
-      pg_rating_checkbox,
-      pg13_rating_checkbox,
-      r_rating_checkbox,
-      nc17_rating_checkbox;
   @FXML private TextField startyear_textfield, endyear_textfield, searchbar_textfield;
 
   @FXML private GridPane movie_gridpane;
@@ -111,14 +81,41 @@ public class SearchScene {
     SearchScene newSearchScene = new SearchScene(model, searchbar_textfield.getText());
   }
 
-  /** tries to fetch the next page of search results and display them in the window */
+  public void yearFilterPressed(){
+    checkPages = 0;
+    filterYear();
+  }
+
+  public void filterYear(){
+    int startYear;
+    int endYear;
+    try{
+       startYear = Integer.parseInt(startyear_textfield.getText());
+    }
+    catch(Exception e){
+      startYear = 0;
+    }
+
+    try{
+      endYear = Integer.parseInt(endyear_textfield.getText());
+    }
+    catch(Exception e){
+      endYear = 10000;
+    }
+    filterResults(startYear, endYear);
+    condenseFilteredResults();
+  }
+
+  /**
+   * tries to fetch the next page of search results and display them in the window
+   */
   public void getResults() {
     searchList.addAll(apiQuery.searchMovies(searchText, pagesQueried + 1, pagesQueried + 2));
     pagesQueried += 2; // 2x10 movies to fill the screen
     for (int rowIndex = rowsDisplayed; rowIndex < rowsDisplayed + 4; rowIndex++) {
       if (rowIndex * 5 < searchList.size()) { // check if there are more movies to add
         movie_anchorpane.setMinSize(
-            movie_anchorpane.getMinWidth(), movie_anchorpane.getMinHeight() + 122);
+            movie_anchorpane.getMinWidth(), movie_anchorpane.getMinHeight() + 132);
       }
       for (int columnIndex = 0; columnIndex < 5; columnIndex++) {
         if (rowIndex * 5 + columnIndex
@@ -149,11 +146,40 @@ public class SearchScene {
           Button button = new Button();
           button.setGraphic(movieImage);
           button.setMaxSize(75, 112);
+          displayedMovies.add(button);
           movie_gridpane.add(button, columnIndex, rowIndex);
           GridPane.setHalignment(button, HPos.CENTER);
         }
       }
     }
     rowsDisplayed = rowsDisplayed + 4;
+    filterYear();
+    condenseFilteredResults();
+  }
+
+  private void filterResults(int startYear, int endYear){
+    filteredMovies.clear();
+    for (int i = 0; i < searchList.size(); i++) {
+        int year = Integer.parseInt(searchList.get(i).getYear());
+        if(year < startYear || year > endYear){
+          movie_gridpane.getChildren().remove(displayedMovies.get(i));
+        }
+        else{
+          filteredMovies.add(displayedMovies.get(i));
+        }
+    }
+  }
+
+  private void condenseFilteredResults(){
+    movie_gridpane.getChildren().clear();
+    for(int i = 0; i < filteredMovies.size(); i++){
+      movie_gridpane.add(filteredMovies.get(i), i % 5, i / 5);
+    }
+
+    movie_anchorpane.setMinSize(movie_anchorpane.getMinWidth(), (float)(filteredMovies.size() / 5 * 132 - 10));
+    if (filteredMovies.size() < 15 && checkPages < 3) {
+      checkPages++;
+      getResults();
+    }
   }
 }

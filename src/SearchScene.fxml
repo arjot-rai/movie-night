@@ -31,6 +31,10 @@
                                           <Insets top="10.0" />
                                        </VBox.margin>
                                     </TextField>
+                                    <Button fx:id="year_filter_button" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#yearFilterPressed" text="Filter">
+                                       <VBox.margin>
+                                          <Insets top="10.0" />
+                                       </VBox.margin></Button>
                                  </children>
                               </VBox>
                            </content></TitledPane>
