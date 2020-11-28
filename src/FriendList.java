@@ -22,14 +22,12 @@ public class FriendList {
   }
 
   public void acceptInvite(String username){
-    // userID has to be casted to Object, otherwise treated as an index
-    friendInvites.remove((Object)username);
+    friendInvites.remove(username);
     confirmedFriends.add(username);
   }
 
   public void rejectInvite(String username){
-    // userID has to be casted to Object, otherwise treated as an index
-    friendInvites.remove((Object)username);
+    friendInvites.remove(username);
   }
 
   public void addInvitation(String username){

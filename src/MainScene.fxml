@@ -88,7 +88,7 @@
                                             <content>
                                               <AnchorPane fx:id="pending_Friends_Scroll" minHeight="0.0" minWidth="0.0" prefHeight="70.0" prefWidth="125.0">
                                                    <children>
-                                                      <VBox fx:id="reqeuest_scroll_space" layoutX="13.0" layoutY="-86.0" prefHeight="0.0" prefWidth="125.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                      <VBox fx:id="request_scroll_space" layoutX="13.0" layoutY="-86.0" prefHeight="0.0" prefWidth="125.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                    </children></AnchorPane>
                                             </content>
                                           </ScrollPane>

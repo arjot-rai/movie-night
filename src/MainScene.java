@@ -4,13 +4,18 @@ import java.util.Objects;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.io.IOException;
 
@@ -25,6 +30,8 @@ public class MainScene {
   @FXML private ImageView movie_Poster;
   @FXML private Image movieImage;
   @FXML private Button featured1_button, featured2_button, featured3_button, featured4_button;
+  @FXML private VBox request_scroll_space;
+  @FXML private VBox friends_scroll_space;
   private ArrayList<Movie> featuredMovies;
   private final int FEATURED_MOVIE_LIST_SIZE = 4;
   private final int FEATURED_TEXT_LENGTH = 8;
@@ -50,6 +57,8 @@ public class MainScene {
     ApiQuery apiQuery = new ApiQuery();
     featuredMovies = getFeaturedMovies(apiQuery.getAllCachedMovies(), FEATURED_MOVIE_LIST_SIZE);
     initializeFeatureMovieScreen();
+    setFriends_scroll_space();
+    setRequest_scroll_space();
   }
 
   public void pressedLogoutButton(ActionEvent event) throws IOException {
@@ -132,5 +141,43 @@ public class MainScene {
             + "Actors: "
             + movie.getMovieActor().toString().replace("[", "").replace("]", "");
     featured_Text_Area.setText(text);
+  }
+
+  private void setFriends_scroll_space(){
+    friends_scroll_space.getChildren().clear();
+    ArrayList<String> confirmedFriends = User.getFriendList().confirmedFriends;
+    for (String friend : confirmedFriends ) {
+        friends_scroll_space.getChildren().add(new Hyperlink(friend));
+    }
+  }
+
+  private void setRequest_scroll_space(){
+    request_scroll_space.getChildren().clear();
+    ArrayList<String> requests = User.getFriendList().friendInvites;
+    for (String friend : requests ) {
+      HBox friendRequestBox = new HBox();
+      Hyperlink friendLink = new Hyperlink(friend);
+      Button acceptButton = new Button("✓");
+      acceptButton.setPadding(new Insets(0, 0, 0, 0));
+      acceptButton.setOnAction(event -> onFriendRequestAccept(acceptButton, friend));
+      Button rejectButton = new Button("✗");
+      rejectButton.setPadding(new Insets(0, 0, 0, 0));
+      rejectButton.setOnAction(event -> onFriendRequestReject(rejectButton, friend));
+      friendRequestBox.getChildren().addAll(friendLink, acceptButton, rejectButton);
+      request_scroll_space.getChildren().add(friendRequestBox);
+    }
+  }
+
+  private void onFriendRequestAccept(Button button, String userName){
+    User.getFriendList().acceptInvite(userName);
+    Server.acceptFriendRequest(userName, User.getUserName());
+    setRequest_scroll_space();
+    setFriends_scroll_space();
+  }
+
+  private void onFriendRequestReject(Button button, String userName){
+    User.getFriendList().rejectInvite(userName);
+    Server.removeFriendRequest(userName, User.getUserName());
+    setRequest_scroll_space();
   }
 }
