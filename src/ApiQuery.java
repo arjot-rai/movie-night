@@ -37,7 +37,8 @@ public class ApiQuery {
    * * Search the Open Movie Database API for movies that match a given search term
    *
    * @param titleSearch String: the user-inputted string to search for matches
-   * @param pages int: the number of pages of results to return - each page contains 3 results
+   * @param pages int: the number of pages of results to return - each page contains up to 10
+   *     results
    */
   public ArrayList<SearchResult> searchMovies(String titleSearch, int pages) {
     titleSearch = formatStringForURL(titleSearch);
@@ -54,19 +55,24 @@ public class ApiQuery {
           // search returns an array, add all of them
           if (json != null) {
             JSONArray jsonArray = (JSONArray) json.get("Search");
-            for (int j = 0; j < 10; j++) {
-              String title = (String) ((JSONObject) jsonArray.get(j)).get("Title");
-              String year = (String) ((JSONObject) jsonArray.get(j)).get("Year");
-              int id =
-                  Integer.parseInt(
-                      ((String) ((JSONObject) jsonArray.get(j)).get("imdbID")).replaceAll("t", ""));
-              String posterUrl = (String) json.get("Poster");
-              SearchResult result = new SearchResult(title, year, id, posterUrl);
-              results.add(result);
+            if (jsonArray != null) {
+              for (int j = 0; j < 10; j++) {
+                if (jsonArray.get(j) != null) {
+                  String title = (String) ((JSONObject) jsonArray.get(j)).get("Title");
+                  String year = (String) ((JSONObject) jsonArray.get(j)).get("Year");
+                  int id =
+                      Integer.parseInt(
+                          ((String) ((JSONObject) jsonArray.get(j)).get("imdbID"))
+                              .replaceAll("t", ""));
+                  String posterUrl = (String) ((JSONObject) jsonArray.get(j)).get("Poster");
+                  SearchResult result = new SearchResult(title, year, id, posterUrl);
+                  results.add(result);
+                }
+              }
             }
           } else {
             error = "Error: could not read JSON";
-            return null;
+            return results;
           }
 
         } else {
@@ -74,8 +80,110 @@ public class ApiQuery {
         }
       } catch (IOException e) {
         error = "Error: malformed URL";
-        return null;
+        return results;
       }
+    }
+    return results;
+  }
+
+  /**
+   * * Search the Open Movie Database API for movies that match a given search term
+   *
+   * @param titleSearch String: the user-inputted string to search for matches
+   * @param startPage int: the start of the range of pages of results to return - each page contains up to 10
+   *     results
+   * @param endPage int: the end of the range of pages of results to return
+   */
+  public ArrayList<SearchResult> searchMovies(String titleSearch, int startPage, int endPage) {
+    titleSearch = formatStringForURL(titleSearch);
+
+    ArrayList<SearchResult> results = new ArrayList<>();
+
+    for (int i = startPage; i <= endPage; i++) {
+      try {
+        URL url = new URL(omdbUrl + omdbApiKey + "&type=movie&s=" + titleSearch + "&page=" + i);
+        // check if the URL works
+        if (isResponseCode200(url)) {
+          JSONObject json = convertStringToJSON(readTextFromURL(url));
+
+          // search returns an array, add all of them
+          if (json != null) {
+            JSONArray jsonArray = (JSONArray) json.get("Search");
+            if (jsonArray != null) {
+              for (int j = 0; j < 10; j++) {
+                if (jsonArray.get(j) != null) {
+                  String title = (String) ((JSONObject) jsonArray.get(j)).get("Title");
+                  String year = (String) ((JSONObject) jsonArray.get(j)).get("Year");
+                  int id =
+                      Integer.parseInt(
+                          ((String) ((JSONObject) jsonArray.get(j)).get("imdbID"))
+                              .replaceAll("t", ""));
+                  String posterUrl = ((JSONObject) jsonArray.get(j)).get("Poster").toString();
+                  SearchResult result = new SearchResult(title, year, id, posterUrl);
+                  results.add(result);
+                }
+              }
+            }
+          } else {
+            error = "Error: could not read JSON";
+            return results;
+          }
+
+        } else {
+          error = "Error: bad response from URL";
+        }
+      } catch (IOException e) {
+        error = "Error: malformed URL";
+        return results;
+      }
+    }
+    return results;
+  }
+
+  /**
+   * * Search the Open Movie Database API for movies that match a given search term
+   *
+   * @param titleSearch String: the user-inputted string to search for matches
+   */
+  public ArrayList<SearchResult> searchMovies(String titleSearch) {
+    titleSearch = formatStringForURL(titleSearch);
+
+    ArrayList<SearchResult> results = new ArrayList<>();
+
+    try {
+      URL url = new URL(omdbUrl + omdbApiKey + "&s=" + titleSearch + "&type=movie");
+      // check if the URL works
+      if (isResponseCode200(url)) {
+        JSONObject json = convertStringToJSON(readTextFromURL(url));
+
+        // search returns an array, add all of them
+        if (json != null) {
+          JSONArray jsonArray = (JSONArray) json.get("Search");
+          if(jsonArray != null){
+            for (int j = 0; j < 10; j++) {
+              if(jsonArray.get(j) != null){
+                String title = (String) ((JSONObject) jsonArray.get(j)).get("Title");
+                String year = (String) ((JSONObject) jsonArray.get(j)).get("Year");
+                int id =
+                    Integer.parseInt(
+                        ((String) ((JSONObject) jsonArray.get(j)).get("imdbID")).replaceAll("t", ""));
+                String posterUrl = (String) ((JSONObject) jsonArray.get(j)).get("Poster");
+                SearchResult result = new SearchResult(title, year, id, posterUrl);
+                results.add(result);
+              }
+            }
+          }
+        } else {
+          error = "Error: could not read JSON";
+          return results;
+        }
+
+      } else {
+        error = "Error: bad response from URL";
+      }
+    } catch (IOException e) {
+      error = "Error: malformed URL";
+      return results;
     }
     return results;
   }
@@ -96,7 +204,7 @@ public class ApiQuery {
       // response code 200 means the URL is valid
       if (isResponseCode200(url)) {
         JSONObject json = convertStringToJSON(readTextFromURL(url));
-        if (json != null) {
+        if (json != null && json.get("Response") == "True") {
           writeJSON(json);
           return formatMovie(json);
         } else {
@@ -135,7 +243,7 @@ public class ApiQuery {
       // response code 200 means the URL is valid
       if (isResponseCode200(url)) {
         JSONObject json = convertStringToJSON(readTextFromURL(url));
-        if (json != null) {
+        if (json != null && json.get("Response") == "True") {
           writeJSON(json);
           return formatMovie(json);
         } else {
@@ -384,5 +492,12 @@ public class ApiQuery {
   }
 
   public static void main(String[] args) {
+    ApiQuery apiQuery = new ApiQuery();
+    ArrayList<SearchResult> movies = apiQuery.searchMovies("a", 1);
+    for (SearchResult result : movies) {
+        if (result != null){
+          System.out.println(result.getTitle());
+        }
+    }
   }
 }

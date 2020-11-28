@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
@@ -75,7 +76,7 @@ public class BrowseScene {
   }
 
   public void onSearch(ActionEvent event) throws IOException {
-
+    SearchScene newSearchScene = new SearchScene(model, searchbar_textfield.getText());
   }
 
 
@@ -91,8 +92,11 @@ public class BrowseScene {
             75, 112, false, false);
         ImageView movieImage = new ImageView(image);
 
-        movie_gridpane.add(movieImage, columnIndex, rowIndex);
-        GridPane.setHalignment(movieImage, HPos.CENTER);
+        Button button = new Button();
+        button.setGraphic(movieImage);
+        button.setMaxSize(75, 112);
+        movie_gridpane.add(button, columnIndex, rowIndex);
+        GridPane.setHalignment(button, HPos.CENTER);
       }
 
     }
