@@ -9,11 +9,16 @@ import javafx.scene.control.TextField;
 public class MovieScene {
   private Model model;
   private Movie movie;
+  private Scene scene;
   @FXML private TextField movie_name_textfield, movie_desc, release_date, director, streaming_services;
 
-  public MovieScene(Model newModel, Movie newMovie) {
+  @FXML private Button back_button;
+
+  public MovieScene(Model newModel, Movie newMovie, Scene oldScene) {
     model = newModel;
     movie = newMovie;
+    scene = oldScene;
+
     try {
       FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieScene.fxml"));
 
@@ -29,10 +34,16 @@ public class MovieScene {
     }
   }
 
-  private void backButtonPressed(ActionEvent event) {
-
+  /**
+   * Takes the scene that was passed into the constructor and sets the stage back to it.
+   */
+  private void backButton(ActionEvent event) throws IOException {
+    model.stage.setScene(scene);
   }
 
+  /**
+   * Sets the text fields to the information given by the Movie object passed in.
+   */
   private void setUpMovieDetails() {
     movie_name_textfield.setText(movie.getMovieName());
     movie_desc.setText(movie.getMoviePlot());
