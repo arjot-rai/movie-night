@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Accordion?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox layoutX="14.0" layoutY="14.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -30,51 +21,6 @@
                   </Button>
                   <Accordion prefHeight="340.0" prefWidth="150.0">
                     <panes>
-                      <TitledPane animated="false" text="Genre">
-                           <content>
-                              <VBox prefHeight="400.0" prefWidth="151.0">
-                                 <children>
-                                    <ScrollPane prefHeight="354.0" prefWidth="130.0">
-                                      <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="465.0" prefWidth="111.0">
-                                             <children>
-                                                <VBox prefHeight="200.0" prefWidth="100.0">
-                                                   <children>
-                                                      <CheckBox fx:id="action_checkbox" mnemonicParsing="false" selected="true" text="Action" />
-                                                      <CheckBox fx:id="adventure_checkbox" mnemonicParsing="false" selected="true" text="Adventure" />
-                                                      <CheckBox fx:id="animation_checkbox" mnemonicParsing="false" selected="true" text="Animation" />
-                                                      <CheckBox fx:id="biography_checkbox" mnemonicParsing="false" selected="true" text="Biography" />
-                                                      <CheckBox fx:id="comedy_checkbox" mnemonicParsing="false" selected="true" text="Comedy" />
-                                                      <CheckBox fx:id="crime_checkbox" mnemonicParsing="false" selected="true" text="Crime" />
-                                                      <CheckBox fx:id="documentary_checkbox" mnemonicParsing="false" selected="true" text="Documentary" />
-                                                      <CheckBox fx:id="drama_checkbox" mnemonicParsing="false" selected="true" text="Drama" />
-                                                      <CheckBox fx:id="family_checkbox" mnemonicParsing="false" selected="true" text="Family" />
-                                                      <CheckBox fx:id="fantasy_checkbox" mnemonicParsing="false" selected="true" text="Fantasy" />
-                                                      <CheckBox fx:id="filmnoir_checkbox" mnemonicParsing="false" selected="true" text="Film-Noir" />
-                                                      <CheckBox fx:id="gameshow_checkbox" mnemonicParsing="false" selected="true" text="Game-Show" />
-                                                      <CheckBox fx:id="history_checkbox" mnemonicParsing="false" selected="true" text="History" />
-                                                      <CheckBox fx:id="horror_checkbox" mnemonicParsing="false" selected="true" text="Horror" />
-                                                      <CheckBox fx:id="music_checkbox" mnemonicParsing="false" selected="true" text="Music" />
-                                                      <CheckBox fx:id="musical_checkbox" mnemonicParsing="false" selected="true" text="Musical" />
-                                                      <CheckBox fx:id="mystery_checkbox" mnemonicParsing="false" selected="true" text="Mystery" />
-                                                      <CheckBox fx:id="news_checkbox" mnemonicParsing="false" selected="true" text="News" />
-                                                      <CheckBox fx:id="reality_checkbox" mnemonicParsing="false" selected="true" text="Reality-TV" />
-                                                      <CheckBox fx:id="romance_checkbox" mnemonicParsing="false" selected="true" text="Romance" />
-                                                      <CheckBox fx:id="scifi_checkbox" mnemonicParsing="false" selected="true" text="Sci-Fi" />
-                                                      <CheckBox fx:id="sport_checkbox" mnemonicParsing="false" selected="true" text="Sport" />
-                                                      <CheckBox fx:id="talkshow_checkbox" mnemonicParsing="false" selected="true" text="Talk-Show" />
-                                                      <CheckBox fx:id="thriller_checkbox" mnemonicParsing="false" selected="true" text="Thriller" />
-                                                      <CheckBox fx:id="war_checkbox" mnemonicParsing="false" selected="true" text="War" />
-                                                      <CheckBox fx:id="western_checkbox" mnemonicParsing="false" selected="true" text="Western" />
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </AnchorPane>
-                                      </content>
-                                    </ScrollPane>
-                                 </children>
-                              </VBox>
-                           </content></TitledPane>
                       <TitledPane animated="false" prefHeight="52.0" prefWidth="152.0" text="Year">
                            <content>
                               <VBox prefHeight="78.0" prefWidth="152.0">
@@ -88,22 +34,6 @@
                                  </children>
                               </VBox>
                            </content></TitledPane>
-                        <TitledPane animated="false" prefHeight="130.0" prefWidth="152.0" text="Rating">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="150.0">
-                                 <children>
-                                    <VBox layoutX="19.6" layoutY="19.6" prefHeight="125.0" prefWidth="131.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="0.0">
-                                       <children>
-                                          <CheckBox fx:id="g_rating_checkbox" mnemonicParsing="false" text="G" />
-                                          <CheckBox fx:id="pg_rating_checkbox" mnemonicParsing="false" text="PG" />
-                                          <CheckBox fx:id="pg13_rating_checkbox" mnemonicParsing="false" text="PG-13" />
-                                          <CheckBox fx:id="r_rating_checkbox" mnemonicParsing="false" text="R" />
-                                          <CheckBox fx:id="nc17_rating_checkbox" mnemonicParsing="false" text="NC-17" />
-                                       </children>
-                                    </VBox>
-                                 </children></AnchorPane>
-                          </content>
-                        </TitledPane>
                     </panes>
                   </Accordion>
                </children></VBox>

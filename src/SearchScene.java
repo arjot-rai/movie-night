@@ -1,6 +1,9 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
-import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
@@ -16,11 +19,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
 
-public class BrowseScene {
+public class SearchScene {
   private Model model;
   private ApiQuery apiQuery;
-  private ArrayList<Movie> movieArrayList;
+  private ArrayList<SearchResult> searchList = new ArrayList<>();
   private int rowsDisplayed;
+  private int pagesQueried = 0;
+  private String searchText;
 
   //private ImageView movieImage;
 
@@ -42,30 +47,33 @@ public class BrowseScene {
 
   @FXML private ScrollPane movie_scrollpane;
 
-  public BrowseScene(Model newModel) {
+
+  public SearchScene(Model newModel, String searchText) {
     model = newModel;
     apiQuery = new ApiQuery();
-    movieArrayList = apiQuery.getAllCachedMovies();
     rowsDisplayed = 0;
+    this.searchText = searchText;
 
     try {
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("BrowseScene.fxml"));
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("SearchScene.fxml"));
 
       loader.setController(this);
 
       model.stage.setScene(new Scene(loader.load()));
 
-      model.stage.setTitle("MovieNight - BrowseScene");
+      model.stage.setTitle("MovieNight - SearchScene");
+
+      searchbar_textfield.setText(searchText);
 
       ScrollBar scrollBar = (ScrollBar) movie_scrollpane.lookup(".scroll-bar:vertical");
       scrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
         if ((Double) newValue == 1.0) {
           System.out.println("Bottom!");
-          initializeSearchField();
+          getResults();
         }
       });
 
-      initializeSearchField();
+      getResults();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -79,28 +87,43 @@ public class BrowseScene {
 
   }
 
-
-  /*
-  * Should be renamed, this will populate 3 rows of images for the browse page when called and
-  * increments the rowDsiplayed counter.
-   */
-  public void initializeSearchField() {
-    for (int rowIndex = rowsDisplayed; rowIndex < rowsDisplayed + 3; rowIndex++) {
-      movie_anchorpane.setMinSize(movie_anchorpane.getMinWidth(), movie_anchorpane.getMinHeight() + 122);
-      for (int columnIndex = 0; columnIndex < 5; columnIndex++) {
-        Image image = new Image(movieArrayList.get(rowIndex * 5 + columnIndex).getMoviePosterUrl(),
-            75, 112, false, false);
-        ImageView movieImage = new ImageView(image);
-
-        Button button = new Button();
-        button.setGraphic(movieImage);
-        button.setMaxSize(75, 112);
-        movie_gridpane.add(button, columnIndex, rowIndex);
-        GridPane.setHalignment(button, HPos.CENTER);
+  public void getResults(){
+    searchList.addAll(apiQuery.searchMovies(searchText, pagesQueried + 1, pagesQueried + 2));
+    pagesQueried += 2;
+    for (int rowIndex = rowsDisplayed; rowIndex < rowsDisplayed + 4; rowIndex++) {
+      if(rowIndex * 5 < searchList.size()){
+        movie_anchorpane.setMinSize(movie_anchorpane.getMinWidth(), movie_anchorpane.getMinHeight() + 122);
       }
+      for (int columnIndex = 0; columnIndex < 5; columnIndex++) {
+        if(rowIndex * 5 + columnIndex < searchList.size()){
+          Image image;
+          try{
+            image = new Image(searchList.get(rowIndex * 5 + columnIndex).getPosterUrl(), 75, 112, false, false);
+          }
+          catch (Exception e){
+            String filePath = new File("").getAbsolutePath();
+            FileInputStream inputstream;
+            try{
+               inputstream = new FileInputStream(filePath + "/img/placeholder.png");
+            }
+            catch (FileNotFoundException fnfe)
+            {
+              break;
+            }
+            image = new Image(inputstream, 75, 112, false, false);
+          }
 
+          ImageView movieImage = new ImageView(image);
+
+          Button button = new Button();
+          button.setGraphic(movieImage);
+          button.setMaxSize(75, 112);
+          movie_gridpane.add(button, columnIndex, rowIndex);
+          GridPane.setHalignment(button, HPos.CENTER);
+        }
+        }
     }
-    rowsDisplayed = rowsDisplayed + 3;
+    rowsDisplayed = rowsDisplayed + 4;
   }
 
 }

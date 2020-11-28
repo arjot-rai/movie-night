@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -27,6 +28,8 @@ public class MainScene {
   private ImageView movie_Poster;
   @FXML
   private Image movieImage;
+  @FXML
+  private TextField movie_search;
 
   public MainScene(Model newModel) {
     model = newModel;
@@ -58,5 +61,9 @@ public class MainScene {
 
   public void pressedBrowseButton(ActionEvent event) throws IOException {
     BrowseScene browseScene = new BrowseScene(model);
+  }
+
+  public void pressedSearch(ActionEvent event) throws IOException {
+    SearchScene searchScene = new SearchScene(model, movie_search.getText());
   }
 }
