@@ -4,6 +4,7 @@ import java.util.Objects;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -56,6 +57,7 @@ public class MainScene {
     ApiQuery apiQuery = new ApiQuery();
     featuredMovies = getFeaturedMovies(apiQuery.getAllCachedMovies(), FEATURED_MOVIE_LIST_SIZE);
     initializeFeatureMovieScreen();
+    User.getFriendList().friendInvites.add("arjot");
     setFriends_scroll_space();
     setRequest_scroll_space();
   }
@@ -143,6 +145,7 @@ public class MainScene {
   }
 
   private void setFriends_scroll_space(){
+    friends_scroll_space.getChildren().clear();
     ArrayList<String> confirmedFriends = User.getFriendList().confirmedFriends;
     for (String friend : confirmedFriends ) {
         friends_scroll_space.getChildren().add(new Hyperlink(friend));
@@ -150,15 +153,30 @@ public class MainScene {
   }
 
   private void setRequest_scroll_space(){
+    request_scroll_space.getChildren().clear();
     ArrayList<String> requests = User.getFriendList().friendInvites;
-    requests.add("arjot");
     for (String friend : requests ) {
       HBox friendRequestBox = new HBox();
       Hyperlink friendLink = new Hyperlink(friend);
-      Button acceptButton = new Button("Accept");
-      Button rejectButton = new Button("Reject");
+      Button acceptButton = new Button("✓");
+      acceptButton.setPadding(new Insets(0, 0, 0, 0));
+      acceptButton.setOnAction(event -> onFriendRequestAccept(acceptButton, friend));
+      Button rejectButton = new Button("✗");
+      rejectButton.setPadding(new Insets(0, 0, 0, 0));
+      rejectButton.setOnAction(event -> onFriendRequestReject(rejectButton, friend));
       friendRequestBox.getChildren().addAll(friendLink, acceptButton, rejectButton);
       request_scroll_space.getChildren().add(friendRequestBox);
     }
+  }
+
+  private void onFriendRequestAccept(Button button, String userName){
+    User.getFriendList().acceptInvite(userName);
+    setRequest_scroll_space();
+    setFriends_scroll_space();
+  }
+
+  private void onFriendRequestReject(Button button, String userName){
+    User.getFriendList().rejectInvite(userName);
+    setRequest_scroll_space();
   }
 }
