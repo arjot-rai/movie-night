@@ -126,7 +126,7 @@ public class BrowseScene {
           button.setGraphic(movieImage);
           button.setMaxSize(75, 112);
           displayedMovies.add(button);
-          button.setOnAction(actionEvent -> {MovieScene movieScene = new MovieScene(model,
+          button.setOnAction(actionEvent -> {altMovieScene movieScene = new altMovieScene(model,
               movie, model.stage.getScene());});
           movie_gridpane.add(button, columnIndex, rowIndex);
           GridPane.setHalignment(button, HPos.CENTER);

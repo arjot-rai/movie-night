@@ -1,44 +1,57 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 
-public class MovieScene {
+
+public class altMovieScene {
   private Model model;
+  private ApiQuery apiQuery;
   private Movie movie;
   private Scene scene;
+
   @FXML
   private Label movie_name, movie_desc, release_date, director, streaming_services;
 
   @FXML private Button back_button;
 
-  public MovieScene(Model newModel, Movie newMovie) {
+  @FXML private ImageView movie_poster;
+
+  public altMovieScene(Model newModel, Movie movie, Scene scene) {
     model = newModel;
-    movie = newMovie;
-    //scene = oldScene;
+    this.movie = movie;
+    this.scene = scene;
 
     try {
       FXMLLoader loader = new FXMLLoader(getClass().getResource("MovieScene.fxml"));
 
       loader.setController(this);
 
-      setUpMovieDetails();
-
       model.stage.setScene(new Scene(loader.load()));
 
       model.stage.setTitle("MovieNight - MovieScene");
+
+      setUpMovieDetails();
+
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
-
-  /**
-   * Takes the scene that was passed into the constructor and sets the stage back to it.
-   */
-  private void backButton(ActionEvent event) throws IOException {
+  public void pressedBack(ActionEvent event) throws IOException {
     model.stage.setScene(scene);
   }
 
@@ -50,8 +63,11 @@ public class MovieScene {
     movie_desc.setText(movie.getMoviePlot());
     director.setText(movie.getMovieDirector());
     release_date.setText(movie.getMovieReleaseDate());
+    Image image = new Image(movie.getMoviePosterUrl(), 150, 224, false, false);
+    movie_poster.setImage(image);
     //streaming_services.setText(movie.getMovieStreamingSite()); // NYI
 
   }
+
 
 }
