@@ -549,6 +549,7 @@ public class Server {
    * @param eventId the event to remove
    */
   public static void removeEvent(String eventId){
+    removeAllEventMovies(eventId);
     try(Session session = driver.session()){
       session.writeTransaction(transaction -> transaction.run(
         "MATCH (a:Event) WHERE a.id=$x1 DETACH DELETE a",
@@ -597,6 +598,27 @@ public class Server {
       return attendees;
     }
 
+  /**
+   * get all the invited people to an event
+   * @param eventId the event id
+   * @return a Hashmap with the first string as the user's username with a map of their attributes,
+   * with that string being the attribute's name and the object is the value
+   */
+  public static HashMap<String, Map<String, Object>> getEventInvitedAttendees(String eventId){
+    HashMap<String, Map<String, Object>> attendees = new HashMap<>();
+
+    try(Session session = driver.session()){
+      Result result = session.run("Match (a:Event)-[:EVENTINVITE]->(b:Person) " +
+        "WHERE a.id=$x1 Return properties(b) ", parameters("x1", eventId));
+      while(result.hasNext()){
+        Record record = result.next();
+        Map<String, Object> friend = record.get("properties(b)").asMap();
+        attendees.put(record.get("properties(b)").get("username").asString(),
+          friend);
+      }
+    }
+    return attendees;
+  }
 
   //Event invite functions
 
