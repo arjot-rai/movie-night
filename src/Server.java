@@ -522,13 +522,15 @@ public class Server {
    * @param location the location for the movie night
    * @param date the date of the event
    */
-  public static void createEvent(String organizer, String eventName, String location, String date){
+  public static String createEvent(String organizer, String eventName, String location, String date){
+    String eventID = getNextEventId();
+    increaseEventId();
     try (Session session = driver.session()) {
       session.writeTransaction(transaction -> transaction.run("MERGE (a:Event " +
               "{eventName:$x1, location:$x2, date:$x3, organizer:$x4, id:$x5})",
           parameters("x1", eventName, "x2", location, "x3", date, "x4", organizer,
-              "x5", getNextEventId())));
-      session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
+              "x5", eventID)));
+            session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
           "WHERE toLower(a.username)=$x1 and toLower(b.eventName)=$x2 " +
           "MERGE (a)-[:EVENTORGANIZER]->(b) " +
           "RETURN a,b", parameters("x1", organizer.toLowerCase(),
@@ -538,8 +540,8 @@ public class Server {
           "MERGE (b)-[:EVENTATTENDEE]->(a) " +
           "RETURN a,b", parameters("x1", organizer.toLowerCase(),
           "x2", eventName.toLowerCase())));
-      increaseEventId();
     }
+    return eventID;
   }
 
   /**
