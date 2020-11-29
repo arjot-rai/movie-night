@@ -124,13 +124,20 @@
                                           <Label text="Pending Events:" />
                                           <ScrollPane prefHeight="70.0" prefWidth="127.0">
                                             <content>
-                                              <AnchorPane fx:id="pending_Events_Scroll" minHeight="0.0" minWidth="0.0" prefHeight="70.0" prefWidth="127.0" />
+                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="70.0" prefWidth="127.0">
+                                                   <children>
+                                                      <VBox prefHeight="70.0" prefWidth="127.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                      <VBox fx:id="pending_events_scroll" prefHeight="70.0" prefWidth="127.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                   </children></AnchorPane>
                                             </content>
                                           </ScrollPane>
                                           <Label text="Current Events:" />
                                           <ScrollPane prefHeight="230.0" prefWidth="130.0">
                                             <content>
-                                              <AnchorPane fx:id="current_events_Scroll" minHeight="0.0" minWidth="0.0" prefHeight="230.0" prefWidth="130.0" />
+                                              <AnchorPane fx:id="current_events_Scroll" minHeight="0.0" minWidth="0.0" prefHeight="230.0" prefWidth="130.0">
+                                                   <children>
+                                                      <VBox fx:id="events_scroll_space" prefHeight="200.0" prefWidth="100.0" />
+                                                   </children></AnchorPane>
                                             </content>
                                           </ScrollPane>
                                        </children>

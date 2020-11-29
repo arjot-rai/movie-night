@@ -1,33 +1,33 @@
 import java.util.ArrayList;
  
 public class EventList {
-  public ArrayList<Integer> confirmedEvents;
+  public ArrayList<Event> confirmedEvents;
 
-  public ArrayList<Integer> eventInvites;
+  public ArrayList<Event> eventInvites;
 
   public EventList(){
     confirmedEvents = new ArrayList<>();
     eventInvites = new ArrayList<>();
   }
 
-  public void addEvent(int eventID){
+  public void addEvent(Event eventID){
     confirmedEvents.add(eventID);
   }
 
-  public void removeEvent(int eventID){
+  public void removeEvent(String eventID){
     confirmedEvents.remove((Object)eventID);
   }
 
-  public void acceptInvite(int eventID){
+  public void acceptInvite(Event eventID){
     eventInvites.remove((Object)eventID);
     confirmedEvents.add(eventID);
   }
 
-  public void rejectInvite(int eventID){
+  public void rejectInvite(Event eventID){
     eventInvites.remove((Object)eventID);
   }
 
-  public void addInvitation(int eventID){
+  public void addInvitation(Event eventID){
     eventInvites.add(eventID);
   }
 
