@@ -383,6 +383,7 @@ public class ApiQuery {
     String title = (String) json.get("Title");
     int id = idStringToInt((String) json.get("imdbID"));
     String director = (String) json.get("Director");
+    String year = (String) json.get("Year");
     String releaseDate = (String) json.get("Released");
     String rating = (String) json.get("Rated");
     String plot = (String) json.get("Plot");
@@ -398,7 +399,7 @@ public class ApiQuery {
     }
 
     Movie movie =
-        new Movie(title, id, director, releaseDate, rating, genreList, plot, runtime, posterUrl);
+        new Movie(title, id, director,  year, releaseDate, rating, genreList, plot, runtime, posterUrl);
 
     String[] actors = ((String) json.get("Actors")).split(",");
     for (String actor : actors) {

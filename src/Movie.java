@@ -7,6 +7,8 @@ public class Movie {
 
   private String movieDirector;
 
+  private String movieYear;
+
   private String movieReleaseDate;
 
   private ArrayList<String> movieActor;
@@ -23,11 +25,12 @@ public class Movie {
 
   private String moviePosterUrl;
 
-  public Movie(String movieName, int id, String director, String release, String rating,
+  public Movie(String movieName, int id, String director, String year, String release, String rating,
       ArrayList<String> genre, String plot, int runtime, String posterUrl){
       this.movieName = movieName;
       this.movieID = id;
       this.movieDirector = director;
+      this.movieYear = year;
       this.movieReleaseDate = release;
       this.movieRating = rating;
       this.movieGenre = genre;
@@ -124,5 +127,13 @@ public class Movie {
 
   public void setMoviePosterUrl(String moviePosterUrl) {
     this.moviePosterUrl = moviePosterUrl;
+  }
+
+  public String getMovieYear() {
+    return movieYear;
+  }
+
+  public void setMovieYear(String movieYear) {
+    this.movieYear = movieYear;
   }
 }

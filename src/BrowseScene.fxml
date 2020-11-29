@@ -76,6 +76,10 @@
                                           <Insets top="10.0" />
                                        </VBox.margin>
                                     </TextField>
+                                    <Button fx:id="year_filter_button" mnemonicParsing="false" onAction="#yearFilterPressed" text="Filter">
+                                       <VBox.margin>
+                                          <Insets top="10.0" />
+                                       </VBox.margin></Button>
                                  </children>
                               </VBox>
                            </content></TitledPane>
@@ -85,11 +89,11 @@
                                  <children>
                                     <VBox layoutX="19.6" layoutY="19.6" prefHeight="125.0" prefWidth="131.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <CheckBox fx:id="g_rating_checkbox" mnemonicParsing="false" text="G" />
-                                          <CheckBox fx:id="pg_rating_checkbox" mnemonicParsing="false" text="PG" />
-                                          <CheckBox fx:id="pg13_rating_checkbox" mnemonicParsing="false" text="PG-13" />
-                                          <CheckBox fx:id="r_rating_checkbox" mnemonicParsing="false" text="R" />
-                                          <CheckBox fx:id="nc17_rating_checkbox" mnemonicParsing="false" text="NC-17" />
+                                          <CheckBox fx:id="g_rating_checkbox" mnemonicParsing="false" selected="true" text="G" />
+                                          <CheckBox fx:id="pg_rating_checkbox" mnemonicParsing="false" selected="true" text="PG" />
+                                          <CheckBox fx:id="pg13_rating_checkbox" mnemonicParsing="false" selected="true" text="PG-13" />
+                                          <CheckBox fx:id="r_rating_checkbox" mnemonicParsing="false" selected="true" text="R" />
+                                          <CheckBox fx:id="nc17_rating_checkbox" mnemonicParsing="false" selected="true" text="NC-17" />
                                        </children>
                                     </VBox>
                                  </children></AnchorPane>
