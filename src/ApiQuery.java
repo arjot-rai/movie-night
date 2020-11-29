@@ -204,7 +204,7 @@ public class ApiQuery {
       // response code 200 means the URL is valid
       if (isResponseCode200(url)) {
         JSONObject json = convertStringToJSON(readTextFromURL(url));
-        if (json != null && json.get("Response") == "True") {
+        if (json != null && json.get("Response").equals("True")) {
           writeJSON(json);
           return formatMovie(json);
         } else {
@@ -243,7 +243,7 @@ public class ApiQuery {
       // response code 200 means the URL is valid
       if (isResponseCode200(url)) {
         JSONObject json = convertStringToJSON(readTextFromURL(url));
-        if (json != null && json.get("Response") == "True") {
+        if (json != null && json.get("Response").toString().equals("True")) {
           writeJSON(json);
           return formatMovie(json);
         } else {
@@ -493,7 +493,7 @@ public class ApiQuery {
 
   public static void main(String[] args) {
     ApiQuery apiQuery = new ApiQuery();
-    ArrayList<SearchResult> movie = apiQuery.searchMovies("ghandi");
-    System.out.println(movie.get(0).getTitle());
+    Movie movie = apiQuery.getMovie("Batman Begins");
+    System.out.println(movie.getMovieName());
   }
 }
