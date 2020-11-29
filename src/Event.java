@@ -7,15 +7,15 @@ public class Event {
 
   private String eventDate;
 
-  private User eventOrganizer;
+  private String eventOrganizer;
 
   private ArrayList<Integer> eventGuestList;
 
-  private int eventID;
+  private String eventID;
 
   private ArrayList<Integer> eventMovies;
 
-  public Event(String name, String location, String date, User organizer, int id){
+  public Event(String name, String location, String date, String organizer, String id){
     this.eventName = name;
     this.eventLocation = location;
     this.eventDate = date;
@@ -49,19 +49,19 @@ public class Event {
     this.eventDate = eventDate;
   }
 
-  public User getEventOrganizer() {
+  public String getEventOrganizer() {
     return eventOrganizer;
   }
 
-  public void setEventOrganizer(User eventOrganizer) {
+  public void setEventOrganizer(String eventOrganizer) {
     this.eventOrganizer = eventOrganizer;
   }
 
-  public int getEventID() {
+  public String getEventID() {
     return eventID;
   }
 
-  public void setEventID(int eventID) {
+  public void setEventID(String eventID) {
     this.eventID = eventID;
   }
 

@@ -106,12 +106,25 @@ public class EventCreateScene {
     }
   }
 
-  public void pressedCreateEventButton(ActionEvent event) throws IOException{
+  public void pressedCreateEventButton(ActionEvent event) throws IOException {
     String eventName = event_name_field.getText();
     String location = location_field.getText();
     String date = date_field.getText();
+    if (!eventName.equals("") || !location.equals("") || !date.equals("")) {
+      String eventID = Server.createEvent(User.getUserName(), eventName, location, date);
 
-    Server.createEvent(User.getUserName(),eventName,location,date);
+      Event newEvent = new Event(eventName, location, date, User.getUserName(), eventID);
+      for (Movie i : movies) {
+        int id = i.getMovieID();
+        newEvent.addMovie(id);
+        Server.addEventMovie(i.getMovieName(), eventID);
+      }
 
+      User.getEventList().addEvent(newEvent);
+      MainScene mainScene = new MainScene(model);
+    }
+    else{
+      error_label.setText("Empty event field");
+    }
   }
 }
