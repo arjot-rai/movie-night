@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import jdk.jfr.Frequency;
 
@@ -41,6 +42,8 @@ public class User{
     updateFriends();
     updateFriendRequests();
     updatePendingRequests();
+    updateEvents();
+    updateEventInvites();
   }
 
   public static String getUserName() {
@@ -95,6 +98,30 @@ public class User{
     Object[] pendingRequests = Server.getPendingRequests(userName).keySet().toArray();
     for (Object name : pendingRequests) {
       friendList.addPending((name.toString()));
+    }
+  }
+
+  public static void updateEvents(){
+    HashMap<String, Map<String, Object>> events = Server.getUsersEvents(userName);
+    Object[] eventIDs = events.keySet().toArray();
+    for (Object id : eventIDs) {
+      eventList.addEvent(new Event(events.get(id.toString()).get("eventName").toString(),
+          events.get(id.toString()).get("location").toString(),
+          events.get(id.toString()).get("date").toString(),
+          events.get(id.toString()).get("organizer").toString(),
+          events.get(id.toString()).get("id").toString()));
+    }
+  }
+
+  public static void updateEventInvites(){
+    HashMap<String, Map<String, Object>> events = Server.getUsersPendingInvites(userName);
+    Object[] eventIDs = events.keySet().toArray();
+    for (Object id : eventIDs) {
+      eventList.addInvitation(new Event(events.get(id.toString()).get("eventName").toString(),
+          events.get(id.toString()).get("location").toString(),
+          events.get(id.toString()).get("date").toString(),
+          events.get(id.toString()).get("organizer").toString(),
+          events.get(id.toString()).get("id").toString()));
     }
   }
 

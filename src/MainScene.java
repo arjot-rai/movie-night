@@ -1,3 +1,4 @@
+import com.sun.javafx.iio.ios.IosDescriptor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
@@ -9,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -26,12 +28,15 @@ public class MainScene {
   @FXML private TextField movie_search;
   @FXML private Button logout_button;
   @FXML private Button profile_button;
+  @FXML private Button create_Events_Button;
   @FXML private TextArea featured_Text_Area;
   @FXML private ImageView movie_Poster;
   @FXML private Image movieImage;
   @FXML private Button featured1_button, featured2_button, featured3_button, featured4_button;
   @FXML private VBox request_scroll_space;
   @FXML private VBox friends_scroll_space;
+  @FXML private VBox events_scroll_space;
+  @FXML private VBox pending_events_scroll;
   private ArrayList<Movie> featuredMovies;
   private final int FEATURED_MOVIE_LIST_SIZE = 4;
   private final int FEATURED_TEXT_LENGTH = 8;
@@ -59,6 +64,7 @@ public class MainScene {
     initializeFeatureMovieScreen();
     setFriends_scroll_space();
     setRequest_scroll_space();
+    setEvents_scroll_space();
   }
 
   public void pressedLogoutButton(ActionEvent event) throws IOException {
@@ -72,6 +78,10 @@ public class MainScene {
 
   public void pressedBrowseButton(ActionEvent event) throws IOException {
     BrowseScene browseScene = new BrowseScene(model);
+  }
+
+  public void pressedCreateEventsButton(ActionEvent event) throws IOException {
+    EventCreateScene eventCreateScene = new EventCreateScene(model);
   }
 
   public void pressedSearch(ActionEvent event) throws IOException {
@@ -141,6 +151,7 @@ public class MainScene {
             + "Actors: "
             + movie.getMovieActor().toString().replace("[", "").replace("]", "");
     featured_Text_Area.setText(text);
+    featured_Text_Area.setEditable(false);
   }
 
   private void setFriends_scroll_space(){
@@ -149,6 +160,15 @@ public class MainScene {
     for (String friend : confirmedFriends ) {
         friends_scroll_space.getChildren().add(new Hyperlink(friend));
     }
+  }
+
+  private void setEvents_scroll_space(){
+    events_scroll_space.getChildren().clear();
+    ArrayList<Event> confirmedEvents = User.getEventList().confirmedEvents;
+    for (Event event : confirmedEvents) {
+      events_scroll_space.getChildren().add(new Hyperlink(event.getEventName()));
+    }
+
   }
 
   private void setRequest_scroll_space(){
@@ -168,6 +188,24 @@ public class MainScene {
     }
   }
 
+  private void setPendingEventsScrollSpace(){
+    pending_events_scroll.getChildren().clear();
+    ArrayList<Event> pending = User.getEventList().eventInvites;
+    for(Event pEvent : pending){
+      HBox pendingEventBox = new HBox();
+
+      Label eventName = new Label();
+      eventName.setText(pEvent.getEventName());
+
+      Button acceptButton = new Button("✓");
+      acceptButton.setPadding(new Insets(0, 0, 0, 0));
+      acceptButton.setOnAction(event -> onEventRequestAccept(acceptButton, pEvent));
+      Button rejectButton = new Button("✗");
+      rejectButton.setPadding(new Insets(0, 0, 0, 0));
+      rejectButton.setOnAction(event -> onEventRequestReject(rejectButton, pEvent));
+    }
+  }
+
   private void onFriendRequestAccept(Button button, String userName){
     User.getFriendList().acceptInvite(userName);
     Server.acceptFriendRequest(userName, User.getUserName());
@@ -179,5 +217,19 @@ public class MainScene {
     User.getFriendList().rejectInvite(userName);
     Server.removeFriendRequest(userName, User.getUserName());
     setRequest_scroll_space();
+  }
+
+  private void onEventRequestAccept(Button button, Event event){
+    User.getEventList().acceptInvite(event);
+    Server.acceptEventInvite(User.getUserName(),event.getEventID());
+    setEvents_scroll_space();
+    setPendingEventsScrollSpace();
+  }
+
+  private void onEventRequestReject(Button button, Event event){
+    User.getEventList().rejectInvite(event);
+    Server.removeEventInvite(User.getUserName(), event.getEventID());
+    setEvents_scroll_space();
+    setPendingEventsScrollSpace();
   }
 }
