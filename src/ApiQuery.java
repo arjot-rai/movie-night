@@ -56,7 +56,7 @@ public class ApiQuery {
           if (json != null) {
             JSONArray jsonArray = (JSONArray) json.get("Search");
             if (jsonArray != null) {
-              for (int j = 0; j < 10; j++) {
+              for (int j = 0; j < jsonArray.size(); j++) {
                 if (jsonArray.get(j) != null) {
                   String title = (String) ((JSONObject) jsonArray.get(j)).get("Title");
                   String year = (String) ((JSONObject) jsonArray.get(j)).get("Year");
@@ -110,7 +110,7 @@ public class ApiQuery {
           if (json != null) {
             JSONArray jsonArray = (JSONArray) json.get("Search");
             if (jsonArray != null) {
-              for (int j = 0; j < 10; j++) {
+              for (int j = 0; j < jsonArray.size(); j++) {
                 if (jsonArray.get(j) != null) {
                   String title = (String) ((JSONObject) jsonArray.get(j)).get("Title");
                   String year = (String) ((JSONObject) jsonArray.get(j)).get("Year");
@@ -160,7 +160,7 @@ public class ApiQuery {
         if (json != null) {
           JSONArray jsonArray = (JSONArray) json.get("Search");
           if(jsonArray != null){
-            for (int j = 0; j < 10; j++) {
+            for (int j = 0; j < jsonArray.size(); j++) {
               if(jsonArray.get(j) != null){
                 String title = (String) ((JSONObject) jsonArray.get(j)).get("Title");
                 String year = (String) ((JSONObject) jsonArray.get(j)).get("Year");
@@ -493,11 +493,7 @@ public class ApiQuery {
 
   public static void main(String[] args) {
     ApiQuery apiQuery = new ApiQuery();
-    ArrayList<SearchResult> movies = apiQuery.searchMovies("a", 1);
-    for (SearchResult result : movies) {
-        if (result != null){
-          System.out.println(result.getTitle());
-        }
-    }
+    ArrayList<SearchResult> movie = apiQuery.searchMovies("ghandi");
+    System.out.println(movie.get(0).getTitle());
   }
 }
