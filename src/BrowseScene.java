@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import javafx.event.ActionEvent;
@@ -118,8 +121,26 @@ public class BrowseScene {
       for (int columnIndex = 0; columnIndex < 5; columnIndex++) {
         if(rowIndex * 5 + columnIndex < movieList.size()){
           Movie movie = movieList.get(rowIndex * 5 + columnIndex);
-          Image image = new Image(movie.getMoviePosterUrl(),
-              75, 112, false, false);
+          Image image;
+          try {
+            image =
+                new Image(
+                    movie.getMoviePosterUrl(),
+                    75,
+                    112,
+                    false,
+                    false);
+          } catch (Exception e) {
+            String filePath = new File("").getAbsolutePath();
+            FileInputStream inputstream;
+            try {
+              // use placeholder image if failed to retrieve from url
+              inputstream = new FileInputStream(filePath + "/img/placeholder.png");
+            } catch (FileNotFoundException fnfe) {
+              break;
+            }
+            image = new Image(inputstream, 75, 112, false, false);
+          }
           ImageView movieImage = new ImageView(image);
 
           Button button = new Button();
