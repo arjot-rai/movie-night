@@ -389,7 +389,13 @@ public class ApiQuery {
     String plot = (String) json.get("Plot");
     String posterUrl = (String) json.get("Poster");
     String runtimeString = (String) json.get("Runtime");
-    int runtime = Integer.parseInt(runtimeString.substring(0, runtimeString.length() - 4));
+    int runtime;
+    try{
+      runtime = Integer.parseInt(runtimeString.substring(0, runtimeString.length() - 4));
+    }
+    catch(Exception e){
+      runtime = 0;
+    }
     String[] genres = ((String) json.get("Genre")).split(",");
     ArrayList<String> genreList = new ArrayList<String>();
 
