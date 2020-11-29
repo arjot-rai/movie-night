@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,24 +22,24 @@ public class EventCreateScene {
   private Model model;
   private ApiQuery apiQuery;
   private int maxMovies;
-  ArrayList<Movie> movies;
+  ArrayList<Movie> movies = new ArrayList<>();
 
-  @FXML
-  private Button back_button;
+  @FXML private Button back_button;
 
-  @FXML
-  private Button add_movie_button;
+  @FXML private Button add_movie_button;
 
-  @FXML
-  private TextField event_name_field, date_field, location_field, add_movie_field;
+  @FXML private Button create_event_button;
 
-  @FXML
-  private VBox selected_movie_box;
+  @FXML private TextField event_name_field, date_field, location_field, add_movie_field;
+
+  @FXML private VBox selected_movie_box;
+
+  @FXML private Label error_label;
 
   public EventCreateScene(Model newModel) {
     model = newModel;
     apiQuery = new ApiQuery();
-    ArrayList<Movie> movies = new ArrayList<Movie>();
+    movies = new ArrayList<>();
     maxMovies = 4;
 
     try {
@@ -58,39 +59,59 @@ public class EventCreateScene {
     MainScene mainScene = new MainScene(model);
   }
 
-  public void pressedAddMovieButton(ActionEvent event) throws  IOException {
+  public void pressedAddMovieButton(ActionEvent event) throws IOException {
     String movieTitle = add_movie_field.getText();
-    if (movieTitle != null){
-      SearchResult movieToAdd = apiQuery.searchMovies(movieTitle).get(0);
-      Movie movieObject = apiQuery.getMovie(movieToAdd.getImdbID());
-      if (movieObject != null){
+    if (!movieTitle.equals("")) {
+      ArrayList<SearchResult> moviesToAdd = apiQuery.searchMovies(movieTitle);
+      if (moviesToAdd.size() != 0) {
+        SearchResult movieToAdd = moviesToAdd.get(0);
+        Movie movieObject = apiQuery.getMovie(movieToAdd.getImdbID());
+        if (movieObject != null) {
 
-        movies.add(movieObject);
+          movies.add(movieObject);
 
-        HBox addedMovie = new HBox();
-        Label title = new Label();
-        Button remove = new Button();
+          HBox addedMovie = new HBox();
+          Label title = new Label();
+          Button remove = new Button();
 
-        title.setText(movieObject.getMovieName());
-        remove.setText("Remove");
+          title.setText(movieObject.getMovieName());
+          remove.setText("Remove");
 
-        addedMovie.getChildren().add(title);
-        addedMovie.getChildren().add(remove);
+          addedMovie.getChildren().add(title);
+          addedMovie.getChildren().add(remove);
+          addedMovie.setAlignment(Pos.CENTER_LEFT);
+          addedMovie.setSpacing(5);
 
-        selected_movie_box.getChildren().add(addedMovie);
+          selected_movie_box.getChildren().add(addedMovie);
 
-        remove.setOnAction(new EventHandler<ActionEvent>() {
-          @Override
-          public void handle(ActionEvent event) {
-
-          }
-        });
-        title.setText(movieTitle);
+          remove.setOnAction(
+              new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                  movies.remove(movieObject);
+                  selected_movie_box.getChildren().remove(addedMovie);
+                }
+              });
+        } else {
+          error_label.setText("No Results Found");
+          error_label.setVisible(true);
+        }
+      } else {
+        error_label.setText("No Results Found");
+        error_label.setVisible(true);
       }
-      else{
-
-      }
+    } else {
+      error_label.setText("Nothing in search field");
+      error_label.setVisible(true);
     }
   }
 
+  public void pressedCreateEventButton(ActionEvent event) throws IOException{
+    String eventName = event_name_field.getText();
+    String location = location_field.getText();
+    String date = date_field.getText();
+
+    Server.createEvent(User.getUserName(),eventName,location,date);
+
+  }
 }

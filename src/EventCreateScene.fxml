@@ -75,8 +75,8 @@
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Button fx:id="add_movie_button" mnemonicParsing="false" onAction="#pressedAddMovieButton" prefWidth="90.0" text="Add Movie" />
-                  <Pane prefHeight="72.0" prefWidth="190.0" />
-                  <Button fx:id="create_event_button" mnemonicParsing="false" prefWidth="90.0" text="Create Event" />
+                  <Label fx:id="error_label" prefHeight="17.0" prefWidth="195.0" text="Error Message" visible="false" />
+                  <Button fx:id="create_event_button" mnemonicParsing="false" onAction="#pressedCreateEventButton" prefWidth="90.0" text="Create Event" />
                </children>
             </HBox>
          </children>
