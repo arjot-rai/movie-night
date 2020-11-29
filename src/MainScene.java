@@ -1,3 +1,4 @@
+import com.sun.javafx.iio.ios.IosDescriptor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
@@ -21,6 +22,7 @@ public class MainScene {
   @FXML private TextField movie_search;
   @FXML private Button logout_button;
   @FXML private Button profile_button;
+  @FXML private Button create_Events_Button;
   @FXML private TextArea featured_Text_Area;
   @FXML private ImageView movie_Poster;
   @FXML private Image movieImage;
@@ -63,6 +65,10 @@ public class MainScene {
 
   public void pressedBrowseButton(ActionEvent event) throws IOException {
     BrowseScene browseScene = new BrowseScene(model);
+  }
+
+  public void pressedCreateEventsButton(ActionEvent event) throws IOException {
+    EventCreateScene eventCreateScene = new EventCreateScene(model);
   }
 
   public void pressedSearch(ActionEvent event) throws IOException {
@@ -132,5 +138,6 @@ public class MainScene {
             + "Actors: "
             + movie.getMovieActor().toString().replace("[", "").replace("]", "");
     featured_Text_Area.setText(text);
+    featured_Text_Area.setEditable(false);
   }
 }
