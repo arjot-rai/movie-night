@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LogInScene">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -33,7 +33,7 @@
             <HBox prefHeight="282.0" prefWidth="600.0">
                <children>
                   <Pane prefHeight="100.0" prefWidth="15.0" />
-                  <ImageView fitHeight="282.0" fitWidth="137.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fitHeight="224.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
                   <Pane prefHeight="282.0" prefWidth="15.0" />
                   <VBox prefHeight="282.0" prefWidth="434.0">
                      <children>
