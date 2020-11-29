@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import javafx.fxml.FXML;
@@ -19,10 +20,12 @@ import javafx.scene.layout.GridPane;
 public class BrowseScene {
   private Model model;
   private ApiQuery apiQuery;
-  private ArrayList<Movie> movieArrayList;
+  private ArrayList<Movie> movieList;
+  private ArrayList<Button> displayedMovies = new ArrayList<>();
+  private ArrayList<Button> filteredMovies = new ArrayList<>();
   private int rowsDisplayed;
-
-  //private ImageView movieImage;
+  private int checkPages;
+  private int lastsize = 0;
 
   @FXML private CheckBox action_checkbox, adventure_checkbox, animation_checkbox,
       biography_checkbox, comedy_checkbox, crime_checkbox, documentary_checkbox, drama_checkbox,
@@ -45,7 +48,8 @@ public class BrowseScene {
   public BrowseScene(Model newModel) {
     model = newModel;
     apiQuery = new ApiQuery();
-    movieArrayList = apiQuery.getAllCachedMovies();
+    movieList = apiQuery.getAllCachedMovies();
+    Collections.shuffle(movieList);
     rowsDisplayed = 0;
 
     try {
@@ -61,11 +65,11 @@ public class BrowseScene {
       scrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
         if ((Double) newValue == 1.0) {
           System.out.println("Bottom!");
-          initializeSearchField();
+          populateSearchField();
         }
       });
 
-      initializeSearchField();
+      populateSearchField();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -79,31 +83,88 @@ public class BrowseScene {
     SearchScene newSearchScene = new SearchScene(model, searchbar_textfield.getText());
   }
 
+  public void yearFilterPressed(){
+    lastsize = 0;
+    filter();
+  }
 
-  /*
-  * Should be renamed, this will populate 3 rows of images for the browse page when called and
+  public void filter(){
+    int startYear;
+    int endYear;
+    try{
+      startYear = Integer.parseInt(startyear_textfield.getText());
+    }
+    catch(Exception e){
+      startYear = 0;
+    }
+
+    try{
+      endYear = Integer.parseInt(endyear_textfield.getText());
+    }
+    catch(Exception e){
+      endYear = 10000;
+    }
+    filterResults(startYear, endYear);
+    condenseFilteredResults();
+  }
+
+  /**
+  * Populate 3 rows of images for the browse page when called and
   * increments the rowDsiplayed counter.
    */
-  public void initializeSearchField() {
+  public void populateSearchField() {
     for (int rowIndex = rowsDisplayed; rowIndex < rowsDisplayed + 3; rowIndex++) {
-      movie_anchorpane.setMinSize(movie_anchorpane.getMinWidth(), movie_anchorpane.getMinHeight() + 122);
+      movie_anchorpane.setMinSize(movie_anchorpane.getMinWidth(), movie_anchorpane.getMinHeight() + 137);
       for (int columnIndex = 0; columnIndex < 5; columnIndex++) {
-        Movie movie = movieArrayList.get(rowIndex * 5 + columnIndex);
-        Image image = new Image(movie.getMoviePosterUrl(),
-            75, 112, false, false);
-        ImageView movieImage = new ImageView(image);
+        if(rowIndex * 5 + columnIndex < movieList.size()){
+          Movie movie = movieList.get(rowIndex * 5 + columnIndex);
+          Image image = new Image(movie.getMoviePosterUrl(),
+              75, 112, false, false);
+          ImageView movieImage = new ImageView(image);
 
-        Button button = new Button();
-        button.setGraphic(movieImage);
-        button.setMaxSize(75, 112);
-        button.setOnAction(actionEvent -> {MovieScene movieScene = new MovieScene(model,
-            movie, model.stage.getScene());});
-        movie_gridpane.add(button, columnIndex, rowIndex);
-        GridPane.setHalignment(button, HPos.CENTER);
+          Button button = new Button();
+          button.setGraphic(movieImage);
+          button.setMaxSize(75, 112);
+          displayedMovies.add(button);
+          button.setOnAction(actionEvent -> {altMovieScene movieScene = new altMovieScene(model,
+              movie, model.stage.getScene());});
+          movie_gridpane.add(button, columnIndex, rowIndex);
+          GridPane.setHalignment(button, HPos.CENTER);
+        }
       }
 
     }
     rowsDisplayed = rowsDisplayed + 3;
+    filter();
+  }
+
+  private void filterResults(int startYear, int endYear){
+    filteredMovies.clear();
+    for (int i = 0; i < displayedMovies.size(); i++) {
+      int year = Integer.parseInt(movieList.get(i).getMovieYear());
+      if(year < startYear || year > endYear){
+        movie_gridpane.getChildren().remove(displayedMovies.get(i));
+      }
+      else{
+        filteredMovies.add(displayedMovies.get(i));
+      }
+    }
+  }
+
+  private void condenseFilteredResults(){
+    movie_gridpane.getChildren().clear();
+    for(int i = 0; i < filteredMovies.size(); i++){
+      movie_gridpane.add(filteredMovies.get(i), i % 5, i / 5);
+    }
+
+    movie_anchorpane.setMinSize(movie_anchorpane.getMinWidth(), (float)(filteredMovies.size() / 5 * 137 - 10));
+    if ((filteredMovies.size() < 15 || (filteredMovies.size() - lastsize) < 5) && displayedMovies.size() < movieList.size()) {
+      System.out.println(filteredMovies.size() + ", " + lastsize);
+      populateSearchField();
+    }
+    else{
+      lastsize = filteredMovies.size();
+    }
   }
 
 }

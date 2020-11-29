@@ -147,6 +147,9 @@ public class SearchScene {
           button.setGraphic(movieImage);
           button.setMaxSize(75, 112);
           displayedMovies.add(button);
+          SearchResult result = searchList.get(rowIndex * 5 + columnIndex);
+          button.setOnAction(actionEvent -> {altMovieScene movieScene = new altMovieScene(model,
+              apiQuery.getMovie(result.getImdbID()), model.stage.getScene());});
           movie_gridpane.add(button, columnIndex, rowIndex);
           GridPane.setHalignment(button, HPos.CENTER);
         }
