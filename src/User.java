@@ -19,6 +19,8 @@ public class User{
 
   private static EventList eventList = new EventList();
 
+  private static String profile_pic;
+
   public User(){
 
   }
@@ -37,6 +39,9 @@ public class User{
     }
     if(attributes.containsKey("last_name")){
       last_name = attributes.get("last_name").toString();
+    }
+    if(attributes.containsKey("pic")){
+      profile_pic = attributes.get("pic").toString();
     }
 
     updateFriends();
@@ -123,6 +128,15 @@ public class User{
           events.get(id.toString()).get("organizer").toString(),
           events.get(id.toString()).get("id").toString()));
     }
+  }
+
+  public static String getProfilePicURL(){
+    return profile_pic;
+  }
+
+  public static void setProfile_pic(String key){
+    Server.updateProfilePicURL(userName, key);
+    profile_pic = key;
   }
 
   public static void clearAttributes(){
