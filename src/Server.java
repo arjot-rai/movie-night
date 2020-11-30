@@ -120,7 +120,7 @@ public class Server {
       try (Session session = driver.session()) {
         session.writeTransaction(transaction -> transaction.run("MERGE (a:Person " +
             "{username:$x1, password:$x2, first_name:$x3, last_name:$x4, " +
-            "pic:\"https://gymblebucket.s3.ca-central-1.amazonaws.com/default_profile_pic.png\"," +
+            "pic:\"https://movienightbucket.s3.ca-central-1.amazonaws.com/default_profile_pic.png\"," +
             "salt:$x5})",
           parameters("x1", username, "x2", hashingInfo.get("hashedPassword"),
             "x3", first_name, "x4", last_name,  "x5", hashingInfo.get("salt"))));
@@ -206,6 +206,19 @@ public class Server {
       }
     }
     return events;
+  }
+
+  /**
+   * this function will update the key to the profile picture
+   * @param username the user looking to update their profile pic
+   * @param new_pic the new key for the S3 server to the new picture
+   */
+  public static void updateProfilePicURL(String username, String new_pic){
+    try (Session session = driver.session()) {
+      session.writeTransaction(transaction -> transaction.run("MATCH (a:Person) WHERE " +
+          "toLower(a.username)=$x1 SET a.pic=$x2",
+        parameters("x1", username.toLowerCase(), "x2", new_pic)));
+    }
   }
 
   //streaming service functions
