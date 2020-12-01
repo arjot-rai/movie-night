@@ -120,7 +120,7 @@ public class Server {
       try (Session session = driver.session()) {
         session.writeTransaction(transaction -> transaction.run("MERGE (a:Person " +
             "{username:$x1, password:$x2, first_name:$x3, last_name:$x4, " +
-            "pic:\"https://movienightbucket.s3.ca-central-1.amazonaws.com/default_profile_pic.png\"," +
+            "pic: \"default_profile_pic.png\"," +
             "salt:$x5})",
           parameters("x1", username, "x2", hashingInfo.get("hashedPassword"),
             "x3", first_name, "x4", last_name,  "x5", hashingInfo.get("salt"))));
@@ -283,14 +283,16 @@ public class Server {
    * @param newMovie the title of the new movie
    * @param username the user looking to add a movie
    */
-  public static void addFavouriteMovie(String newMovie, String username){
+  public static void addFavouriteMovie(String newMovie, String username, String rating){
     try (Session session = driver.session()) {
       session.writeTransaction(transaction -> transaction.run("MERGE (a:Movie {name:$x1})",
         parameters("x1", newMovie)));
       session.writeTransaction(transaction -> transaction.run("MATCH (a:Movie), (b:Person) " +
         "WHERE toLower(a.name)=$x2 AND toLower(b.username)=$x1 " +
-        "MERGE (b)-[:FAVMOVIE]->(a) " +
-        "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", newMovie.toLowerCase())));
+        "MERGE (b)-[f:FAVMOVIE]->(a) " +
+        "SET f.rating = $x3 " +
+        "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", newMovie.toLowerCase(),
+                                "x3", rating)));
     }
   }
 
@@ -318,16 +320,16 @@ public class Server {
     HashMap<String, Map<String, Object>> movies = new HashMap<>();
 
     try(Session session = driver.session()){
-      Result result = session.run("Match (a:Person)-[:FAVMOVIE]->(b:Movie) " +
-        "WHERE toLower(a.username)=$x1 Return properties(b) ", parameters("x1", username.toLowerCase()));
+      Result result = session.run("Match (a:Person)-[f:FAVMOVIE]->(b:Movie) " +
+        "WHERE toLower(a.username)=$x1 Return properties(b), properties(f) ",
+        parameters("x1", username.toLowerCase()));
       while(result.hasNext()){
         Record record = result.next();
-        Map<String, Object> service = record.get("properties(b)").asMap();
+        Map<String, Object> ratings = record.get("properties(f)").asMap();
         movies.put(record.get("properties(b)").get("name").asString(),
-          service);
+          ratings);
       }
     }
-    System.out.println(movies);
     return movies;
   }
 

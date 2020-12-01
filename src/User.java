@@ -19,7 +19,7 @@ public class User{
 
   private static EventList eventList = new EventList();
 
-  private static String profile_pic;
+  private static String profile_pic = "";
 
   public User(){
 

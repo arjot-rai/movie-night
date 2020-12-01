@@ -44,11 +44,11 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="username_text" prefHeight="36.0" prefWidth="422.0">
-                     <VBox.margin>
-                        <Insets bottom="5.0" top="5.0" />
-                     </VBox.margin>
-                  </TextArea>
+                  <Label fx:id="username_text" prefHeight="36.0" prefWidth="423.0" text="Label">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                   <Label prefHeight="17.0" prefWidth="441.0" text="Password">
                      <font>
                         <Font size="14.0" />
@@ -64,20 +64,46 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="streaming_services_text" prefHeight="60.0" prefWidth="422.0" />
-                  <Button fx:id="add_Service_Button" mnemonicParsing="false" text="Add Service+">
-                     <VBox.margin>
-                        <Insets bottom="5.0" top="5.0" />
-                     </VBox.margin>
-                  </Button>
+                  <ScrollPane prefHeight="45.0" prefWidth="200.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="117.0" prefWidth="407.0">
+                           <children>
+                              <ListView fx:id="services_list" prefHeight="117.0" prefWidth="407.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </ScrollPane>
+                  <HBox prefHeight="15.0" prefWidth="422.0" spacing="10.0">
+                     <children>
+                        <MenuButton mnemonicParsing="false" text="Add New Service +">
+                          <items>
+                            <MenuItem fx:id="netflix_click" mnemonicParsing="false" text="Netflix" />
+                            <MenuItem fx:id="hulu_click" mnemonicParsing="false" text="Hulu" />
+                              <MenuItem fx:id="crave_click" mnemonicParsing="false" text="Crave" />
+                              <MenuItem fx:id="prime_click" mnemonicParsing="false" text="Prime" />
+                          </items>
+                        </MenuButton>
+                        <MenuButton mnemonicParsing="false" text="Remove Streaming Service -">
+                          <items>
+                            <MenuItem fx:id="netflix_remove" mnemonicParsing="false" text="Netflix" />
+                            <MenuItem fx:id="hulu_remove" mnemonicParsing="false" text="Hulu" />
+                              <MenuItem fx:id="crave_remove" mnemonicParsing="false" text="Crave" />
+                              <MenuItem fx:id="prime_remove" mnemonicParsing="false" text="Prime" />
+                          </items>
+                        </MenuButton>
+                     </children>
+                  </HBox>
                   <Label text="Movie Ratings">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <ScrollPane prefHeight="90.0" prefWidth="422.0">
+                  <ScrollPane prefHeight="112.0" prefWidth="422.0">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                      <AnchorPane fx:id="anchor" minHeight="0.0" minWidth="0.0" prefHeight="112.0" prefWidth="407.0">
+                           <children>
+                              <VBox fx:id="movie_ratings_vbox" prefHeight="200.0" prefWidth="409.0" />
+                           </children></AnchorPane>
                     </content>
                   </ScrollPane>
                </children>
