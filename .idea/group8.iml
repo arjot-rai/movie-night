@@ -41,7 +41,8 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="lib" level="application" />
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="com.amazonaws:aws-java-sdk-s3:1.11.43" level="project" />
+    <orderEntry type="library" name="com.guicedee.services:jakarta.xml.bind-api:62" level="project" />
   </component>
 </module>

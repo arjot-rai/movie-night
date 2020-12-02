@@ -179,6 +179,7 @@ public class ServerTestDriver {
 
   System.out.println("Testing add streaming service...");
   Server.addStreamingService("Netflix", "AdaUN");
+  Server.addStreamingService("Hulu", "AdaUN");
   Server.addStreamingService("Netflix", "BobUN");
   Assert.assertEquals(true, Server.getUsersStreamingServices("AdaUN").keySet().contains("netflix"));
   Assert.assertEquals(true, Server.getUsersStreamingServices("BobUN").keySet().contains("netflix"));
@@ -195,7 +196,13 @@ public class ServerTestDriver {
   System.out.println("Passed");
 
   System.out.println("Testing add favourite movie...");
-  Server.addFavouriteMovie("Superbad", "BobUN");
+  Server.addFavouriteMovie("Superbad", "BobUN", "4.6/5");
+  Server.addFavouriteMovie("Superbad", "AdaUN", "3.6/5");
+  Server.addFavouriteMovie("21 Grams", "AdaUN", "3.6/5");
+  Server.addFavouriteMovie("1917", "AdaUN", "3.6/5");
+  Server.addFavouriteMovie("300", "AdaUN", "3.6/5");
+
+
   Assert.assertEquals(true, Server.getUsersFavouriteMovies("BobUN").keySet().contains("Superbad"));
   Assert.assertEquals(false, Server.getUsersFavouriteMovies("BobUN").keySet().contains("Scream"));
   System.out.println("Passed");
@@ -203,6 +210,10 @@ public class ServerTestDriver {
   System.out.println("Testing remove favourite movie...");
   Server.removeFavouriteMovie("Superbad", "BobUN");
   Assert.assertEquals(false, Server.getUsersFavouriteMovies("BobUN").keySet().contains("Superbad"));
+  System.out.println("Passed");
+
+  System.out.println("Testing get fav movie ratings...");
+  Assert.assertEquals("3.6/5", Server.getUsersFavouriteMovies("AdaUN").get("Superbad").get("rating").toString());
   System.out.println("Passed");
 
   System.out.println("Great Success");
