@@ -63,6 +63,14 @@
                                           </AnchorPane>
                                       </content>
                                     </ScrollPane>
+                                    <Button fx:id="genre_filter_button" mnemonicParsing="false" onAction="#yearFilterPressed" text="Filter">
+                                       <opaqueInsets>
+                                          <Insets top="10.0" />
+                                       </opaqueInsets>
+                                       <VBox.margin>
+                                          <Insets top="10.0" />
+                                       </VBox.margin>
+                                    </Button>
                                  </children>
                               </VBox>
                            </content></TitledPane>
@@ -94,6 +102,11 @@
                                           <CheckBox fx:id="pg13_rating_checkbox" mnemonicParsing="false" selected="true" text="PG-13" />
                                           <CheckBox fx:id="r_rating_checkbox" mnemonicParsing="false" selected="true" text="R" />
                                           <CheckBox fx:id="nc17_rating_checkbox" mnemonicParsing="false" selected="true" text="NC-17" />
+                                          <Button fx:id="rating_filter_button" mnemonicParsing="false" onAction="#yearFilterPressed" text="Filter">
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </Button>
                                        </children>
                                     </VBox>
                                  </children></AnchorPane>

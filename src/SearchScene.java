@@ -179,7 +179,8 @@ public class SearchScene {
       movie_gridpane.add(filteredMovies.get(i), i % 5, i / 5);
     }
 
-    movie_anchorpane.setMinSize(movie_anchorpane.getMinWidth(), (float)(filteredMovies.size() / 5 * 132 - 10));
+    movie_anchorpane.setMinSize(movie_anchorpane.getPrefWidth(), (float)(filteredMovies.size() / 5 * 130));
+    movie_anchorpane.setMaxSize(movie_anchorpane.getPrefWidth(), (float)(filteredMovies.size() / 5 * 130));
     if (filteredMovies.size() < 15 && checkPages < 3) {
       checkPages++;
       getResults();
