@@ -143,6 +143,10 @@ public class User{
     userName = "";
     first_name = "";
     last_name = "";
+    friendList = new FriendList();
+    eventList = new EventList();
+    movieList = new MovieList();
+
   }
 
   public static void main(String[] args) {
