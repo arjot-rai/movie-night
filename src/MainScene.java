@@ -1,6 +1,7 @@
 import com.sun.javafx.iio.ios.IosDescriptor;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,20 +16,26 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
+import javafx.stage.Window;
 
 public class MainScene {
 
   private Model model;
 
+
+  @FXML private AnchorPane main_anchor_pane;
   @FXML private TextField movie_search;
   @FXML private Button logout_button;
   @FXML private Button profile_button;
   @FXML private Button create_Events_Button;
+  @FXML private Button add_Friends_Button;
   @FXML private TextArea featured_Text_Area;
   @FXML private ImageView movie_Poster;
   @FXML private Image movieImage;
@@ -86,6 +93,13 @@ public class MainScene {
 
   public void pressedSearch(ActionEvent event) throws IOException {
     SearchScene searchScene = new SearchScene(model, movie_search.getText());
+  }
+
+  public void pressedAddFriendButton(ActionEvent event) throws IOException {
+    main_anchor_pane.setDisable(true);
+    AddFriendScene addFriendScene = new AddFriendScene(model);
+    main_anchor_pane.setDisable(false);
+
   }
   /**
    * Helper function to obtain a number of movies randomly from a larger list of movies
