@@ -8,9 +8,9 @@ public class ServerTestDriver {
 
   @Before
   public void serverTestSetUp(){
-  Server.connectServer("bolt://174.2.15.198:7687", "neo4j", "cmpt370");
+  //Server.connectServer("bolt://174.2.15.198:7687", "neo4j", "cmpt370");
   //this line is for my local testing, use my external IP above
-  //Server.connectServer("bolt://localhost:7687", "neo4j", "password");
+  Server.connectServer("bolt://localhost:7687", "neo4j", "password");
 
   //this top line is temporary as it will literally delete all
   // nodes but the source before beginning
@@ -215,6 +215,20 @@ public class ServerTestDriver {
   System.out.println("Testing get fav movie ratings...");
   Assert.assertEquals("3.6/5", Server.getUsersFavouriteMovies("AdaUN").get("Superbad").get("rating").toString());
   System.out.println("Passed");
+
+  System.out.println("Testing new want to see movie...");
+  Server.addWantToWatch("Superbad", "AliceUN");
+  Server.addWantToWatch("Scream", "AliceUN");
+  Assert.assertEquals(true, Server.getUsersWantToWatchMovies("AliceUN").keySet().contains("Superbad"));
+  Assert.assertEquals(false, Server.getUsersWantToWatchMovies("AliceUN").keySet().contains("Anything else"));
+  Assert.assertEquals(true, Server.getUsersWantToWatchMovies("AliceUN").keySet().contains("Scream"));
+  System.out.println("Passed");
+
+  System.out.println("Testing remove want to see movie...");
+  Server.removeWantToWatch("Scream", "AliceUN");
+  Assert.assertEquals(false, Server.getUsersWantToWatchMovies("AliceUN").keySet().contains("Scream"));
+  System.out.println("Passed");
+
 
   System.out.println("Great Success");
   }
