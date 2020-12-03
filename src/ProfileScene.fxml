@@ -49,16 +49,22 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label prefHeight="17.0" prefWidth="441.0" text="Password">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <Button fx:id="change_Password_Button" alignment="CENTER" mnemonicParsing="false" text="Change Password">
-                     <VBox.margin>
-                        <Insets bottom="5.0" top="5.0" />
-                     </VBox.margin>
-                  </Button>
+                  <HBox prefHeight="14.0" prefWidth="422.0">
+                     <children>
+                        <Label prefHeight="20.0" prefWidth="141.0" text="Change Password">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="change_error" text="The Confirmed Password is Incorrect!" textFill="#da0b0b" visible="false" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="23.0" prefWidth="422.0">
+                     <children>
+                        <PasswordField fx:id="password_field" prefHeight="25.0" prefWidth="311.0" promptText="Enter Current Password" />
+                        <Button fx:id="change_password_button" alignment="CENTER" mnemonicParsing="false" text="Confirm Password" />
+                     </children>
+                  </HBox>
                   <Label text="Streaming Services">
                      <font>
                         <Font size="14.0" />
@@ -98,7 +104,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <ScrollPane prefHeight="112.0" prefWidth="422.0">
+                  <ScrollPane prefHeight="122.0" prefWidth="422.0">
                     <content>
                       <AnchorPane fx:id="anchor" minHeight="0.0" minWidth="0.0" prefHeight="112.0" prefWidth="407.0">
                            <children>

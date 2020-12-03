@@ -18,6 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class ProfileScene {
@@ -25,7 +26,7 @@ public class ProfileScene {
 
   private ApiQuery api;
 
-  @FXML private Button profile_back_button, change_ProfilePicture_Button, add_Service_Button;
+  @FXML private Button profile_back_button, change_ProfilePicture_Button, add_Service_Button, change_password_button;
   @FXML
   private MenuItem netflix_click,
       hulu_click,
@@ -38,13 +39,15 @@ public class ProfileScene {
 
   @FXML private ImageView profile_picture;
 
-  @FXML private Label username_text;
+  @FXML private Label username_text, change_error;
 
   @FXML private ListView services_list;
 
   @FXML private VBox movie_ratings_vbox;
 
   @FXML private AnchorPane anchor;
+
+  @FXML private PasswordField password_field;
 
   public ProfileScene(Model newModel) {
     model = newModel;
@@ -85,6 +88,13 @@ public class ProfileScene {
       HBox movie_collection = new HBox();
       ImageView movie_poster =
           new ImageView(new Image(movie.getMoviePosterUrl(), 75, 112, false, false));
+      Button movie_button = new Button();
+      movie_button.setGraphic(movie_poster);
+      movie_button.setMaxSize(75,112);
+      movie_button.setOnAction(
+        actionEvent -> {altMovieScene movieScene = new altMovieScene(model, movie, model.stage.getScene());
+
+        });
       VBox info = new VBox();
       Label movie_title = new Label(pair.getKey().toString());
       Label movie_rating = new Label(fav_movies.get(pair.getKey()).get("rating").toString());
@@ -96,16 +106,17 @@ public class ProfileScene {
       info.getChildren().addAll(movie_title, movie_rating, removeButton);
       info.setSpacing(15);
 
-      movie_collection.getChildren().addAll(movie_poster, info);
+      movie_collection.getChildren().addAll(movie_button, info);
 
-      anchor.setMinHeight(anchor.getMinHeight() + 112);
-      movie_ratings_vbox.setMinHeight(movie_ratings_vbox.getMinHeight() + 112);
+      anchor.setMinHeight(anchor.getMinHeight() + 120);
+      movie_ratings_vbox.setMinHeight(movie_ratings_vbox.getMinHeight() + 120);
       movie_ratings_vbox.getChildren().add(movie_collection);
       removeButton.setOnAction(
           event -> removeFavouriteMovie(movie.getMovieName(), movie_collection));
     }
 
     change_ProfilePicture_Button.setOnAction(event -> pressedSetProfilePicButton());
+    change_password_button.setOnAction(event -> pressedConfirmPasswordButton());
     hulu_click.setOnAction(event -> pressedAddServiceButton("Hulu"));
     netflix_click.setOnAction(event -> pressedAddServiceButton("Netflix"));
     crave_click.setOnAction(event -> pressedAddServiceButton("Crave"));
@@ -143,5 +154,41 @@ public class ProfileScene {
   public void removeFavouriteMovie(String movieName, HBox hBoxToBeRemoved) {
     Server.removeFavouriteMovie(movieName, User.getUserName());
     movie_ratings_vbox.getChildren().remove(hBoxToBeRemoved);
+    movie_ratings_vbox.setMinHeight(movie_ratings_vbox.getMinHeight() - 120);
+    anchor.setMinHeight(anchor.getMinHeight() - 120);
   }
+
+  public void pressedConfirmPasswordButton(){
+    LogInReturn password_check = Server.attemptLogIn(User.getUserName(), password_field.getText());
+
+    if(password_check.getSuccess()){
+      change_password_button.setText("Change Password");
+      password_field.clear();
+      password_field.setPromptText("Enter New Password");
+      change_error.setVisible(false);
+      change_password_button.setOnAction(event -> pressedChangePasswordButton());
+    }
+    else{
+      change_error.setText("The confirmed password is incorrect!");
+      change_error.setVisible(true);
+    }
+  }
+
+  public void pressedChangePasswordButton(){
+    if(!password_field.getText().isBlank()){
+      Server.updatePassword(User.getUserName(), password_field.getText());
+      password_field.clear();
+      password_field.setPromptText("Enter Current Password");
+      change_error.setTextFill(Color.BLACK);
+      change_error.setText("New Password Set!");
+      change_error.setVisible(true);
+      change_password_button.setOnAction(event -> pressedConfirmPasswordButton());
+    }
+    else{
+      change_error.setText("Must enter a new valid password!");
+      change_error.setVisible(true);
+    }
+  }
+
+
 }
