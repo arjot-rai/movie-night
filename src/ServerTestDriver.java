@@ -216,6 +216,20 @@ public class ServerTestDriver {
   Assert.assertEquals("3.6/5", Server.getUsersFavouriteMovies("AdaUN").get("Superbad").get("rating").toString());
   System.out.println("Passed");
 
+  System.out.println("Testing new want to see movie...");
+  Server.addWantToWatch("Superbad", "AliceUN");
+  Server.addWantToWatch("Scream", "AliceUN");
+  Assert.assertEquals(true, Server.getUsersWantToWatchMovies("AliceUN").keySet().contains("Superbad"));
+  Assert.assertEquals(false, Server.getUsersWantToWatchMovies("AliceUN").keySet().contains("Anything else"));
+  Assert.assertEquals(true, Server.getUsersWantToWatchMovies("AliceUN").keySet().contains("Scream"));
+  System.out.println("Passed");
+
+  System.out.println("Testing remove want to see movie...");
+  Server.removeWantToWatch("Scream", "AliceUN");
+  Assert.assertEquals(false, Server.getUsersWantToWatchMovies("AliceUN").keySet().contains("Scream"));
+  System.out.println("Passed");
+
+
   System.out.println("Great Success");
   }
 
