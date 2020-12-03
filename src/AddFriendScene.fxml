@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="287.0" prefWidth="579.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="287.0" prefWidth="105.0">
+         <children>
+            <Button fx:id="back_button" mnemonicParsing="false" onAction="#pressedBackButton" prefHeight="60.0" prefWidth="90.0" text="X">
+               <font>
+                  <Font size="28.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+      <VBox layoutX="112.0" prefHeight="111.0" prefWidth="488.0">
+         <children>
+            <Label prefHeight="54.0" prefWidth="192.0" text="Add Friend">
+               <font>
+                  <Font size="24.0" />
+               </font></Label>
+            <TextField fx:id="username_textfield" onAction="#sendFriendRequest" promptText="Enter user name here..." />
+            <Label fx:id="response_label" prefHeight="33.0" prefWidth="487.0" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
