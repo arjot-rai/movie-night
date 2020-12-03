@@ -64,6 +64,7 @@ public class Server {
    * and if it was all the attributes along side it
    */
   public static LogInReturn attemptLogIn(String username, String password){
+    System.out.println(password + " " + username);
       try(Session session = driver.session()){
         Result result = session.run("MATCH (a:Person) WHERE toLower(a.username)=$x1" +
             " RETURN properties(a)",
@@ -218,6 +219,26 @@ public class Server {
       session.writeTransaction(transaction -> transaction.run("MATCH (a:Person) WHERE " +
           "toLower(a.username)=$x1 SET a.pic=$x2",
         parameters("x1", username.toLowerCase(), "x2", new_pic)));
+    }
+  }
+
+
+  /**
+   * will update the password without question under a new hash and salt, the user must first be prompted to verify
+   * their password elsewhere in the program for this to be truly secure, even after a login
+   * @param username the user looking to change their password
+   * @param new_password the new password to save under the user
+   */
+  public static void updatePassword(String username, String new_password){
+    try (Session session = driver.session()) {
+
+      Map<String, byte[]> hashingInfo = PasswordHashing.hashNewPassword(new_password);
+      System.out.println(hashingInfo.get("hashedPassword"));
+
+      session.writeTransaction(transaction -> transaction.run("MATCH (a:Person) WHERE " +
+          "toLower(a.username)=$x1 SET a += {password:$x2, salt:$x3}",
+        parameters("x1", username.toLowerCase(), "x2", hashingInfo.get("hashedPassword"),
+                  "x3", hashingInfo.get("salt"))));
     }
   }
 
