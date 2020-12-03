@@ -95,6 +95,10 @@ public class MainScene {
     SearchScene searchScene = new SearchScene(model, movie_search.getText());
   }
 
+  private void openFriendProfile(Model model, String friendName, Scene scene) {
+    FriendProfileScene friendProfileScene = new FriendProfileScene(model, friendName, scene);
+  }
+
   public void pressedAddFriendButton(ActionEvent event) throws IOException {
     main_anchor_pane.setDisable(true);
     AddFriendScene addFriendScene = new AddFriendScene(model);
@@ -172,7 +176,9 @@ public class MainScene {
     friends_scroll_space.getChildren().clear();
     ArrayList<String> confirmedFriends = User.getFriendList().confirmedFriends;
     for (String friend : confirmedFriends ) {
-        friends_scroll_space.getChildren().add(new Hyperlink(friend));
+      Hyperlink hyperlink = new Hyperlink(friend);
+      hyperlink.setOnAction(e -> openFriendProfile(model, friend, model.stage.getScene()));
+        friends_scroll_space.getChildren().add(hyperlink);
     }
   }
 
@@ -246,4 +252,5 @@ public class MainScene {
     setEvents_scroll_space();
     setPendingEventsScrollSpace();
   }
+
 }
