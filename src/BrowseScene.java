@@ -242,8 +242,15 @@ public class BrowseScene {
           } else {
             Button movieToAdd = displayedMovies.get(i);
             Image image;
+            ImageView movieImage;
             try {
-              image = new Image(displayedMovieObjects.get(i).getMoviePosterUrl(), 75, 112, false, false);
+              if (movieToAdd.getGraphic() == null) {
+                image =
+                    new Image(
+                        displayedMovieObjects.get(i).getMoviePosterUrl(), 75, 112, false, false);
+                movieImage = new ImageView(image);
+                movieToAdd.setGraphic(movieImage);
+              }
             } catch (Exception e) {
               String filePath = new File("").getAbsolutePath();
               FileInputStream inputstream;
@@ -254,10 +261,9 @@ public class BrowseScene {
                 break;
               }
               image = new Image(inputstream, 75, 112, false, false);
+              movieImage = new ImageView(image);
+              movieToAdd.setGraphic(movieImage);
             }
-            ImageView movieImage = new ImageView(image);
-            movieToAdd.setGraphic(movieImage);
-
             filteredMovies.add(movieToAdd);
           }
         }
