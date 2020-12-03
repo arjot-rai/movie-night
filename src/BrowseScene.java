@@ -26,6 +26,7 @@ public class BrowseScene {
   private ApiQuery apiQuery;
   private ArrayList<Movie> movieList;
   private ArrayList<Button> displayedMovies = new ArrayList<>();
+  private ArrayList<Movie> displayedMovieObjects = new ArrayList<>();
   private ArrayList<Button> filteredMovies = new ArrayList<>();
   private int rowsDisplayed;
   private int checkPages;
@@ -129,7 +130,6 @@ public class BrowseScene {
           .addListener(
               (observable, oldValue, newValue) -> {
                 if ((Double) newValue == 1.0) {
-                  System.out.println("Bottom!");
                   populateSearchField();
                 }
               });
@@ -180,26 +180,10 @@ public class BrowseScene {
       for (int columnIndex = 0; columnIndex < 5; columnIndex++) {
         if (rowIndex * 5 + columnIndex < movieList.size()) {
           Movie movie = movieList.get(rowIndex * 5 + columnIndex);
-          Image image;
-          try {
-            image = new Image(movie.getMoviePosterUrl(), 75, 112, false, false);
-          } catch (Exception e) {
-            String filePath = new File("").getAbsolutePath();
-            FileInputStream inputstream;
-            try {
-              // use placeholder image if failed to retrieve from url
-              inputstream = new FileInputStream(filePath + "/img/placeholder.png");
-            } catch (FileNotFoundException fnfe) {
-              break;
-            }
-            image = new Image(inputstream, 75, 112, false, false);
-          }
-          ImageView movieImage = new ImageView(image);
-
           Button button = new Button();
-          button.setGraphic(movieImage);
           button.setMaxSize(75, 112);
           displayedMovies.add(button);
+          displayedMovieObjects.add(movie);
           button.setOnAction(
               actionEvent -> {
                 altMovieScene movieScene = new altMovieScene(model, movie, model.stage.getScene());
@@ -218,7 +202,6 @@ public class BrowseScene {
 
     ArrayList<String> checkedGenres = new ArrayList<>();
     for (CheckBox checkBox : genreCheckboxes.keySet()) {
-      System.out.println(genreCheckboxes.get(checkBox));
       if (checkBox.isSelected()) {
         checkedGenres.add(genreCheckboxes.get(checkBox));
       }
@@ -257,7 +240,25 @@ public class BrowseScene {
           if (!filterRating) {
             movie_gridpane.getChildren().remove(displayedMovies.get(i));
           } else {
-            filteredMovies.add(displayedMovies.get(i));
+            Button movieToAdd = displayedMovies.get(i);
+            Image image;
+            try {
+              image = new Image(displayedMovieObjects.get(i).getMoviePosterUrl(), 75, 112, false, false);
+            } catch (Exception e) {
+              String filePath = new File("").getAbsolutePath();
+              FileInputStream inputstream;
+              try {
+                // use placeholder image if failed to retrieve from url
+                inputstream = new FileInputStream(filePath + "/img/placeholder.png");
+              } catch (FileNotFoundException fnfe) {
+                break;
+              }
+              image = new Image(inputstream, 75, 112, false, false);
+            }
+            ImageView movieImage = new ImageView(image);
+            movieToAdd.setGraphic(movieImage);
+
+            filteredMovies.add(movieToAdd);
           }
         }
       }
@@ -276,7 +277,6 @@ public class BrowseScene {
         movie_anchorpane.getPrefWidth(), (float) (filteredMovies.size() / 5 * 130));
     if ((filteredMovies.size() < 15 || (filteredMovies.size() - lastsize) < 5)
         && displayedMovies.size() < movieList.size()) {
-      System.out.println(filteredMovies.size() + ", " + lastsize);
       populateSearchField();
     } else {
       lastsize = filteredMovies.size();
