@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="145.0" prefWidth="324.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="47.0" prefWidth="61.0">
+         <children>
+            <Button fx:id="back_button" mnemonicParsing="false" onAction="#pressedBackButton" prefHeight="33.0" prefWidth="38.0" text="X">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+      <ComboBox fx:id="event_list" layoutX="43.0" layoutY="60.0" prefHeight="25.0" prefWidth="184.0" promptText="Pick an event to add to..." />
+      <Button fx:id="add_button" layoutX="233.0" layoutY="60.0" mnemonicParsing="false" onAction="#addMovieToEvent" text="Add" />
+      <Label fx:id="title_label" layoutX="72.0" layoutY="15.0" text="Adding _______ to Event" wrapText="true" />
+   </children>
+</AnchorPane>

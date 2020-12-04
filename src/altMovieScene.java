@@ -1,6 +1,9 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,10 +27,17 @@ public class altMovieScene {
   private Movie movie;
   private Scene scene;
 
+  private boolean onList = false;
+
+  @FXML private AnchorPane main_anchor_pane;
   @FXML
   private Label movie_name, movie_desc, release_date, director, streaming_services;
 
   @FXML private Button back_button;
+
+  @FXML private Button my_list_button;
+
+  @FXML private Button event_button;
 
   @FXML private ImageView movie_poster;
 
@@ -65,8 +75,41 @@ public class altMovieScene {
     release_date.setText(movie.getMovieReleaseDate());
     Image image = new Image(movie.getMoviePosterUrl(), 150, 224, false, false);
     movie_poster.setImage(image);
-    //streaming_services.setText(movie.getMovieStreamingSite()); // NYI
+    streaming_services.setText(""); // NYI
 
+    HashMap<String, Map<String, Object>> wantMovies = Server.getUsersWantToWatchMovies(User.getUserName());
+    Set<String> titles = wantMovies.keySet();
+
+    if(titles.contains(movie.getMovieName())){
+      my_list_button.setText("Remove from My List");
+      onList = true;
+    }
+  }
+
+  /**
+   * adds the movie to the user's want to watch list
+   */
+  public void addMovieToList(){
+    if(onList){
+      Server.removeWantToWatch(movie.getMovieName(), User.getUserName());
+      my_list_button.setText("Add to My List");
+      onList = false;
+    }
+    else{
+      Server.addWantToWatch(movie.getMovieName(), User.getUserName());
+      my_list_button.setText("Remove from My List");
+      onList = true;
+    }
+
+  }
+
+  /**
+   * opens popup to select the event to add the movie to.
+   */
+  public void addMovieToEvent(){
+    main_anchor_pane.setDisable(true);
+    AddMovieToEventScene addMovieToEventScene = new AddMovieToEventScene(model, movie);
+    main_anchor_pane.setDisable(false);
   }
 
 
