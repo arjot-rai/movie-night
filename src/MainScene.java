@@ -24,6 +24,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
 import javafx.stage.Window;
+import javax.swing.plaf.synth.SynthDesktopIconUI;
+import software.amazon.ion.SystemSymbols;
 
 public class MainScene {
 
@@ -37,7 +39,7 @@ public class MainScene {
   @FXML private Button create_Events_Button;
   @FXML private Button add_Friends_Button;
   @FXML private TextArea featured_Text_Area;
-  @FXML private ImageView movie_Poster;
+  @FXML private Button featuredMovie;
   @FXML private Image movieImage;
   @FXML private Button featured1_button, featured2_button, featured3_button, featured4_button;
   @FXML private VBox request_scroll_space;
@@ -47,6 +49,7 @@ public class MainScene {
   private ArrayList<Movie> featuredMovies;
   private final int FEATURED_MOVIE_LIST_SIZE = 4;
   private final int FEATURED_TEXT_LENGTH = 8;
+  private Button goToMovieScene = new Button();
 
   public MainScene(Model newModel) {
     model = newModel;
@@ -149,14 +152,20 @@ public class MainScene {
    * @param movie: Movie; the movie that needs to be displayed
    */
   private void setElements(Movie movie) {
+
+    featuredMovie.setOnAction(event -> {
+      altMovieScene movieScene = new altMovieScene(model, movie, model.stage.getScene());
+    });
     Image image =
         new Image(
             movie.getMoviePosterUrl(),
-            movie_Poster.getFitWidth(),
-            movie_Poster.getFitHeight(),
+            featuredMovie.getWidth(),
+            featuredMovie.getHeight(),
             false,
             false);
+    ImageView movie_Poster = new ImageView();
     movie_Poster.setImage(image);
+    featuredMovie.setGraphic(movie_Poster);
 
     String text =
         movie.getMovieName()
