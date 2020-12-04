@@ -28,16 +28,19 @@ public class altMovieScene {
   private Scene scene;
 
   private boolean onList = false;
+  private int stars = 0;
 
   @FXML private AnchorPane main_anchor_pane;
   @FXML
-  private Label movie_name, movie_desc, release_date, director, streaming_services;
+  private Label movie_name, movie_desc, release_date, director, runtime, rating, actors;
 
   @FXML private Button back_button;
 
   @FXML private Button my_list_button;
 
   @FXML private Button event_button;
+
+  @FXML private Button star1, star2, star3, star4, star5;
 
   @FXML private ImageView movie_poster;
 
@@ -75,7 +78,17 @@ public class altMovieScene {
     release_date.setText(movie.getMovieReleaseDate());
     Image image = new Image(movie.getMoviePosterUrl(), 150, 224, false, false);
     movie_poster.setImage(image);
-    streaming_services.setText(""); // NYI
+    runtime.setText(Integer.toString(movie.getMovieRuntime()) + " mins");
+    rating.setText(movie.getMovieRating());
+    actors.setText(movie.getMovieActor().toString().replace("[", "").replace("]", ""));
+
+    HashMap<String, Map<String, Object>> ratings = Server.getUsersFavouriteMovies(User.getUserName());
+    Set<String> ratedTitles = ratings.keySet();
+
+    if(ratedTitles.contains(movie.getMovieName())){
+      stars = Integer.parseInt(ratings.get(movie.getMovieName()).get("rating").toString());
+      setRating(stars, true);
+    }
 
     HashMap<String, Map<String, Object>> wantMovies = Server.getUsersWantToWatchMovies(User.getUserName());
     Set<String> titles = wantMovies.keySet();
@@ -84,6 +97,76 @@ public class altMovieScene {
       my_list_button.setText("Remove from My List");
       onList = true;
     }
+  }
+
+  public void setRating(int stars, boolean visualOnly){
+    if(stars < 1){
+      stars = 1;
+    }
+    else if(stars > 5) {
+      stars = 5;
+    }
+
+    if(stars >= 1){
+      star1.setText("★");
+    }
+    else{
+      star1.setText("☆");
+    }
+
+    if(stars >= 2){
+      star2.setText("★");
+    }
+    else{
+      star2.setText("☆");
+    }
+
+    if(stars >= 3){
+      star3.setText("★");
+    }
+    else{
+      star3.setText("☆");
+    }
+
+    if(stars >= 4){
+      star4.setText("★");
+    }
+    else{
+      star4.setText("☆");
+    }
+
+    if(stars == 5){
+      star5.setText("★");
+    }
+    else{
+      star5.setText("☆");
+    }
+
+    if(!visualOnly){
+      Server.addFavouriteMovie(movie.getMovieName(), User.getUserName(), Integer.toString(stars));
+    }
+
+  }
+
+
+  public void star1Pressed(){
+    setRating(1, false);
+  }
+
+  public void star2Pressed(){
+    setRating(2, false);
+  }
+
+  public void star3Pressed(){
+    setRating(3, false);
+  }
+
+  public void star4Pressed(){
+    setRating(4, false);
+  }
+
+  public void star5Pressed(){
+    setRating(5, false);
   }
 
   /**
