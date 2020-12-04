@@ -303,7 +303,16 @@ public class ApiQuery {
    * @param json the JSON data to write
    */
   public void writeJSON(JSONObject json) {
-    String filePath = new File("").getAbsolutePath();
+    String filePath = "";
+    try{
+      filePath = new File(ApiQuery.class.getProtectionDomain().getCodeSource().getLocation()
+          .toURI()).getParentFile().getPath();
+      System.out.println(filePath);
+    }
+    catch (Exception e){
+
+    }
+
     String path = "/movieCache/";
     String fileName = (String) json.get("Title");
     fileName = fileName.replaceAll("\\W", "");
@@ -354,7 +363,16 @@ public class ApiQuery {
   }
 
   public ArrayList<Movie> getAllCachedMovies() {
-    String filePath = new File("").getAbsolutePath();
+    String filePath = "";
+    try{
+      filePath = new File(ApiQuery.class.getProtectionDomain().getCodeSource().getLocation()
+          .toURI()).getParentFile().getPath();
+      System.out.println(filePath);
+    }
+    catch(Exception e){
+
+    }
+
     File folder = new File(filePath + "/movieCache/");
     File[] listOfFiles = folder.listFiles();
 
