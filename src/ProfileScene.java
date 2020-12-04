@@ -47,7 +47,11 @@ public class ProfileScene {
 
   @FXML private AnchorPane anchor;
 
+  @FXML private AnchorPane anchorDesired;
+
   @FXML private PasswordField password_field;
+
+  @FXML private VBox desired_movie_vbox;
 
   public ProfileScene(Model newModel) {
     model = newModel;
@@ -74,47 +78,8 @@ public class ProfileScene {
     services.addAll(Server.getUsersStreamingServices(User.getUserName()).keySet());
     services_list.setItems(services);
 
-    // get all the movies into a hash map and iterate through them collecting each movie title and
-    // rating as well as
-    // getting their movie class to generate a movie post url
-    HashMap<String, Map<String, Object>> fav_movies =
-        Server.getUsersFavouriteMovies(User.getUserName());
-
-    Iterator movie_it = fav_movies.entrySet().iterator();
-    while (movie_it.hasNext()) {
-      Map.Entry pair = (Map.Entry) movie_it.next();
-      Movie movie = api.getMovie(pair.getKey().toString());
-
-      HBox movie_collection = new HBox();
-      ImageView movie_poster =
-          new ImageView(new Image(movie.getMoviePosterUrl(), 75, 112, false, false));
-      Button movie_button = new Button();
-      movie_button.setGraphic(movie_poster);
-      movie_button.setMaxSize(75,112);
-      movie_button.setOnAction(
-        actionEvent -> {altMovieScene movieScene = new altMovieScene(model, movie, model.stage.getScene());
-
-        });
-      VBox info = new VBox();
-      Label movie_title = new Label(pair.getKey().toString());
-      Label movie_rating = new Label(fav_movies.get(pair.getKey()).get("rating").toString());
-
-      Button removeButton = new Button("Remove");
-
-      movie_title.setMinSize(400, 10);
-      movie_title.setFont(new Font(20));
-      info.getChildren().addAll(movie_title, movie_rating, removeButton);
-      info.setSpacing(15);
-
-      movie_collection.getChildren().addAll(movie_button, info);
-
-      anchor.setMinHeight(anchor.getMinHeight() + 120);
-      movie_ratings_vbox.setMinHeight(movie_ratings_vbox.getMinHeight() + 120);
-      movie_ratings_vbox.getChildren().add(movie_collection);
-      removeButton.setOnAction(
-          event -> removeFavouriteMovie(movie.getMovieName(), movie_collection));
-    }
-
+    setUpMovieRatingBox();
+    setUpDesiredMovieBox();
     change_ProfilePicture_Button.setOnAction(event -> pressedSetProfilePicButton());
     change_password_button.setOnAction(event -> pressedConfirmPasswordButton());
     hulu_click.setOnAction(event -> pressedAddServiceButton("Hulu"));
@@ -151,13 +116,6 @@ public class ProfileScene {
     services_list.setItems(services);
   }
 
-  public void removeFavouriteMovie(String movieName, HBox hBoxToBeRemoved) {
-    Server.removeFavouriteMovie(movieName, User.getUserName());
-    movie_ratings_vbox.getChildren().remove(hBoxToBeRemoved);
-    movie_ratings_vbox.setMinHeight(movie_ratings_vbox.getMinHeight() - 120);
-    anchor.setMinHeight(anchor.getMinHeight() - 120);
-  }
-
   public void pressedConfirmPasswordButton(){
     LogInReturn password_check = Server.attemptLogIn(User.getUserName(), password_field.getText());
 
@@ -190,5 +148,105 @@ public class ProfileScene {
     }
   }
 
+  private void setUpMovieRatingBox(){
+    // get all the movies into a hash map and iterate through them collecting each movie title and
+    // rating as well as
+    // getting their movie class to generate a movie post url
+    HashMap<String, Map<String, Object>> fav_movies =
+        Server.getUsersFavouriteMovies(User.getUserName());
 
+    Iterator movie_it = fav_movies.entrySet().iterator();
+    while (movie_it.hasNext()) {
+      Map.Entry pair = (Map.Entry) movie_it.next();
+      Movie movie = api.getMovie(pair.getKey().toString());
+
+      HBox movie_collection = new HBox();
+      ImageView movie_poster =
+          new ImageView(new Image(movie.getMoviePosterUrl(), 75, 112, false, false));
+      Button movie_button = new Button();
+      movie_button.setGraphic(movie_poster);
+      movie_button.setMaxSize(75,112);
+      movie_button.setOnAction(
+          actionEvent -> {altMovieScene movieScene = new altMovieScene(model, movie, model.stage.getScene());
+
+          });
+      VBox info = new VBox();
+      Label movie_title = new Label(pair.getKey().toString());
+      Label movie_rating = new Label(fav_movies.get(pair.getKey()).get("rating").toString());
+
+      Button removeButton = new Button("Remove");
+
+      movie_title.setMinSize(400, 10);
+      movie_title.setFont(new Font(20));
+      info.getChildren().addAll(movie_title, movie_rating, removeButton);
+      info.setSpacing(15);
+
+      movie_collection.getChildren().addAll(movie_button, info);
+
+      anchor.setMinHeight(anchor.getMinHeight() + 120);
+      movie_ratings_vbox.setMinHeight(movie_ratings_vbox.getMinHeight() + 120);
+      movie_ratings_vbox.getChildren().add(movie_collection);
+      removeButton.setOnAction(
+          event -> removeMovieRating(movie.getMovieName(), movie_collection));
+    }
+  }
+
+  private void setUpDesiredMovieBox(){
+    // get all the movies into a hash map and iterate through them collecting each movie title and
+    // rating as well as
+    // getting their movie class to generate a movie post url
+    HashMap<String, Map<String, Object>> fav_movies =
+        Server.getUsersWantToWatchMovies(User.getUserName());
+
+    Iterator movie_it = fav_movies.entrySet().iterator();
+    while (movie_it.hasNext()) {
+      Map.Entry pair = (Map.Entry) movie_it.next();
+      Movie movie = api.getMovie(pair.getKey().toString());
+      System.out.println(movie.getMovieName());
+      HBox movie_collection = new HBox();
+      ImageView movie_poster =
+          new ImageView(new Image(movie.getMoviePosterUrl(), 75, 112, false, false));
+      Button movie_button = new Button();
+      movie_button.setGraphic(movie_poster);
+      movie_button.setMaxSize(75,112);
+      movie_button.setOnAction(
+          actionEvent -> {altMovieScene movieScene = new altMovieScene(model, movie, model.stage.getScene());
+
+          });
+      VBox info = new VBox();
+      Label movie_title = new Label(pair.getKey().toString());
+
+      Button removeButton = new Button("Remove");
+
+      movie_title.setMinSize(400, 10);
+      movie_title.setFont(new Font(20));
+      info.getChildren().addAll(movie_title, removeButton);
+      info.setSpacing(15);
+
+      movie_collection.getChildren().addAll(movie_button, info);
+
+      anchorDesired.setMinHeight(anchorDesired.getMinHeight() + 120);
+      desired_movie_vbox.setMinHeight(desired_movie_vbox.getMinHeight() + 120);
+      desired_movie_vbox.getChildren().add(movie_collection);
+      removeButton.setOnAction(
+          event -> removeDesiredMovie(movie.getMovieName(), movie_collection));
+    }
+  }
+
+  private void removeMovieRating(String movieName, HBox hBoxToBeRemoved) {
+    Server.removeFavouriteMovie(movieName, User.getUserName());
+    movie_ratings_vbox.getChildren().remove(hBoxToBeRemoved);
+    movie_ratings_vbox.setMinHeight(movie_ratings_vbox.getMinHeight() - 120);
+    anchor.setMinHeight(anchor.getMinHeight() - 120);
+  }
+
+  private void removeDesiredMovie(String movieName, HBox hBoxToBeRemoved) {
+    if(User.getMovieList().movieNames.contains(movieName)){
+      User.getMovieList().movieNames.remove(movieName);
+    }
+    Server.removeWantToWatch(movieName, User.getUserName());
+    desired_movie_vbox.getChildren().remove(hBoxToBeRemoved);
+    desired_movie_vbox.setMinHeight(movie_ratings_vbox.getMinHeight() - 120);
+    anchorDesired.setMinHeight(anchor.getMinHeight() - 120);
+  }
 }
