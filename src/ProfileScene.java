@@ -241,6 +241,9 @@ public class ProfileScene {
   }
 
   private void removeDesiredMovie(String movieName, HBox hBoxToBeRemoved) {
+    if(User.getMovieList().movieNames.contains(movieName)){
+      User.getMovieList().movieNames.remove(movieName);
+    }
     Server.removeWantToWatch(movieName, User.getUserName());
     desired_movie_vbox.getChildren().remove(hBoxToBeRemoved);
     desired_movie_vbox.setMinHeight(movie_ratings_vbox.getMinHeight() - 120);
