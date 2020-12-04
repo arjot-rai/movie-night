@@ -73,10 +73,16 @@ public class AddMovieToEventScene {
 
   }
 
-  public void pressedBackButton(ActionEvent event) throws IOException {
+  /**
+   * close the popup and return to the previous scene
+   */
+  public void pressedBackButton(){
     movieEventStage.close();
   }
 
+  /**
+   * Add the movie to the event selected in the combobox
+   */
   public void addMovieToEvent(){
     String pickedEvent = event_list.getValue().toString();
     Server.addEventMovie(movie.getMovieName(), reverseEventMap.get(pickedEvent));

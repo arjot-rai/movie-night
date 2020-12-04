@@ -86,6 +86,9 @@ public class altMovieScene {
     }
   }
 
+  /**
+   * adds the movie to the user's want to watch list
+   */
   public void addMovieToList(){
     if(onList){
       Server.removeWantToWatch(movie.getMovieName(), User.getUserName());
@@ -100,6 +103,9 @@ public class altMovieScene {
 
   }
 
+  /**
+   * opens popup to select the event to add the movie to.
+   */
   public void addMovieToEvent(){
     main_anchor_pane.setDisable(true);
     AddMovieToEventScene addMovieToEventScene = new AddMovieToEventScene(model, movie);
