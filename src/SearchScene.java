@@ -25,6 +25,7 @@ public class SearchScene {
   private ApiQuery apiQuery;
   private ArrayList<SearchResult> searchList = new ArrayList<>();
   private ArrayList<Button> displayedMovies = new ArrayList<>();
+  private ArrayList<Movie> displayedMovieObjects = new ArrayList<>();
   private ArrayList<Button> filteredMovies = new ArrayList<>();
   private int rowsDisplayed;
   private int pagesQueried = 0;
@@ -120,31 +121,8 @@ public class SearchScene {
       for (int columnIndex = 0; columnIndex < 5; columnIndex++) {
         if (rowIndex * 5 + columnIndex
             < searchList.size()) { // check that you havent run out of results
-          Image image;
-          try {
-            image =
-                new Image(
-                    searchList.get(rowIndex * 5 + columnIndex).getPosterUrl(),
-                    75,
-                    112,
-                    false,
-                    false);
-          } catch (Exception e) {
-            String filePath = new File("").getAbsolutePath();
-            FileInputStream inputstream;
-            try {
-              // use placeholder image if failed to retrieve from url
-              inputstream = new FileInputStream(filePath + "/img/placeholder.png");
-            } catch (FileNotFoundException fnfe) {
-              break;
-            }
-            image = new Image(inputstream, 75, 112, false, false);
-          }
-
-          ImageView movieImage = new ImageView(image);
 
           Button button = new Button();
-          button.setGraphic(movieImage);
           button.setMaxSize(75, 112);
           displayedMovies.add(button);
           SearchResult result = searchList.get(rowIndex * 5 + columnIndex);
@@ -168,7 +146,37 @@ public class SearchScene {
           movie_gridpane.getChildren().remove(displayedMovies.get(i));
         }
         else{
-          filteredMovies.add(displayedMovies.get(i));
+          Button button = displayedMovies.get(i);
+          Image image;
+          ImageView movieImage;
+          try {
+            if(button.getGraphic() == null){
+              image =
+                  new Image(
+                      searchList.get(i).getPosterUrl(),
+                      75,
+                      112,
+                      false,
+                      false);
+              movieImage = new ImageView(image);
+              button.setGraphic(movieImage);
+            }
+
+          } catch (Exception e) {
+            String filePath = new File("").getAbsolutePath();
+            FileInputStream inputstream;
+            try {
+              // use placeholder image if failed to retrieve from url
+              inputstream = new FileInputStream(filePath + "/img/placeholder.png");
+            } catch (FileNotFoundException fnfe) {
+              break;
+            }
+            image = new Image(inputstream, 75, 112, false, false);
+            movieImage = new ImageView(image);
+            button.setGraphic(movieImage);
+          }
+
+          filteredMovies.add(button);
         }
     }
   }
