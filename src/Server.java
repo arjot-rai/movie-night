@@ -354,6 +354,60 @@ public class Server {
     return movies;
   }
 
+//Want to watch movie functions
+
+  /**
+   * adds a movie the user wants to see to the user's profile, without creating duplicates
+   * @param newMovie the title of the new movie
+   * @param username the user looking to add a movie
+   */
+  public static void addWantToWatch(String newMovie, String username){
+    try (Session session = driver.session()) {
+      session.writeTransaction(transaction -> transaction.run("MERGE (a:Movie {name:$x1})",
+        parameters("x1", newMovie)));
+      session.writeTransaction(transaction -> transaction.run("MATCH (a:Movie), (b:Person) " +
+        "WHERE toLower(a.name)=$x2 AND toLower(b.username)=$x1 " +
+        "MERGE (b)-[:WANTTOWATCH]->(a) " +
+        "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", newMovie.toLowerCase())));
+    }
+  }
+
+  /**
+   * removes a wanted to see movie from a user's profile, without removing the movie from the database
+   * @param remove_movie the name of the movie to remove
+   * @param username the user to remove the movie from
+   */
+  public static void removeWantToWatch(String remove_movie, String username){
+    try(Session session = driver.session()){
+      session.writeTransaction(transaction -> transaction.run(
+        "MATCH (a:Person)-[e:WANTTOWATCH]->(b:Movie) " +
+          "WHERE toLower(a.username)=$x1 AND toLower(b.name)=$x2 " +
+          "DELETE e",
+        parameters("x1", username.toLowerCase(), "x2", remove_movie.toLowerCase())));
+    }
+  }
+
+  /**
+   * Gets a hashmap of all the user's movies they want to see
+   * @param username the user to get the movies from
+   * @return the movies
+   */
+  public static HashMap<String, Map<String, Object>> getUsersWantToWatchMovies(String username){
+    HashMap<String, Map<String, Object>> movies = new HashMap<>();
+
+    try(Session session = driver.session()){
+      Result result = session.run("Match (a:Person)-[:WANTTOWATCH]->(b:Movie) " +
+          "WHERE toLower(a.username)=$x1 Return properties(b)",
+        parameters("x1", username.toLowerCase()));
+      while(result.hasNext()){
+        Record record = result.next();
+        Map<String, Object> ratings = record.get("properties(b)").asMap();
+        movies.put(record.get("properties(b)").get("name").asString(),
+          ratings);
+      }
+    }
+    return movies;
+  }
 
   //Friendship functions
   /**
