@@ -65,7 +65,15 @@ public class altMovieScene {
     release_date.setText(movie.getMovieReleaseDate());
     Image image = new Image(movie.getMoviePosterUrl(), 150, 224, false, false);
     movie_poster.setImage(image);
-    //streaming_services.setText(movie.getMovieStreamingSite()); // NYI
+    streaming_services.setText(""); // NYI
+
+  }
+
+  public void addMovieToList(){
+
+  }
+
+  public void addMovieToEvent(){
 
   }
 
