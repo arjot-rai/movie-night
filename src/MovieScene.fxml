@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="main_anchor_pane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="592.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -30,20 +30,20 @@
             <HBox prefHeight="282.0" prefWidth="600.0">
                <children>
                   <Pane prefHeight="100.0" prefWidth="15.0" />
-                  <VBox prefHeight="200.0" prefWidth="100.0">
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                      <children>
                         <ImageView fx:id="movie_poster" fitHeight="193.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" />
-                        <Button mnemonicParsing="false" onAction="#addMovieToList" text="Add to My List">
+                        <Button fx:id="my_list_button" mnemonicParsing="false" onAction="#addMovieToList" text="Add to My List">
                            <VBox.margin>
-                              <Insets left="20.0" top="10.0" />
+                              <Insets top="10.0" />
                            </VBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#addMovieToEvent" text="Add to Event">
+                        <Button fx:id="event_button" mnemonicParsing="false" onAction="#addMovieToEvent" text="Add to Event">
                            <padding>
                               <Insets bottom="5.0" left="13.0" right="13.0" top="5.0" />
                            </padding>
                            <VBox.margin>
-                              <Insets left="20.0" top="10.0" />
+                              <Insets top="10.0" />
                            </VBox.margin>
                         </Button>
                      </children>
