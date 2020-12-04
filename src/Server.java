@@ -47,8 +47,8 @@ public class Server {
    */
   public static boolean checkUsernameAvailability(String username) {
     try (Session session = driver.session()) {
-      Result result = session.run("MATCH (a:Person) WHERE a.username=$x1 RETURN a",
-          parameters("x1", username));
+      Result result = session.run("MATCH (a:Person) WHERE toLower(a.username)=$x1 RETURN a",
+          parameters("x1", username.toLowerCase()));
       if(result.hasNext()){
         return false;
       }
