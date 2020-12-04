@@ -57,7 +57,7 @@ public class Person {
     this.movieList = mList;
   }
 
-  public void addMovie(int movieID){
-    movieList.addMovie(movieID);
+  public void addMovie(String movieName){
+    movieList.addMovie(movieName);
   }
 }

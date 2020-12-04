@@ -7,11 +7,11 @@ class MovieListTest {
   void testComparingMovieLists(){
     MovieList firstList = new MovieList();
     MovieList secondList = new MovieList();
-    firstList.addMovie(1);
-    firstList.addMovie(2);
-    secondList.addMovie(1);
-    secondList.addMovie(3);
+    firstList.addMovie("superbad");
+    firstList.addMovie("21 Grams");
+    secondList.addMovie("21 Grams");
+    secondList.addMovie("spiderman");
     MovieList movieList = firstList.compareMovies(secondList);
-    System.out.println(movieList.movies.toString());
+    System.out.println(movieList.movieNames.toString());
   }
 }
