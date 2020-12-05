@@ -30,9 +30,9 @@ import java.io.IOException;
 public class MainScene {
 
   private Model model;
-  private static final String IDLE_BUTTON_STYLE = "-fx-background-color: #0087FF";
+  private static final String IDLE_BUTTON_STYLE = "-fx-background-color: #3892C7";
   private static final String HOVERED_BUTTON_STYLE = "-fx-background-color: #005BFF";
-  private static final Paint TEXT_FILL = Color.web("#0007FF");
+  private static final Paint TEXT_FILL = Color.web("#384BC7");
 
   @FXML private TextField movie_search;
   @FXML private Button logout_button;

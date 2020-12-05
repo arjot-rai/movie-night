@@ -8,11 +8,11 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: lightgray;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="109.0">
                <children>
-                  <Button fx:id="profile_button" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#pressedProfileButton" prefHeight="59.0" prefWidth="71.0" style="-fx-border-radius: 5px; -fx-background-color: #0087FF; -fx-text-fill: #0008FF;" text="Profile " textAlignment="CENTER">
+                  <Button fx:id="profile_button" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#pressedProfileButton" prefHeight="59.0" prefWidth="71.0" style="-fx-border-radius: 5px;" text="Profile " textAlignment="CENTER">
                      <VBox.margin>
                         <Insets top="15.0" />
                      </VBox.margin>
@@ -21,7 +21,7 @@
                      </font>
                   </Button>
                   <Pane prefHeight="266.0" prefWidth="109.0" />
-                  <Button fx:id="logout_button" mnemonicParsing="false" onAction="#pressedLogoutButton" prefHeight="59.0" prefWidth="71.0" style="-fx-background-color: #0087FF; -fx-background-radius: 5px; -fx-text-fill: #0008FF; -fx-border-radius: 5px;" text="Logout">
+                  <Button fx:id="logout_button" mnemonicParsing="false" onAction="#pressedLogoutButton" prefHeight="59.0" prefWidth="71.0" style="-fx-background-radius: 5px; -fx-border-radius: 5px;" text="Logout">
                      <VBox.margin>
                         <Insets bottom="15.0" />
                      </VBox.margin>
@@ -75,7 +75,7 @@
                      </children>
                   </HBox>
                   <Pane prefHeight="45.0" prefWidth="380.0" />
-                  <Button fx:id="browse_Button" contentDisplay="CENTER" mnemonicParsing="false" onAction="#pressedBrowseButton" prefHeight="59.0" prefWidth="192.0" style="-fx-background-color: #0087FF; -fx-background-radius: 5px; -fx-text-fill: #0008FF; -fx-border-radius: 5px;" text="Browse" textAlignment="CENTER">
+                  <Button fx:id="browse_Button" contentDisplay="CENTER" mnemonicParsing="false" onAction="#pressedBrowseButton" prefHeight="59.0" prefWidth="192.0" style="-fx-background-radius: 5px; -fx-border-radius: 5px;" text="Browse" textAlignment="CENTER">
                      <VBox.margin>
                         <Insets bottom="15.0" />
                      </VBox.margin>
@@ -148,7 +148,7 @@
                                  <children>
                                     <VBox prefHeight="200.0" prefWidth="100.0">
                                        <children>
-                                          <Button fx:id="create_Events_Button" mnemonicParsing="false" onAction="#pressedCreateEventsButton" prefHeight="35.0" prefWidth="127.0" style="-fx-background-color: #0087FF; -fx-background-radius: 5px; -fx-text-fill: #0007FF;" text="Create Events">
+                                          <Button fx:id="create_Events_Button" mnemonicParsing="false" onAction="#pressedCreateEventsButton" prefHeight="35.0" prefWidth="127.0" style="-fx-background-radius: 5px;" text="Create Events">
                                              <font>
                                                 <Font name="Berlin Sans FB Demi Bold" size="15.0" />
                                              </font>
