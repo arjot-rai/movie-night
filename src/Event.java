@@ -9,11 +9,13 @@ public class Event {
 
   private String eventOrganizer;
 
-  private ArrayList<Integer> eventGuestList;
+  private ArrayList<String> eventGuestList;
 
   private String eventID;
 
   private ArrayList<Integer> eventMovies;
+
+  private ArrayList<String> eventStreamingServices;
 
   public Event(String name, String location, String date, String organizer, String id){
     this.eventName = name;
@@ -23,6 +25,8 @@ public class Event {
     this.eventID = id;
     this.eventGuestList = new ArrayList<>();
     this.eventMovies = new ArrayList<>();
+    this.eventStreamingServices = new ArrayList<>();
+
   }
 
   public String getEventName() {
@@ -78,17 +82,21 @@ public class Event {
     this.eventMovies.remove((Object)movieID);
   }
 
-  public ArrayList<Integer> getEventGuestList() {
+  public ArrayList<String> getEventGuestList() {
     return eventGuestList;
   }
 
-  public void addEventGuest(int id) {
+  public void addEventGuest(String id) {
     this.eventGuestList.add(id);
   }
 
-  public void removeEventGuest(int id) {
+  public void removeEventGuest(String id) {
     this.eventGuestList.remove(id);
   }
+
+  public void addStreamingService(String service) { this.eventStreamingServices.add(service); }
+
+  public void removeStreamingService(String service) { this.eventStreamingServices.remove(service); }
 
   public static void main(String[] args){
 
