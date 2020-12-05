@@ -94,6 +94,8 @@ public class Event {
     this.eventGuestList.remove(id);
   }
 
+  public ArrayList<String> getEventStreamingServices() { return eventStreamingServices; }
+
   public void addStreamingService(String service) { this.eventStreamingServices.add(service); }
 
   public void removeStreamingService(String service) { this.eventStreamingServices.remove(service); }
