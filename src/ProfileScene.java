@@ -172,7 +172,7 @@ public class ProfileScene {
           });
       VBox info = new VBox();
       Label movie_title = new Label(pair.getKey().toString());
-      Label movie_rating = new Label(fav_movies.get(pair.getKey()).get("rating").toString());
+      Label movie_rating = new Label(fav_movies.get(pair.getKey()).get("rating").toString() + "/5");
 
       Button removeButton = new Button("Remove");
 
