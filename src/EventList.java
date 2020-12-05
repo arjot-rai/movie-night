@@ -23,6 +23,15 @@ public class EventList {
     confirmedEvents.add(eventID);
   }
 
+  public boolean containsEvent(String eventID){
+    for (Event event: confirmedEvents) {
+        if(event.getEventID().equals(eventID)){
+          return true;
+        }
+    }
+    return false;
+  }
+
   public void rejectInvite(Event eventID){
     eventInvites.remove((Object)eventID);
   }

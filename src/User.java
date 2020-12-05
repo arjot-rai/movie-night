@@ -110,11 +110,28 @@ public class User{
     HashMap<String, Map<String, Object>> events = Server.getUsersEvents(userName);
     Object[] eventIDs = events.keySet().toArray();
     for (Object id : eventIDs) {
-      eventList.addEvent(new Event(events.get(id.toString()).get("eventName").toString(),
-          events.get(id.toString()).get("location").toString(),
-          events.get(id.toString()).get("date").toString(),
-          events.get(id.toString()).get("organizer").toString(),
-          events.get(id.toString()).get("id").toString()));
+      if (!eventList.containsEvent(id.toString())) {
+        eventList.addEvent(
+            new Event(
+                events.get(id.toString()).get("eventName").toString(),
+                events.get(id.toString()).get("location").toString(),
+                events.get(id.toString()).get("date").toString(),
+                events.get(id.toString()).get("organizer").toString(),
+                events.get(id.toString()).get("id").toString()));
+      }
+    }
+
+    events = Server.getUsersOrganizingEvents(userName);
+    eventIDs = events.keySet().toArray();
+    for (Object id : eventIDs) {
+      if(!eventList.containsEvent(id.toString())){
+        eventList.addEvent(new Event(events.get(id.toString()).get("eventName").toString(),
+            events.get(id.toString()).get("location").toString(),
+            events.get(id.toString()).get("date").toString(),
+            events.get(id.toString()).get("organizer").toString(),
+            events.get(id.toString()).get("id").toString()));
+      }
+
     }
   }
 

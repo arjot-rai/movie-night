@@ -64,6 +64,9 @@ public class MainScene {
 
       model.stage.setTitle("MovieNight - MainScene");
 
+      User.updateEvents();
+      //User.updateEventInvites();
+
     } catch (IOException e) {
       e.printStackTrace();
     }
