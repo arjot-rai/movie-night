@@ -2,6 +2,7 @@ import com.sun.javafx.iio.ios.IosDescriptor;
 import com.sun.xml.bind.v2.model.core.ID;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,13 +20,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
+import javafx.stage.Window;
+import javax.swing.plaf.synth.SynthDesktopIconUI;
+import software.amazon.ion.SystemSymbols;
 
 public class MainScene {
 
@@ -34,6 +40,8 @@ public class MainScene {
   private static final String HOVERED_BUTTON_STYLE = "-fx-background-color: #005BFF";
   private static final Paint TEXT_FILL = Color.web("#384BC7");
 
+
+  @FXML private AnchorPane main_anchor_pane;
   @FXML private TextField movie_search;
   @FXML private Button logout_button;
   @FXML private Button profile_button;
@@ -41,7 +49,7 @@ public class MainScene {
   @FXML private Button browse_Button;
   @FXML private Button add_Friends_Button;
   @FXML private TextArea featured_Text_Area;
-  @FXML private ImageView movie_Poster;
+  @FXML private Button featuredMovie;
   @FXML private Image movieImage;
   @FXML private Button featured1_button, featured2_button, featured3_button, featured4_button;
   @FXML private VBox request_scroll_space;
@@ -51,6 +59,7 @@ public class MainScene {
   private ArrayList<Movie> featuredMovies;
   private final int FEATURED_MOVIE_LIST_SIZE = 4;
   private final int FEATURED_TEXT_LENGTH = 8;
+  private Button goToMovieScene = new Button();
 
   public MainScene(Model newModel) {
     model = newModel;
@@ -140,6 +149,16 @@ public class MainScene {
     SearchScene searchScene = new SearchScene(model, movie_search.getText());
   }
 
+  private void openFriendProfile(Model model, String friendName, Scene scene) {
+    FriendProfileScene friendProfileScene = new FriendProfileScene(model, friendName, scene);
+  }
+
+  public void pressedAddFriendButton(ActionEvent event) throws IOException {
+    main_anchor_pane.setDisable(true);
+    AddFriendScene addFriendScene = new AddFriendScene(model);
+    main_anchor_pane.setDisable(false);
+
+  }
   /**
    * Helper function to obtain a number of movies randomly from a larger list of movies
    *
@@ -184,14 +203,20 @@ public class MainScene {
    * @param movie: Movie; the movie that needs to be displayed
    */
   private void setElements(Movie movie) {
+
+    featuredMovie.setOnAction(event -> {
+      altMovieScene movieScene = new altMovieScene(model, movie, model.stage.getScene());
+    });
     Image image =
         new Image(
             movie.getMoviePosterUrl(),
-            movie_Poster.getFitWidth(),
-            movie_Poster.getFitHeight(),
+            featuredMovie.getWidth(),
+            featuredMovie.getHeight(),
             false,
             false);
+    ImageView movie_Poster = new ImageView();
     movie_Poster.setImage(image);
+    featuredMovie.setGraphic(movie_Poster);
 
     String text =
         movie.getMovieName()
@@ -211,7 +236,9 @@ public class MainScene {
     friends_scroll_space.getChildren().clear();
     ArrayList<String> confirmedFriends = User.getFriendList().confirmedFriends;
     for (String friend : confirmedFriends ) {
-        friends_scroll_space.getChildren().add(new Hyperlink(friend));
+      Hyperlink hyperlink = new Hyperlink(friend);
+      hyperlink.setOnAction(e -> openFriendProfile(model, friend, model.stage.getScene()));
+        friends_scroll_space.getChildren().add(hyperlink);
     }
   }
 
@@ -285,4 +312,5 @@ public class MainScene {
     setEvents_scroll_space();
     setPendingEventsScrollSpace();
   }
+
 }

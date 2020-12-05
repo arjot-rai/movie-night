@@ -22,6 +22,7 @@ public class MovieScene {
 
   @FXML private Button back_button;
 
+  /** THIS CLASS IS DEPRECATED, CAN PROBABLY DELETE. USE ALTMOVIESCENE INSTEAD*/
   public MovieScene(Model newModel, Movie newMovie) {
     model = newModel;
     movie = newMovie;

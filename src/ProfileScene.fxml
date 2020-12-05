@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="504.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox prefHeight="462.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="156.0">
                <children>
@@ -47,47 +47,87 @@
                         <Font name="Berlin Sans FB Demi Bold" size="14.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="username_text" prefHeight="36.0" prefWidth="422.0">
-                     <VBox.margin>
-                        <Insets bottom="5.0" top="5.0" />
-                     </VBox.margin>
-                  </TextArea>
-                  <Label prefHeight="17.0" prefWidth="441.0" style="-fx-text-fill: #008;" text="Password">
+                  <Label fx:id="username_text" prefHeight="36.0" prefWidth="423.0" text="Label">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <HBox prefHeight="14.0" prefWidth="422.0">
+                     <children>
+                        <Label prefHeight="20.0" prefWidth="141.0" text="Change Password">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="change_error" text="The Confirmed Password is Incorrect!" textFill="#da0b0b" visible="false" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="23.0" prefWidth="422.0">
+                     <children>
+                        <PasswordField fx:id="password_field" prefHeight="25.0" prefWidth="311.0" promptText="Enter Current Password" />
+                        <Button fx:id="change_password_button" alignment="CENTER" mnemonicParsing="false" text="Confirm Password" />
+                     </children>
+                  </HBox>
+                  <Label text="Streaming Services">
                      <font>
                         <Font name="Berlin Sans FB Demi Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Button fx:id="change_Password_Button" alignment="CENTER" mnemonicParsing="false" text="Change Password">
-                     <VBox.margin>
-                        <Insets bottom="5.0" top="5.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font name="Berlin Sans FB Demi Bold" size="12.0" />
-                     </font>
-                  </Button>
-                  <Label style="-fx-text-fill: #008;" text="Streaming Services">
-                     <font>
-                        <Font name="Berlin Sans FB Demi Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <TextArea fx:id="streaming_services_text" prefHeight="60.0" prefWidth="422.0" />
-                  <Button fx:id="add_Service_Button" mnemonicParsing="false" text="Add Service+">
-                     <VBox.margin>
-                        <Insets bottom="5.0" top="5.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font name="Berlin Sans FB Demi Bold" size="12.0" />
-                     </font>
-                  </Button>
-                  <Label style="-fx-text-fill: #008;" text="Movie Ratings">
-                     <font>
-                        <Font name="Berlin Sans FB Demi Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <ScrollPane prefHeight="90.0" prefWidth="422.0">
+                  <ScrollPane prefHeight="45.0" prefWidth="200.0">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="117.0" prefWidth="407.0">
+                           <children>
+                              <ListView fx:id="services_list" prefHeight="117.0" prefWidth="407.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
                     </content>
+                  </ScrollPane>
+                  <HBox prefHeight="15.0" prefWidth="422.0" spacing="10.0">
+                     <children>
+                        <MenuButton mnemonicParsing="false" text="Add New Service +">
+                          <items>
+                            <MenuItem fx:id="netflix_click" mnemonicParsing="false" text="Netflix" />
+                            <MenuItem fx:id="hulu_click" mnemonicParsing="false" text="Hulu" />
+                              <MenuItem fx:id="crave_click" mnemonicParsing="false" text="Crave" />
+                              <MenuItem fx:id="prime_click" mnemonicParsing="false" text="Prime" />
+                          </items>
+                        </MenuButton>
+                        <MenuButton mnemonicParsing="false" text="Remove Streaming Service -">
+                          <items>
+                            <MenuItem fx:id="netflix_remove" mnemonicParsing="false" text="Netflix" />
+                            <MenuItem fx:id="hulu_remove" mnemonicParsing="false" text="Hulu" />
+                              <MenuItem fx:id="crave_remove" mnemonicParsing="false" text="Crave" />
+                              <MenuItem fx:id="prime_remove" mnemonicParsing="false" text="Prime" />
+                          </items>
+                        </MenuButton>
+                     </children>
+                  </HBox>
+                  <Label text="Movie Ratings">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <ScrollPane prefHeight="122.0" prefWidth="422.0">
+                    <content>
+                      <AnchorPane fx:id="anchor" minHeight="0.0" minWidth="0.0" prefHeight="112.0" prefWidth="407.0">
+                           <children>
+                              <VBox fx:id="movie_ratings_vbox" prefHeight="200.0" prefWidth="409.0" />
+                           </children></AnchorPane>
+                    </content>
+                  </ScrollPane>
+                  <Label prefHeight="17.0" prefWidth="434.0" text="Want to watch">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <ScrollPane layoutX="10.0" layoutY="267.0" prefHeight="122.0" prefWidth="422.0">
+                     <content>
+                        <AnchorPane fx:id="anchorDesired" minHeight="0.0" minWidth="0.0" prefHeight="112.0" prefWidth="407.0">
+                           <children>
+                              <VBox fx:id="desired_movie_vbox" prefHeight="110.0" prefWidth="409.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
                   </ScrollPane>
                </children>
                <HBox.margin>

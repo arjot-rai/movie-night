@@ -47,8 +47,8 @@ public class Server {
    */
   public static boolean checkUsernameAvailability(String username) {
     try (Session session = driver.session()) {
-      Result result = session.run("MATCH (a:Person) WHERE a.username=$x1 RETURN a",
-          parameters("x1", username));
+      Result result = session.run("MATCH (a:Person) WHERE toLower(a.username)=$x1 RETURN a",
+          parameters("x1", username.toLowerCase()));
       if(result.hasNext()){
         return false;
       }
@@ -64,6 +64,7 @@ public class Server {
    * and if it was all the attributes along side it
    */
   public static LogInReturn attemptLogIn(String username, String password){
+    System.out.println(password + " " + username);
       try(Session session = driver.session()){
         Result result = session.run("MATCH (a:Person) WHERE toLower(a.username)=$x1" +
             " RETURN properties(a)",
@@ -120,7 +121,7 @@ public class Server {
       try (Session session = driver.session()) {
         session.writeTransaction(transaction -> transaction.run("MERGE (a:Person " +
             "{username:$x1, password:$x2, first_name:$x3, last_name:$x4, " +
-            "pic:\"https://movienightbucket.s3.ca-central-1.amazonaws.com/default_profile_pic.png\"," +
+            "pic: \"default_profile_pic.png\"," +
             "salt:$x5})",
           parameters("x1", username, "x2", hashingInfo.get("hashedPassword"),
             "x3", first_name, "x4", last_name,  "x5", hashingInfo.get("salt"))));
@@ -221,6 +222,26 @@ public class Server {
     }
   }
 
+
+  /**
+   * will update the password without question under a new hash and salt, the user must first be prompted to verify
+   * their password elsewhere in the program for this to be truly secure, even after a login
+   * @param username the user looking to change their password
+   * @param new_password the new password to save under the user
+   */
+  public static void updatePassword(String username, String new_password){
+    try (Session session = driver.session()) {
+
+      Map<String, byte[]> hashingInfo = PasswordHashing.hashNewPassword(new_password);
+      System.out.println(hashingInfo.get("hashedPassword"));
+
+      session.writeTransaction(transaction -> transaction.run("MATCH (a:Person) WHERE " +
+          "toLower(a.username)=$x1 SET a += {password:$x2, salt:$x3}",
+        parameters("x1", username.toLowerCase(), "x2", hashingInfo.get("hashedPassword"),
+                  "x3", hashingInfo.get("salt"))));
+    }
+  }
+
   //streaming service functions
 
   /**
@@ -283,14 +304,16 @@ public class Server {
    * @param newMovie the title of the new movie
    * @param username the user looking to add a movie
    */
-  public static void addFavouriteMovie(String newMovie, String username){
+  public static void addFavouriteMovie(String newMovie, String username, String rating){
     try (Session session = driver.session()) {
       session.writeTransaction(transaction -> transaction.run("MERGE (a:Movie {name:$x1})",
         parameters("x1", newMovie)));
       session.writeTransaction(transaction -> transaction.run("MATCH (a:Movie), (b:Person) " +
         "WHERE toLower(a.name)=$x2 AND toLower(b.username)=$x1 " +
-        "MERGE (b)-[:FAVMOVIE]->(a) " +
-        "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", newMovie.toLowerCase())));
+        "MERGE (b)-[f:FAVMOVIE]->(a) " +
+        "SET f.rating = $x3 " +
+        "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", newMovie.toLowerCase(),
+                                "x3", rating)));
     }
   }
 
@@ -318,19 +341,73 @@ public class Server {
     HashMap<String, Map<String, Object>> movies = new HashMap<>();
 
     try(Session session = driver.session()){
-      Result result = session.run("Match (a:Person)-[:FAVMOVIE]->(b:Movie) " +
-        "WHERE toLower(a.username)=$x1 Return properties(b) ", parameters("x1", username.toLowerCase()));
+      Result result = session.run("Match (a:Person)-[f:FAVMOVIE]->(b:Movie) " +
+        "WHERE toLower(a.username)=$x1 Return properties(b), properties(f) ",
+        parameters("x1", username.toLowerCase()));
       while(result.hasNext()){
         Record record = result.next();
-        Map<String, Object> service = record.get("properties(b)").asMap();
+        Map<String, Object> ratings = record.get("properties(f)").asMap();
         movies.put(record.get("properties(b)").get("name").asString(),
-          service);
+          ratings);
       }
     }
-    System.out.println(movies);
     return movies;
   }
 
+//Want to watch movie functions
+
+  /**
+   * adds a movie the user wants to see to the user's profile, without creating duplicates
+   * @param newMovie the title of the new movie
+   * @param username the user looking to add a movie
+   */
+  public static void addWantToWatch(String newMovie, String username){
+    try (Session session = driver.session()) {
+      session.writeTransaction(transaction -> transaction.run("MERGE (a:Movie {name:$x1})",
+        parameters("x1", newMovie)));
+      session.writeTransaction(transaction -> transaction.run("MATCH (a:Movie), (b:Person) " +
+        "WHERE toLower(a.name)=$x2 AND toLower(b.username)=$x1 " +
+        "MERGE (b)-[:WANTTOWATCH]->(a) " +
+        "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", newMovie.toLowerCase())));
+    }
+  }
+
+  /**
+   * removes a wanted to see movie from a user's profile, without removing the movie from the database
+   * @param remove_movie the name of the movie to remove
+   * @param username the user to remove the movie from
+   */
+  public static void removeWantToWatch(String remove_movie, String username){
+    try(Session session = driver.session()){
+      session.writeTransaction(transaction -> transaction.run(
+        "MATCH (a:Person)-[e:WANTTOWATCH]->(b:Movie) " +
+          "WHERE toLower(a.username)=$x1 AND toLower(b.name)=$x2 " +
+          "DELETE e",
+        parameters("x1", username.toLowerCase(), "x2", remove_movie.toLowerCase())));
+    }
+  }
+
+  /**
+   * Gets a hashmap of all the user's movies they want to see
+   * @param username the user to get the movies from
+   * @return the movies
+   */
+  public static HashMap<String, Map<String, Object>> getUsersWantToWatchMovies(String username){
+    HashMap<String, Map<String, Object>> movies = new HashMap<>();
+
+    try(Session session = driver.session()){
+      Result result = session.run("Match (a:Person)-[:WANTTOWATCH]->(b:Movie) " +
+          "WHERE toLower(a.username)=$x1 Return properties(b)",
+        parameters("x1", username.toLowerCase()));
+      while(result.hasNext()){
+        Record record = result.next();
+        Map<String, Object> ratings = record.get("properties(b)").asMap();
+        movies.put(record.get("properties(b)").get("name").asString(),
+          ratings);
+      }
+    }
+    return movies;
+  }
 
   //Friendship functions
   /**
