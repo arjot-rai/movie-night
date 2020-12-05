@@ -20,6 +20,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class BrowseScene {
   private Model model;
@@ -30,6 +32,9 @@ public class BrowseScene {
   private int rowsDisplayed;
   private int checkPages;
   private int lastsize = 0;
+  private static final String IDLE_BUTTON_STYLE = "-fx-background-color: #3892C7";
+  private static final String HOVERED_BUTTON_STYLE = "-fx-background-color: #005BFF";
+  private static final Paint TEXT_FILL = Color.web("#384BC7");
 
   private Map<CheckBox, String> genreCheckboxes = new HashMap<CheckBox, String>();
   private Map<CheckBox, String> ratingCheckboxes = new HashMap<CheckBox, String>();
@@ -66,6 +71,8 @@ public class BrowseScene {
   @FXML private CheckBox r_rating_checkbox;
   @FXML private CheckBox nc17_rating_checkbox;
 
+  @FXML private Button genre_filter_button, year_filter_button, rating_filter_button, back_button;
+
   @FXML private TextField startyear_textfield, endyear_textfield, searchbar_textfield;
 
   @FXML private GridPane movie_gridpane;
@@ -89,6 +96,26 @@ public class BrowseScene {
       model.stage.setScene(new Scene(loader.load()));
 
       model.stage.setTitle("MovieNight - BrowseScene");
+
+      back_button.setStyle(IDLE_BUTTON_STYLE);
+      back_button.setTextFill(TEXT_FILL);
+      back_button.setOnMouseEntered(e -> back_button.setStyle(HOVERED_BUTTON_STYLE));
+      back_button.setOnMouseExited(e -> back_button.setStyle(IDLE_BUTTON_STYLE));
+
+      genre_filter_button.setStyle(IDLE_BUTTON_STYLE);
+      genre_filter_button.setTextFill(TEXT_FILL);
+      genre_filter_button.setOnMouseEntered(e -> genre_filter_button.setStyle(HOVERED_BUTTON_STYLE));
+      genre_filter_button.setOnMouseExited(e -> genre_filter_button.setStyle(IDLE_BUTTON_STYLE));
+
+      year_filter_button.setStyle(IDLE_BUTTON_STYLE);
+      year_filter_button.setTextFill(TEXT_FILL);
+      year_filter_button.setOnMouseEntered(e -> year_filter_button.setStyle(HOVERED_BUTTON_STYLE));
+      year_filter_button.setOnMouseExited(e -> year_filter_button.setStyle(IDLE_BUTTON_STYLE));
+
+      rating_filter_button.setStyle(IDLE_BUTTON_STYLE);
+      rating_filter_button.setTextFill(TEXT_FILL);
+      rating_filter_button.setOnMouseEntered(e -> rating_filter_button.setStyle(HOVERED_BUTTON_STYLE));
+      rating_filter_button.setOnMouseExited(e -> rating_filter_button.setStyle(IDLE_BUTTON_STYLE));
 
       genreCheckboxes.put(action_checkbox, "Action");
       genreCheckboxes.put(adventure_checkbox, "Adventure");

@@ -5,11 +5,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class MovieScene {
   private Model model;
   private Movie movie;
   private Scene scene;
+
+  private static final String IDLE_BUTTON_STYLE = "-fx-background-color: #3892C7";
+  private static final String HOVERED_BUTTON_STYLE = "-fx-background-color: #005BFF";
+  private static final Paint TEXT_FILL = Color.web("#384BC7");
+
   @FXML
   private Label movie_name, movie_desc, release_date, director, streaming_services;
 
@@ -30,6 +37,12 @@ public class MovieScene {
       model.stage.setScene(new Scene(loader.load()));
 
       model.stage.setTitle("MovieNight - MovieScene");
+
+      back_button.setStyle(IDLE_BUTTON_STYLE);
+      back_button.setTextFill(TEXT_FILL);
+      back_button.setOnMouseEntered(e -> back_button.setStyle(HOVERED_BUTTON_STYLE));
+      back_button.setOnMouseExited(e -> back_button.setStyle(IDLE_BUTTON_STYLE));
+
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -47,6 +60,7 @@ public class MovieScene {
    */
   private void setUpMovieDetails() {
     movie_name.setText(movie.getMovieName());
+    movie_name.setTextFill(TEXT_FILL);
     movie_desc.setText(movie.getMoviePlot());
     director.setText(movie.getMovieDirector());
     release_date.setText(movie.getMovieReleaseDate());

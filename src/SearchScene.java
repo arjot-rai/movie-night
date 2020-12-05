@@ -19,6 +19,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class SearchScene {
   private Model model;
@@ -31,6 +33,10 @@ public class SearchScene {
   private String searchText;
   private int checkPages = 0;
 
+  private static final String IDLE_BUTTON_STYLE = "-fx-background-color: #3892C7";
+  private static final String HOVERED_BUTTON_STYLE = "-fx-background-color: #005BFF";
+  private static final Paint TEXT_FILL = Color.web("#384BC7");
+
   @FXML private TextField startyear_textfield, endyear_textfield, searchbar_textfield;
 
   @FXML private GridPane movie_gridpane;
@@ -38,6 +44,8 @@ public class SearchScene {
   @FXML private AnchorPane movie_anchorpane;
 
   @FXML private ScrollPane movie_scrollpane;
+
+  @FXML private Button back_button, year_filter_button;
 
   public SearchScene(Model newModel, String searchText) {
     model = newModel;
@@ -55,6 +63,16 @@ public class SearchScene {
       model.stage.setTitle("MovieNight - SearchScene");
 
       searchbar_textfield.setText(searchText);
+
+      back_button.setStyle(IDLE_BUTTON_STYLE);
+      back_button.setTextFill(TEXT_FILL);
+      back_button.setOnMouseEntered(e -> back_button.setStyle(HOVERED_BUTTON_STYLE));
+      back_button.setOnMouseExited(e -> back_button.setStyle(IDLE_BUTTON_STYLE));
+
+      year_filter_button.setStyle(IDLE_BUTTON_STYLE);
+      year_filter_button.setTextFill(TEXT_FILL);
+      year_filter_button.setOnMouseEntered(e -> year_filter_button.setStyle(HOVERED_BUTTON_STYLE));
+      year_filter_button.setOnMouseExited(e -> year_filter_button.setStyle(IDLE_BUTTON_STYLE));
 
       ScrollBar scrollBar = (ScrollBar) movie_scrollpane.lookup(".scroll-bar:vertical");
       scrollBar

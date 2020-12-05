@@ -12,14 +12,13 @@
          <children>
             <HBox prefHeight="69.0" prefWidth="600.0">
                <children>
-                  <Pane prefHeight="100.0" prefWidth="10.0" />
-                  <Button fx:id="back_button" mnemonicParsing="false" onAction="#pressedBack" prefHeight="60.0" prefWidth="74.0" text="X">
+                  <Button fx:id="back_button" mnemonicParsing="false" onAction="#pressedBack" prefHeight="38.0" prefWidth="41.0" text="X">
                      <font>
-                        <Font size="28.0" />
+                        <Font name="Berlin Sans FB Demi Bold" size="20.0" />
                      </font>
                   </Button>
-                  <Pane prefHeight="100.0" prefWidth="50.0" />
-                  <Label fx:id="movie_name" alignment="CENTER" contentDisplay="TOP" prefHeight="69.0" prefWidth="410.0" text="MovieName" textAlignment="CENTER" wrapText="true">
+                  <Pane prefHeight="69.0" prefWidth="79.0" />
+                  <Label fx:id="movie_name" alignment="CENTER" contentDisplay="TOP" prefHeight="69.0" prefWidth="320.0" text="MovieName" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -40,7 +39,10 @@
                      <children>
                         <VBox prefHeight="187.0" prefWidth="421.0">
                            <children>
-                              <Label text="Description" />
+                              <Label style="-fx-text-fill: #384BC7;" text="Description">
+                                 <font>
+                                    <Font name="Berlin Sans FB Demi Bold" size="15.0" />
+                                 </font></Label>
                               <HBox prefHeight="146.0" prefWidth="421.0">
                                  <children>
                                     <Pane prefHeight="65.0" prefWidth="30.0" />
@@ -51,7 +53,10 @@
                         </VBox>
                         <VBox prefHeight="60.0" prefWidth="434.0">
                            <children>
-                              <Label text="Date" />
+                              <Label style="-fx-text-fill: #384BC7;" text="Date">
+                                 <font>
+                                    <Font name="Berlin Sans FB Demi Bold" size="15.0" />
+                                 </font></Label>
                               <HBox prefHeight="49.0" prefWidth="434.0">
                                  <children>
                                     <Pane prefHeight="65.0" prefWidth="30.0" />
@@ -62,7 +67,10 @@
                         </VBox>
                         <VBox prefHeight="60.0" prefWidth="434.0">
                            <children>
-                              <Label text="Director" />
+                              <Label style="-fx-text-fill: #384BC7;" text="Director">
+                                 <font>
+                                    <Font name="Berlin Sans FB Demi Bold" size="15.0" />
+                                 </font></Label>
                               <HBox prefHeight="49.0" prefWidth="434.0">
                                  <children>
                                     <Pane prefHeight="65.0" prefWidth="30.0" />
@@ -73,7 +81,10 @@
                         </VBox>
                         <VBox prefHeight="60.0" prefWidth="434.0">
                            <children>
-                              <Label text="Streaming Services" />
+                              <Label style="-fx-text-fill: #384BC7;" text="Streaming Services">
+                                 <font>
+                                    <Font name="Berlin Sans FB Demi Bold" size="15.0" />
+                                 </font></Label>
                               <HBox prefHeight="49.0" prefWidth="434.0">
                                  <children>
                                     <Pane prefHeight="65.0" prefWidth="30.0" />
