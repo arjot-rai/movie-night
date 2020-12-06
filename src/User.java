@@ -127,6 +127,16 @@ public class User{
         eventList.addEvent(newEvent);
 
       }
+      else{
+        Event event = eventList.getEvent(id.toString());
+        Set<String> movies = Server.getEventMovies(id.toString()).keySet();
+        ArrayList<String> existingMovies = event.getEventMovies();
+        for (String moviename : movies) {
+          if(!existingMovies.contains(moviename)){
+            event.addMovie(moviename);
+          }
+        }
+      }
     }
 
     events = Server.getUsersOrganizingEvents(userName);
@@ -147,6 +157,16 @@ public class User{
 
         eventList.addEvent(newEvent);
 
+      }
+      else{
+        Event event = eventList.getEvent(id.toString());
+        Set<String> movies = Server.getEventMovies(id.toString()).keySet();
+        ArrayList<String> existingMovies = event.getEventMovies();
+        for (String moviename : movies) {
+          if(!existingMovies.contains(moviename)){
+            event.addMovie(moviename);
+          }
+        }
       }
     }
   }

@@ -18,6 +18,15 @@ public class EventList {
     confirmedEvents.remove((Object)eventID);
   }
 
+  public Event getEvent(String eventID){
+    for (Event event : confirmedEvents) {
+        if(event.getEventID().equals(eventID)){
+          return event;
+        }
+    }
+    return null;
+  }
+
   public void acceptInvite(Event eventID){
     eventInvites.remove((Object)eventID);
     confirmedEvents.add(eventID);
