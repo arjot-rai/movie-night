@@ -105,6 +105,10 @@ public class MainScene {
     FriendProfileScene friendProfileScene = new FriendProfileScene(model, friendName, scene);
   }
 
+  private void openEventScene(Model model, Event event) {
+    EventScene eventScene = new EventScene(model, event);
+  }
+
   public void pressedAddFriendButton(ActionEvent event) throws IOException {
     main_anchor_pane.setDisable(true);
     AddFriendScene addFriendScene = new AddFriendScene(model);
@@ -198,7 +202,9 @@ public class MainScene {
     events_scroll_space.getChildren().clear();
     ArrayList<Event> confirmedEvents = User.getEventList().confirmedEvents;
     for (Event event : confirmedEvents) {
-      events_scroll_space.getChildren().add(new Hyperlink(event.getEventName()));
+      Hyperlink hyperlink = new Hyperlink(event.getEventName());
+      hyperlink.setOnAction(e -> openEventScene(model, event));
+      events_scroll_space.getChildren().add(hyperlink);
     }
 
   }
