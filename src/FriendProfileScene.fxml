@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="429.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="430.0" maxWidth="600.0" minHeight="430.0" minWidth="600.0" prefHeight="430.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -14,12 +14,12 @@
                <children>
                   <VBox prefHeight="91.0" prefWidth="133.0">
                      <children>
-                        <Button fx:id="profile_back_button" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#pressedBackButton" prefHeight="60.0" prefWidth="90.0" text="X">
+                        <Button fx:id="profile_back_button" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#pressedBackButton" prefHeight="38.0" prefWidth="41.0" text="X">
                            <VBox.margin>
-                              <Insets left="10.0" />
+                              <Insets />
                            </VBox.margin>
                            <font>
-                              <Font size="28.0" />
+                              <Font name="Berlin Sans FB Demi Bold" size="20.0" />
                            </font></Button>
                         <Pane prefHeight="200.0" prefWidth="200.0" />
                      </children>
@@ -29,14 +29,14 @@
             </VBox>
             <VBox prefHeight="400.0" prefWidth="445.0">
                <children>
-                  <Label fx:id="friends_name_textfield" prefHeight="35.0" prefWidth="445.0" text="Friend's Profile" underline="true">
+                  <Label fx:id="friends_name_textfield" prefHeight="35.0" prefWidth="445.0" style="-fx-text-fill: #008;" text="Friend's Profile" underline="true">
                      <font>
-                        <Font size="30.0" />
+                        <Font name="Berlin Sans FB Demi Bold" size="30.0" />
                      </font>
                   </Label>
-                  <Label prefHeight="17.0" prefWidth="445.0" text="Username">
+                  <Label prefHeight="17.0" prefWidth="445.0" style="-fx-text-fill: #008;" text="Username">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="Berlin Sans FB Demi Bold" size="14.0" />
                      </font>
                   </Label>
                   <Label fx:id="username_text" prefHeight="36.0" prefWidth="423.0" text="Label">
@@ -44,9 +44,9 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label text="Streaming Services">
+                  <Label style="-fx-text-fill: #008;" text="Streaming Services">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="Berlin Sans FB Demi Bold" size="14.0" />
                      </font>
                   </Label>
                   <ScrollPane prefHeight="45.0" prefWidth="200.0">
@@ -59,9 +59,9 @@
                     </content>
                   </ScrollPane>
                   <HBox prefHeight="15.0" prefWidth="422.0" spacing="10.0" />
-                  <Label text="Movie Ratings">
+                  <Label style="-fx-text-fill: #008;" text="Movie Ratings">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="Berlin Sans FB Demi Bold" size="14.0" />
                      </font>
                   </Label>
                   <ScrollPane prefHeight="110.0" prefWidth="423.0">
@@ -72,9 +72,9 @@
                            </children></AnchorPane>
                     </content>
                   </ScrollPane>
-                  <Label prefHeight="17.0" prefWidth="423.0" text="Want to watch">
+                  <Label prefHeight="17.0" prefWidth="423.0" style="-fx-text-fill: #008;" text="Want to watch">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="Berlin Sans FB Demi Bold" size="14.0" />
                      </font>
                   </Label>
                   <ScrollPane layoutX="10.0" layoutY="212.0" prefHeight="110.0" prefWidth="423.0">

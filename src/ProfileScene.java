@@ -33,13 +33,8 @@ public class ProfileScene {
 
   private ApiQuery api;
 
-  @FXML private Button profile_back_button, change_ProfilePicture_Button, add_Service_Button, change_password_button;
-  @FXML
-  private Button profile_back_button;
-  @FXML
-  private Button change_ProfilePicture_Button;
-  @FXML
-  private Button change_Password_Button, add_Service_Button;
+  @FXML private Button profile_back_button, change_ProfilePicture_Button, add_Service_Button, change_Password_Button;
+
   private MenuItem netflix_click,
       hulu_click,
       crave_click,
@@ -92,10 +87,6 @@ public class ProfileScene {
       change_Password_Button.setOnMouseEntered(e -> change_Password_Button.setStyle(HOVERED_BUTTON_STYLE));
       change_Password_Button.setOnMouseExited(e -> change_Password_Button.setStyle(IDLE_BUTTON_STYLE));
 
-      add_Service_Button.setStyle(IDLE_BUTTON_STYLE);
-      add_Service_Button.setTextFill(TEXT_FILL);
-      add_Service_Button.setOnMouseEntered(e -> add_Service_Button.setStyle(HOVERED_BUTTON_STYLE));
-      add_Service_Button.setOnMouseExited(e -> add_Service_Button.setStyle((IDLE_BUTTON_STYLE)));
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -114,7 +105,7 @@ public class ProfileScene {
     setUpMovieRatingBox();
     setUpDesiredMovieBox();
     change_ProfilePicture_Button.setOnAction(event -> pressedSetProfilePicButton());
-    change_password_button.setOnAction(event -> pressedConfirmPasswordButton());
+    change_Password_Button.setOnAction(event -> pressedConfirmPasswordButton());
     hulu_click.setOnAction(event -> pressedAddServiceButton("Hulu"));
     netflix_click.setOnAction(event -> pressedAddServiceButton("Netflix"));
     crave_click.setOnAction(event -> pressedAddServiceButton("Crave"));
@@ -153,11 +144,11 @@ public class ProfileScene {
     LogInReturn password_check = Server.attemptLogIn(User.getUserName(), password_field.getText());
 
     if(password_check.getSuccess()){
-      change_password_button.setText("Change Password");
+      change_Password_Button.setText("Change Password");
       password_field.clear();
       password_field.setPromptText("Enter New Password");
       change_error.setVisible(false);
-      change_password_button.setOnAction(event -> pressedChangePasswordButton());
+      change_Password_Button.setOnAction(event -> pressedChangePasswordButton());
     }
     else{
       change_error.setText("The confirmed password is incorrect!");
@@ -173,7 +164,7 @@ public class ProfileScene {
       change_error.setTextFill(Color.BLACK);
       change_error.setText("New Password Set!");
       change_error.setVisible(true);
-      change_password_button.setOnAction(event -> pressedConfirmPasswordButton());
+      change_Password_Button.setOnAction(event -> pressedConfirmPasswordButton());
     }
     else{
       change_error.setText("Must enter a new valid password!");

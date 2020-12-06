@@ -20,7 +20,7 @@ public class MovieScene {
   @FXML
   private Label movie_name, movie_desc, release_date, director, streaming_services;
 
-  @FXML private Button back_button;
+  @FXML private Button back_button, my_list_button, event_button, star1, star2, star3, star4, star5;
 
   /** THIS CLASS IS DEPRECATED, CAN PROBABLY DELETE. USE ALTMOVIESCENE INSTEAD*/
   public MovieScene(Model newModel, Movie newMovie) {

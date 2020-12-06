@@ -1,3 +1,4 @@
+import com.sun.xml.bind.v2.model.core.ID;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,12 +11,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class AddFriendScene {
   private Model model;
   private Stage friendStage;
+  private static final String IDLE_BUTTON_STYLE = "-fx-background-color: #3892C7";
+  private static final String HOVERED_BUTTON_STYLE = "-fx-background-color: #005BFF";
+  private static final Paint TEXT_FILL = Color.web("#384BC7");
 
   @FXML
   private Button back_button;
@@ -41,6 +47,11 @@ public class AddFriendScene {
       friendStage.setScene(new Scene(loader.load()));
       friendStage.setTitle("MovieNight - AddFriendScene");
       friendStage.showAndWait();
+
+      back_button.setStyle(IDLE_BUTTON_STYLE);
+      back_button.setTextFill(TEXT_FILL);
+      back_button.setOnMouseEntered(e -> back_button.setStyle(HOVERED_BUTTON_STYLE));
+      back_button.setOnMouseExited(e -> back_button.setStyle(IDLE_BUTTON_STYLE));
 
     } catch (IOException e) {
       e.printStackTrace();
