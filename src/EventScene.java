@@ -40,6 +40,10 @@ public class EventScene {
     }
   }
 
+  /**
+   * Set up all the UI elements in the scene
+   *
+   */
   private void setUpFields() {
     event_name.setText(thisEvent.getEventName());
     StringBuilder guestText = new StringBuilder();
@@ -58,19 +62,37 @@ public class EventScene {
     }
     streaming_text.setText(serviceText.toString());
     streaming_text.setEditable(false);
+    profile_picture.setImage(ProfilePicture.getProfilePic(thisEvent.getEventOrganizer()));
   }
 
 
-  public void pressedYesAttending(ActionEvent event) throws IOException {
-
+  public void pressedYesAttending(ActionEvent e) throws IOException {
+    if (!User.getEventList().confirmedEvents.contains(thisEvent)) {
+      Server.acceptEventInvite(User.getUserName(), thisEvent.getEventID());
+      //TODO: Change these buttons to Accepted or something like that
+    }
   }
 
-  public void pressedNoAttending(ActionEvent event) throws IOException {
-
+  public void pressedNoAttending(ActionEvent e) throws IOException {
+    if (User.getEventList().confirmedEvents.contains(thisEvent)) {
+      Server.removeEventInvite(User.getUserName(), thisEvent.getEventID());
+      MainScene mainScene = new MainScene(model);
+    }
   }
 
-  public void pressedBackButton(ActionEvent event) throws IOException {
+  public void pressedBackButton(ActionEvent e) throws IOException {
     MainScene mainScene = new MainScene(model);
+  }
+
+  /**
+   * Set up the movies in the grid
+   */
+  public void displayMovies() {
+    for (int rowIndex = 0; rowIndex < (thisEvent.getEventMovies().size() / 2) + 1; rowIndex++) {
+      for (int columnIndex = 0; columnIndex < 2; columnIndex++) {
+        //if ()
+      }
+    }
   }
 
 }
