@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Event {
   private String eventName;
@@ -17,6 +18,9 @@ public class Event {
 
   private ArrayList<String> eventStreamingServices;
 
+  // A HashMap mapping the movieID to a list of usernames who have already voted on that movieID
+  private HashMap<Integer, ArrayList<String>> movieVotingRecord;
+
   public Event(String name, String location, String date, String organizer, String id){
     this.eventName = name;
     this.eventLocation = location;
@@ -26,6 +30,7 @@ public class Event {
     this.eventGuestList = new ArrayList<>();
     this.eventMovies = new ArrayList<>();
     this.eventStreamingServices = new ArrayList<>();
+    this.movieVotingRecord = new HashMap<>();
 
   }
 
@@ -75,11 +80,13 @@ public class Event {
 
   public void addMovie(int movieID){
     this.eventMovies.add(movieID);
+    this.movieVotingRecord.put(movieID, new ArrayList<String>());
   }
 
   public void removeMovie(int movieID){
     // movieID has to be casted to Object, otherwise treated as an index
     this.eventMovies.remove((Object)movieID);
+    this.movieVotingRecord.remove(movieID);
   }
 
   public ArrayList<String> getEventGuestList() {
@@ -99,6 +106,20 @@ public class Event {
   public void addStreamingService(String service) { this.eventStreamingServices.add(service); }
 
   public void removeStreamingService(String service) { this.eventStreamingServices.remove(service); }
+
+  public HashMap<Integer, ArrayList<String>> getMovieVotingRecord() { return movieVotingRecord; }
+
+  public void addVoter(Integer movieID, String username) {
+    ArrayList<String> tempArray = movieVotingRecord.get(movieID);
+    tempArray.add(username);
+    movieVotingRecord.put(movieID, tempArray);
+  }
+
+  public void removeVoter(Integer movieID, String username) {
+    ArrayList<String> tempArray = movieVotingRecord.get(movieID);
+    tempArray.remove(username);
+    movieVotingRecord.put(movieID, tempArray);
+  }
 
   public static void main(String[] args){
 
