@@ -1,30 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ProfileScene">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="156.0">
                <children>
+                  <Button fx:id="back_button" mnemonicParsing="false" onAction="#pressedBackButton" prefHeight="60.0" prefWidth="90.0" text="X">
+                     <VBox.margin>
+                        <Insets right="50.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="28.0" />
+                     </font>
+                  </Button>
                   <ImageView fx:id="profile_picture" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" />
-                  <Pane prefHeight="141.0" prefWidth="133.0" />
+                  <Pane prefHeight="41.0" prefWidth="156.0" />
                   <Label prefHeight="17.0" prefWidth="136.0" text="Attending:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Button mnemonicParsing="false" prefWidth="40.0" text="Yes">
+                  <Button fx:id="yes_attending" mnemonicParsing="false" onAction="#pressedYesAttending" prefWidth="40.0" text="Yes">
                      <VBox.margin>
                         <Insets bottom="15.0" top="15.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefWidth="40.0" text="No" />
+                  <Button fx:id="no_attending" mnemonicParsing="false" onAction="#pressedNoAttending" prefWidth="40.0" text="No" />
                </children>
             </VBox>
             <VBox prefHeight="400.0" prefWidth="170.0" spacing="10.0">
@@ -39,7 +56,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="attendees_Text" prefHeight="36.0" prefWidth="422.0">
+                  <TextArea fx:id="attendees_text" prefHeight="36.0" prefWidth="422.0">
                      <VBox.margin>
                         <Insets bottom="5.0" top="5.0" />
                      </VBox.margin>
@@ -49,19 +66,19 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="date_Text" prefHeight="36.0" prefWidth="170.0" />
+                  <TextArea fx:id="date_text" prefHeight="36.0" prefWidth="170.0" />
                   <Label text="Location">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="location_Text" prefHeight="36.0" prefWidth="170.0" />
+                  <TextArea fx:id="location_text" prefHeight="36.0" prefWidth="170.0" />
                   <Label text="Streaming Services">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextArea prefHeight="47.0" prefWidth="170.0" />
+                  <TextArea fx:id="streaming_text" prefHeight="47.0" prefWidth="170.0" />
                </children>
                <HBox.margin>
                   <Insets left="45.0" right="10.0" />
