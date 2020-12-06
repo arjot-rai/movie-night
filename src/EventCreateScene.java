@@ -115,8 +115,8 @@ public class EventCreateScene {
 
       Event newEvent = new Event(eventName, location, date, User.getUserName(), eventID);
       for (Movie i : movies) {
-        int id = i.getMovieID();
-        newEvent.addMovie(id);
+        String name = i.getMovieName();
+        newEvent.addMovie(name);
         Server.addEventMovie(i.getMovieName(), eventID);
       }
 

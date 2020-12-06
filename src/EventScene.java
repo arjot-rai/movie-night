@@ -98,6 +98,7 @@ public class EventScene {
    * Set up the movies in the grid
    */
   public void displayMovies() {
+    System.out.println(thisEvent.getEventMovies());
     for (int rowIndex = 0; rowIndex < (thisEvent.getEventMovies().size() / 2) + 1; rowIndex++) {
       for (int columnIndex = 0; columnIndex < 2; columnIndex++) {
         Movie movie = apiQuery.getMovie(thisEvent.getEventMovies().get(rowIndex * 2 + columnIndex));
@@ -125,7 +126,7 @@ public class EventScene {
 
     // Check if username has voted on this movie to set the button status
     Button voteButton = new Button();
-    if (!thisEvent.getMovieVotingRecord().get(movie.getMovieID()).contains(User.getUserName())) {
+    if (!thisEvent.getMovieVotingRecord().get(movie.getMovieName()).contains(User.getUserName())) {
       voteButton.setText("Vote");
       voteButton.setOnAction(e -> { pressedVoteButton(voteButton, movie); });
     } else {
@@ -145,7 +146,7 @@ public class EventScene {
     button.setText("Voted");
     button.setOnAction(e -> { pressedVotedButton(button, movie); });
 
-    thisEvent.addVoter(movie.getMovieID(), User.getUserName());
+    thisEvent.addVoter(movie.getMovieName(), User.getUserName());
     Server.addMovieVote(movie.getMovieName(), thisEvent.getEventID());
   }
 
@@ -153,7 +154,7 @@ public class EventScene {
     button.setText("Vote");
     button.setOnAction(e -> { pressedVotedButton(button, movie); });
 
-    thisEvent.removeVoter(movie.getMovieID(), User.getUserName());
+    thisEvent.removeVoter(movie.getMovieName(), User.getUserName());
     Server.reduceMovieVote(movie.getMovieName(), thisEvent.getEventID());
   }
 
