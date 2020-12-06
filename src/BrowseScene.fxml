@@ -7,7 +7,7 @@
 
 <AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox layoutX="14.0" layoutY="14.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox layoutX="14.0" layoutY="14.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #cde3f1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox prefHeight="400.0" prefWidth="150.0">
                <children>
@@ -233,7 +233,7 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </TextField>
-                  <ScrollPane fx:id="movie_scrollpane" prefHeight="365.0" prefWidth="450.0">
+                  <ScrollPane fx:id="movie_scrollpane" prefHeight="365.0" prefWidth="450.0" style="-fx-background-color: #cde3f1;">
                     <content>
                       <AnchorPane fx:id="movie_anchorpane" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="435.0">
                            <children>

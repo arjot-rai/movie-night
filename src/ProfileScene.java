@@ -35,7 +35,7 @@ public class ProfileScene {
 
   @FXML private Button profile_back_button, change_ProfilePicture_Button, add_Service_Button, change_Password_Button;
 
-  private MenuItem netflix_click,
+  @FXML private MenuItem netflix_click,
       hulu_click,
       crave_click,
       prime_click,
