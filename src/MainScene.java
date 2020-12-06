@@ -1,11 +1,14 @@
 import com.sun.javafx.iio.ios.IosDescriptor;
+import com.sun.xml.bind.v2.model.core.ID;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HorizontalDirection;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,9 +19,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -30,6 +36,9 @@ import software.amazon.ion.SystemSymbols;
 public class MainScene {
 
   private Model model;
+  private static final String IDLE_BUTTON_STYLE = "-fx-background-color: #3892C7";
+  private static final String HOVERED_BUTTON_STYLE = "-fx-background-color: #005BFF";
+  private static final Paint TEXT_FILL = Color.web("#384BC7");
 
 
   @FXML private AnchorPane main_anchor_pane;
@@ -37,6 +46,7 @@ public class MainScene {
   @FXML private Button logout_button;
   @FXML private Button profile_button;
   @FXML private Button create_Events_Button;
+  @FXML private Button browse_Button;
   @FXML private Button add_Friends_Button;
   @FXML private TextArea featured_Text_Area;
   @FXML private Button featuredMovie;
@@ -64,8 +74,46 @@ public class MainScene {
 
       model.stage.setTitle("MovieNight - MainScene");
 
-      User.updateEvents();
-      //User.updateEventInvites();
+      featured1_button.setStyle(IDLE_BUTTON_STYLE);
+      featured1_button.setOnMouseEntered(e -> featured1_button.setStyle(HOVERED_BUTTON_STYLE));
+      featured1_button.setOnMouseExited(e -> featured1_button.setStyle(IDLE_BUTTON_STYLE));
+
+      featured2_button.setStyle(IDLE_BUTTON_STYLE);
+      featured2_button.setOnMouseEntered(e -> featured2_button.setStyle(HOVERED_BUTTON_STYLE));
+      featured2_button.setOnMouseExited(e -> featured2_button.setStyle(IDLE_BUTTON_STYLE));
+
+      featured3_button.setStyle(IDLE_BUTTON_STYLE);
+      featured3_button.setOnMouseEntered(e -> featured3_button.setStyle(HOVERED_BUTTON_STYLE));
+      featured3_button.setOnMouseExited(e -> featured3_button.setStyle(IDLE_BUTTON_STYLE));
+
+      featured4_button.setStyle(IDLE_BUTTON_STYLE);
+      featured4_button.setOnMouseEntered(e -> featured4_button.setStyle(HOVERED_BUTTON_STYLE));
+      featured4_button.setOnMouseExited(e -> featured4_button.setStyle(IDLE_BUTTON_STYLE));
+
+      add_Friends_Button.setStyle(IDLE_BUTTON_STYLE);
+      add_Friends_Button.setTextFill(TEXT_FILL);
+      add_Friends_Button.setOnMouseEntered(e -> add_Friends_Button.setStyle(HOVERED_BUTTON_STYLE));
+      add_Friends_Button.setOnMouseExited(e -> add_Friends_Button.setStyle(IDLE_BUTTON_STYLE));
+
+      create_Events_Button.setStyle(IDLE_BUTTON_STYLE);
+      create_Events_Button.setTextFill(TEXT_FILL);
+      create_Events_Button.setOnMouseEntered(e -> create_Events_Button.setStyle(HOVERED_BUTTON_STYLE));
+      create_Events_Button.setOnMouseExited(e -> create_Events_Button.setStyle(IDLE_BUTTON_STYLE));
+
+      profile_button.setStyle(IDLE_BUTTON_STYLE);
+      profile_button.setTextFill(TEXT_FILL);
+      profile_button.setOnMouseEntered(e -> profile_button.setStyle(HOVERED_BUTTON_STYLE));
+      profile_button.setOnMouseExited(e -> profile_button.setStyle(IDLE_BUTTON_STYLE));
+
+      logout_button.setStyle(IDLE_BUTTON_STYLE);
+      logout_button.setTextFill(TEXT_FILL);
+      logout_button.setOnMouseEntered(e -> logout_button.setStyle(HOVERED_BUTTON_STYLE));
+      logout_button.setOnMouseExited(e -> logout_button.setStyle(IDLE_BUTTON_STYLE));
+
+      browse_Button.setStyle(IDLE_BUTTON_STYLE);
+      browse_Button.setTextFill(TEXT_FILL);
+      browse_Button.setOnMouseEntered(e -> browse_Button.setStyle(HOVERED_BUTTON_STYLE));
+      browse_Button.setOnMouseExited(e -> browse_Button.setStyle(IDLE_BUTTON_STYLE));
 
     } catch (IOException e) {
       e.printStackTrace();

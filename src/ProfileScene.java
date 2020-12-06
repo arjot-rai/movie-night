@@ -12,6 +12,10 @@ import java.util.Map;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,13 +26,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class ProfileScene {
+  private static final String IDLE_BUTTON_STYLE = "-fx-background-color: #3892C7";
+  private static final String HOVERED_BUTTON_STYLE = "-fx-background-color: #005BFF";
+  private static final Paint TEXT_FILL = Color.web("#384BC7");
   private Model model;
 
   private ApiQuery api;
 
-  @FXML private Button profile_back_button, change_ProfilePicture_Button, add_Service_Button, change_password_button;
-  @FXML
-  private MenuItem netflix_click,
+  @FXML private Button profile_back_button, change_ProfilePicture_Button, add_Service_Button, change_Password_Button;
+
+  @FXML private MenuItem netflix_click,
       hulu_click,
       crave_click,
       prime_click,
@@ -64,6 +71,23 @@ public class ProfileScene {
       model.stage.setScene(new Scene(loader.load()));
 
       model.stage.setTitle("MovieNight - ProfileScene");
+
+      profile_back_button.setStyle(IDLE_BUTTON_STYLE);
+      profile_back_button.setTextFill(TEXT_FILL);
+      profile_back_button.setOnMouseEntered(e -> profile_back_button.setStyle(HOVERED_BUTTON_STYLE));
+      profile_back_button.setOnMouseExited(e -> profile_back_button.setStyle(IDLE_BUTTON_STYLE));
+
+      change_ProfilePicture_Button.setStyle(IDLE_BUTTON_STYLE);
+      change_ProfilePicture_Button.setTextFill(TEXT_FILL);
+      change_ProfilePicture_Button.setOnMouseEntered(e -> change_ProfilePicture_Button.setStyle(HOVERED_BUTTON_STYLE));
+      change_ProfilePicture_Button.setOnMouseExited(e -> change_ProfilePicture_Button.setStyle(IDLE_BUTTON_STYLE));
+
+      change_Password_Button.setStyle(IDLE_BUTTON_STYLE);
+      change_Password_Button.setTextFill(TEXT_FILL);
+      change_Password_Button.setOnMouseEntered(e -> change_Password_Button.setStyle(HOVERED_BUTTON_STYLE));
+      change_Password_Button.setOnMouseExited(e -> change_Password_Button.setStyle(IDLE_BUTTON_STYLE));
+
+
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -81,7 +105,7 @@ public class ProfileScene {
     setUpMovieRatingBox();
     setUpDesiredMovieBox();
     change_ProfilePicture_Button.setOnAction(event -> pressedSetProfilePicButton());
-    change_password_button.setOnAction(event -> pressedConfirmPasswordButton());
+    change_Password_Button.setOnAction(event -> pressedConfirmPasswordButton());
     hulu_click.setOnAction(event -> pressedAddServiceButton("Hulu"));
     netflix_click.setOnAction(event -> pressedAddServiceButton("Netflix"));
     crave_click.setOnAction(event -> pressedAddServiceButton("Crave"));
@@ -120,11 +144,11 @@ public class ProfileScene {
     LogInReturn password_check = Server.attemptLogIn(User.getUserName(), password_field.getText());
 
     if(password_check.getSuccess()){
-      change_password_button.setText("Change Password");
+      change_Password_Button.setText("Change Password");
       password_field.clear();
       password_field.setPromptText("Enter New Password");
       change_error.setVisible(false);
-      change_password_button.setOnAction(event -> pressedChangePasswordButton());
+      change_Password_Button.setOnAction(event -> pressedChangePasswordButton());
     }
     else{
       change_error.setText("The confirmed password is incorrect!");
@@ -140,7 +164,7 @@ public class ProfileScene {
       change_error.setTextFill(Color.BLACK);
       change_error.setText("New Password Set!");
       change_error.setVisible(true);
-      change_password_button.setOnAction(event -> pressedConfirmPasswordButton());
+      change_Password_Button.setOnAction(event -> pressedConfirmPasswordButton());
     }
     else{
       change_error.setText("Must enter a new valid password!");

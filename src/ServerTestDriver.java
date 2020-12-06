@@ -162,8 +162,16 @@ public class ServerTestDriver {
   System.out.println("Passed");
 
   System.out.println("Testing add movie vote...");
-  Server.addMovieVote("SuperBad", "1");
+  Assert.assertEquals("no", Server.getUsersVotedMovie("BobUN", "1"));
+  Server.userVoted("BobUN", "1", "SuperBad");
+  Assert.assertEquals("SuperBad", Server.getUsersVotedMovie("BobUN", "1"));
   Assert.assertEquals("1", Server.getEventMovies("1").get("SuperBad").get("vote").toString());
+  System.out.println("Passed");
+
+  System.out.println("Testing remove movie vote...");
+  Server.userRemovedVote("BobUN", "1", "SuperBad");
+  Assert.assertEquals("0", Server.getEventMovies("1").get("SuperBad").get("vote").toString());
+  Assert.assertEquals("no", Server.getUsersVotedMovie("BobUN", "1"));
   System.out.println("Passed");
 
   System.out.println("Testing remove movie from movie night vote...");
