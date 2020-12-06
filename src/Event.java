@@ -18,12 +18,6 @@ public class Event {
 
   private ArrayList<String> eventStreamingServices;
 
-  // A HashMap mapping the movieID with the number of votes it has received.
-  private HashMap<String, Integer> movieVoteTotals;
-
-  // A HashMap mapping the movieID to a list of usernames who have already voted on that movieID
-  private HashMap<String, ArrayList<String>> movieVotingRecord;
-
   public Event(String name, String location, String date, String organizer, String id){
     this.eventName = name;
     this.eventLocation = location;
@@ -33,8 +27,6 @@ public class Event {
     this.eventGuestList = new ArrayList<>();
     this.eventMovies = new ArrayList<>();
     this.eventStreamingServices = new ArrayList<>();
-    this.movieVotingRecord = new HashMap<>();
-    this.movieVoteTotals = new HashMap<>();
   }
 
   public String getEventName() {
@@ -81,15 +73,11 @@ public class Event {
     return this.eventMovies;
   }
 
-  public void addMovie(String title){
-    this.eventMovies.add(title);
-    this.movieVotingRecord.put(title, new ArrayList<String>());
-  }
+  public void addMovie(String title){ this.eventMovies.add(title); }
 
   public void removeMovie(String title){
     // movieID has to be casted to Object, otherwise treated as an index
     this.eventMovies.remove((Object)title);
-    this.movieVotingRecord.remove(title);
   }
 
   public ArrayList<String> getEventGuestList() {
@@ -109,37 +97,6 @@ public class Event {
   public void addStreamingService(String service) { this.eventStreamingServices.add(service); }
 
   public void removeStreamingService(String service) { this.eventStreamingServices.remove(service); }
-
-  public HashMap<String, ArrayList<String>> getMovieVotingRecord() { return movieVotingRecord; }
-
-  public void addVoter(String title, String username) {
-    ArrayList<String> tempArray = movieVotingRecord.get(title);
-    tempArray.add(username);
-    movieVotingRecord.put(title, tempArray);
-    addMovieVote(title);
-  }
-
-  public void removeVoter(String title, String username) {
-    ArrayList<String> tempArray = movieVotingRecord.get(title);
-    tempArray.remove(username);
-    movieVotingRecord.put(title, tempArray);
-    removeMovieVote(title);
-  }
-
-  public HashMap<String, Integer> getMovieVoteTotals() { return movieVoteTotals; }
-
-  private void addMovieVote(String title) {
-    Integer tempInt = movieVoteTotals.get(title);
-    tempInt = tempInt + 1;
-    movieVoteTotals.put(title, tempInt);
-  }
-
-  private void removeMovieVote(String title) {
-    Integer tempInt = movieVoteTotals.get(title);
-    tempInt = tempInt - 1;
-    movieVoteTotals.put(title, tempInt);
-  }
-
 
   public static void main(String[] args){
 

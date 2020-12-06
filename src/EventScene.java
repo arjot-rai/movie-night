@@ -151,7 +151,6 @@ public class EventScene {
     button.setText("Voted");
     button.setOnAction(e -> { pressedVotedButton(button, movie); });
 
-    thisEvent.addVoter(movie.getMovieName(), User.getUserName());
     Server.addMovieVote(movie.getMovieName(), thisEvent.getEventID());
   }
 
