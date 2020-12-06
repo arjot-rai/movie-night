@@ -627,7 +627,8 @@ public class Server {
           "x2", eventName.toLowerCase())));
       session.writeTransaction(transaction -> transaction.run("MATCH(a:Person),(b:Event) " +
           "WHERE toLower(a.username)=$x1 and toLower(b.eventName)=$x2 " +
-          "MERGE (b)-[:EVENTATTENDEE]->(a) " +
+          "MERGE (b)-[e:EVENTATTENDEE]->(a) " +
+          "SET e.voted='no'" +
           "RETURN a,b", parameters("x1", organizer.toLowerCase(),
           "x2", eventName.toLowerCase())));
     }
@@ -744,7 +745,8 @@ public class Server {
         "RETURN a,b", parameters("x1", username.toLowerCase(), "x2", eventId)));
       session.writeTransaction(transaction -> transaction.run("MATCH(a:Event),(b:Person) " +
         "WHERE a.id=$x1 AND toLower(b.username)=$x2 " +
-        "MERGE (a)-[f:EVENTATTENDEE]->(b) " +
+        "MERGE (a)-[e:EVENTATTENDEE]->(b) " +
+        "SET e.voted = 'no' " +
         "RETURN a,b", parameters("x1", eventId, "x2", username.toLowerCase())));
     }
   }
@@ -819,7 +821,7 @@ public class Server {
         "Return properties(b)", parameters("x1", eventId, "x2", movieTitle.toLowerCase()));
       int intCount = Integer.parseInt(result.next().get("properties(b)").asMap().get("vote").toString()) + 1;
       session.writeTransaction(transaction -> transaction.run("Match (a:Event)-[m:EVENTMOVIE]->(b:EventMovie) " +
-          "Where a.id=$x1 and toLower(b.name)=$x2 AND b.eventId=$x1 Set b.vote=$x3",
+          "Where a.id=$x1 and toLower(b.name)=$x2 AND b.eventId=$x1 SET b.vote=$x3",
         parameters("x1", eventId, "x2", movieTitle.toLowerCase(), "x3", Integer.toString(intCount))));
     }
   }
@@ -846,6 +848,56 @@ public class Server {
           "Where a.id=$x1 and toLower(b.name)=$x2 AND b.eventId=$x1 Set b.vote=$x3",
         parameters("x1", eventId, "x2", movieTitle.toLowerCase(), "x3", Integer.toString(vote))));
     }
+  }
+
+  /**
+   * this is called when the user votes for a new movie, as it will set which movie the user voted for and add a
+   * vote into the event movie
+   * @param username the user doing the voting
+   * @param eventID the event
+   * @param movieTitle the movie to vote for
+   */
+  public static void userVoted(String username, String eventID, String movieTitle){
+    try(Session session = driver.session()){
+      session.writeTransaction(transaction -> transaction.run("MATCH (a:Person)<-[e:EVENTATTENDEE]-(b:Event) " +
+        "WHERE toLower(a.username)=$x1 AND b.id=$x2 " +
+        "SET e.voted=$x3", parameters("x1", username.toLowerCase(), "x2", eventID, "x3", movieTitle)));
+    }
+    addMovieVote(movieTitle, eventID);
+  }
+
+  /**
+   * the user revokes their vote on a specific movie in an event, while removing the vote from the event
+   * @param username the user going back on their vote
+   * @param eventID the event they are removing the event from
+   * @param movieTitle the movie to get unvoted
+   */
+  public static void userRemovedVote(String username, String eventID, String movieTitle){
+    try(Session session = driver.session()){
+      session.writeTransaction(transaction -> transaction.run("MATCH (a:Person)<-[e:EVENTATTENDEE]-(b:Event) " +
+        "WHERE toLower(a.username)=$x1 AND b.id=$x2 " +
+        "SET e.voted='no'", parameters("x1", username.toLowerCase(), "x2", eventID)));
+    }
+    reduceMovieVote(movieTitle, eventID);
+  }
+
+  /**
+   * get the movie the user voted for in an event
+   * @param username the user
+   * @param eventID the specific event to get the vote from
+   * @return either the movie title as a string or no if they still have their vote
+   */
+  public static String getUsersVotedMovie(String username, String eventID){
+    try(Session session = driver.session()){
+      Result result = session.run("MATCH (a:Person)<-[e:EVENTATTENDEE]-(b:Event) " +
+        "WHERE toLower(a.username)=$x1 AND b.id=$x2 " +
+        "RETURN properties(e)", parameters("x1", username.toLowerCase(), "x2", eventID));
+      if(result.hasNext()){
+        Record record = result.next();
+        return record.get("properties(e)").get("voted").toString().replace("\"", "");
+      }
+    }
+    return "no";
   }
 
   /**
