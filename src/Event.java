@@ -18,6 +18,9 @@ public class Event {
 
   private ArrayList<String> eventStreamingServices;
 
+  // A HashMap mapping the movieID with the number of votes it has received.
+  private HashMap<Integer, Integer> movieVoteTotals;
+
   // A HashMap mapping the movieID to a list of usernames who have already voted on that movieID
   private HashMap<Integer, ArrayList<String>> movieVotingRecord;
 
@@ -31,7 +34,7 @@ public class Event {
     this.eventMovies = new ArrayList<>();
     this.eventStreamingServices = new ArrayList<>();
     this.movieVotingRecord = new HashMap<>();
-
+    this.movieVoteTotals = new HashMap<>();
   }
 
   public String getEventName() {
@@ -113,13 +116,30 @@ public class Event {
     ArrayList<String> tempArray = movieVotingRecord.get(movieID);
     tempArray.add(username);
     movieVotingRecord.put(movieID, tempArray);
+    addMovieVote(movieID);
   }
 
   public void removeVoter(Integer movieID, String username) {
     ArrayList<String> tempArray = movieVotingRecord.get(movieID);
     tempArray.remove(username);
     movieVotingRecord.put(movieID, tempArray);
+    removeMovieVote(movieID);
   }
+
+  public HashMap<Integer, Integer> getMovieVoteTotals() { return movieVoteTotals; }
+
+  private void addMovieVote(Integer movieID) {
+    Integer tempInt = movieVoteTotals.get(movieID);
+    tempInt = tempInt + 1;
+    movieVoteTotals.put(movieID, tempInt);
+  }
+
+  private void removeMovieVote(Integer movieID) {
+    Integer tempInt = movieVoteTotals.get(movieID);
+    tempInt = tempInt - 1;
+    movieVoteTotals.put(movieID, tempInt);
+  }
+
 
   public static void main(String[] args){
 
