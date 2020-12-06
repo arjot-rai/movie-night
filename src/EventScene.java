@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 public class EventScene {
   private Model model;
   private Event thisEvent;
+  private ApiQuery apiQuery;
 
   @FXML
   private TextArea attendees_text, date_text, location_text, streaming_text;
@@ -28,6 +29,7 @@ public class EventScene {
   public EventScene(Model newModel, Event newEvent) {
     model = newModel;
     thisEvent = newEvent;
+    apiQuery = new ApiQuery();
     try {
       FXMLLoader loader = new FXMLLoader(getClass().getResource("EventScene.fxml"));
       loader.setController(this);
@@ -90,7 +92,11 @@ public class EventScene {
   public void displayMovies() {
     for (int rowIndex = 0; rowIndex < (thisEvent.getEventMovies().size() / 2) + 1; rowIndex++) {
       for (int columnIndex = 0; columnIndex < 2; columnIndex++) {
-        //if ()
+        Movie movie = apiQuery.getMovie(thisEvent.getEventMovies().get(rowIndex * 2 + columnIndex));
+        Button button = new Button();
+        button.setMaxSize(75, 112);
+        button.setOnAction(e -> {});
+
       }
     }
   }
