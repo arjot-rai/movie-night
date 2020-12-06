@@ -42,6 +42,7 @@ public class EventScene {
       loader.setController(this);
       model.stage.setScene(new Scene(loader.load()));
       model.stage.setTitle("MovieNight - EventScene");
+      User.updateEvents();
       setUpFields();
       displayMovies();
 
@@ -99,14 +100,18 @@ public class EventScene {
    */
   public void displayMovies() {
     System.out.println(thisEvent.getEventMovies());
+    int moviesShown = 0;
     for (int rowIndex = 0; rowIndex < (thisEvent.getEventMovies().size() / 2) + 1; rowIndex++) {
       for (int columnIndex = 0; columnIndex < 2; columnIndex++) {
-        Movie movie = apiQuery.getMovie(thisEvent.getEventMovies().get(rowIndex * 2 + columnIndex));
-        VBox vBox = createVotingBox(movie);
-        vote_gridpane.add(vBox, columnIndex, rowIndex);
-        //TODO Create a button to bring you to movie page
+        if (moviesShown < thisEvent.getEventMovies().size()) {
+          Movie movie = apiQuery.getMovie(thisEvent.getEventMovies().get(rowIndex * 2 + columnIndex));
+          VBox vBox = createVotingBox(movie);
+          vote_gridpane.add(vBox, columnIndex, rowIndex);
+          //TODO Create a button to bring you to movie page
 
-        GridPane.setHalignment(vBox, HPos.CENTER);
+          GridPane.setHalignment(vBox, HPos.CENTER);
+        }
+        moviesShown = moviesShown + 1;
 
       }
     }
