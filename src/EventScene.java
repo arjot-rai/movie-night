@@ -47,13 +47,17 @@ public class EventScene {
       guestText.append(guestID).append("\n");
     }
     attendees_text.setText(guestText.toString());
+    attendees_text.setEditable(false);
     date_text.setText(thisEvent.getEventDate());
+    date_text.setEditable(false);
     location_text.setText(thisEvent.getEventLocation());
+    location_text.setEditable(false);
     StringBuilder serviceText = new StringBuilder();
     for (String service : thisEvent.getEventStreamingServices()) {
       serviceText.append(service).append("\n");
     }
     streaming_text.setText(serviceText.toString());
+    streaming_text.setEditable(false);
   }
 
 
