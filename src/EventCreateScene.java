@@ -1,5 +1,6 @@
 import com.sun.javafx.iio.ios.IosDescriptor;
 
+import com.sun.xml.bind.v2.model.core.ID;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
@@ -15,6 +16,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javax.swing.Action;
 import javax.swing.Scrollable;
 
@@ -23,6 +27,10 @@ public class EventCreateScene {
   private ApiQuery apiQuery;
   private int maxMovies;
   ArrayList<Movie> movies = new ArrayList<>();
+
+  private static final String IDLE_BUTTON_STYLE = "-fx-background-color: #3892C7";
+  private static final String HOVERED_BUTTON_STYLE = "-fx-background-color: #005BFF";
+  private static final Paint TEXT_FILL = Color.web("#384BC7");
 
   @FXML private Button back_button;
 
@@ -50,6 +58,21 @@ public class EventCreateScene {
       model.stage.setScene(new Scene(loader.load()));
 
       model.stage.setTitle("MovieNight - EventCreateScene");
+
+      add_movie_button.setStyle(IDLE_BUTTON_STYLE);
+      add_movie_button.setTextFill(TEXT_FILL);
+      add_movie_button.setOnMouseEntered(e -> add_movie_button.setStyle(HOVERED_BUTTON_STYLE));
+      add_movie_button.setOnMouseExited(e -> add_movie_button.setStyle(IDLE_BUTTON_STYLE));
+
+      create_event_button.setStyle(IDLE_BUTTON_STYLE);
+      create_event_button.setTextFill(TEXT_FILL);
+      create_event_button.setOnMouseEntered(e -> create_event_button.setStyle(HOVERED_BUTTON_STYLE));
+      create_event_button.setOnMouseExited(e -> create_event_button.setStyle(IDLE_BUTTON_STYLE));
+
+      back_button.setStyle(IDLE_BUTTON_STYLE);
+      back_button.setTextFill(TEXT_FILL);
+      back_button.setOnMouseEntered(e -> back_button.setStyle(HOVERED_BUTTON_STYLE));
+      back_button.setOnMouseExited(e -> back_button.setStyle(IDLE_BUTTON_STYLE));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -74,8 +97,14 @@ public class EventCreateScene {
           Label title = new Label();
           Button remove = new Button();
 
+
           title.setText(movieObject.getMovieName());
           remove.setText("Remove");
+          remove.setFont(Font.font("Berlin Sans FB Demi", 12));
+          remove.setTextFill(TEXT_FILL);
+          remove.setStyle(IDLE_BUTTON_STYLE);
+          remove.setOnMouseEntered(e -> remove.setStyle(HOVERED_BUTTON_STYLE));
+          remove.setOnMouseExited(e -> remove.setStyle(IDLE_BUTTON_STYLE));
 
           addedMovie.getChildren().add(title);
           addedMovie.getChildren().add(remove);

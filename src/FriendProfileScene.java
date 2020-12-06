@@ -16,6 +16,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 public class FriendProfileScene {
@@ -23,6 +25,10 @@ public class FriendProfileScene {
   private Scene scene;
   private String name;
   private ApiQuery api;
+
+  private static final String IDLE_BUTTON_STYLE = "-fx-background-color: #3892C7";
+  private static final String HOVERED_BUTTON_STYLE = "-fx-background-color: #005BFF";
+  private static final Paint TEXT_FILL = Color.web("#384BC7");
 
   @FXML
   private Button profile_back_button;
@@ -64,6 +70,12 @@ public class FriendProfileScene {
       model.stage.setScene(new Scene(loader.load()));
 
       model.stage.setTitle("MovieNight - FriendProfileScene");
+
+      profile_back_button.setStyle(IDLE_BUTTON_STYLE);
+      profile_back_button.setTextFill(TEXT_FILL);
+      profile_back_button.setOnMouseEntered(e -> profile_back_button.setStyle(HOVERED_BUTTON_STYLE));
+      profile_back_button.setOnMouseExited(e -> profile_back_button.setStyle(IDLE_BUTTON_STYLE));
+
     } catch (IOException e) {
       e.printStackTrace();
     }

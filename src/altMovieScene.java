@@ -19,6 +19,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 
 
 public class altMovieScene {
@@ -26,6 +29,10 @@ public class altMovieScene {
   private ApiQuery apiQuery;
   private Movie movie;
   private Scene scene;
+
+  private static final String IDLE_BUTTON_STYLE = "-fx-background-color: #3892C7";
+  private static final String HOVERED_BUTTON_STYLE = "-fx-background-color: #005BFF";
+  private static final Paint TEXT_FILL = Color.web("#384BC7");
 
   private boolean onList = false;
   private int stars = 0;
@@ -58,6 +65,46 @@ public class altMovieScene {
 
       model.stage.setTitle("MovieNight - MovieScene");
 
+      back_button.setStyle(IDLE_BUTTON_STYLE);
+      back_button.setTextFill(TEXT_FILL);
+      back_button.setOnMouseEntered(e -> back_button.setStyle(HOVERED_BUTTON_STYLE));
+      back_button.setOnMouseExited(e -> back_button.setStyle(IDLE_BUTTON_STYLE));
+
+      my_list_button.setStyle(IDLE_BUTTON_STYLE);
+      my_list_button.setTextFill(TEXT_FILL);
+      my_list_button.setOnMouseEntered(e -> my_list_button.setStyle(HOVERED_BUTTON_STYLE));
+      my_list_button.setOnMouseExited(e -> my_list_button.setStyle(IDLE_BUTTON_STYLE));
+
+      event_button.setStyle(IDLE_BUTTON_STYLE);
+      event_button.setTextFill(TEXT_FILL);
+      event_button.setOnMouseEntered(e -> event_button.setStyle(HOVERED_BUTTON_STYLE));
+      event_button.setOnMouseExited(e -> event_button.setStyle(IDLE_BUTTON_STYLE));
+
+      star1.setStyle(IDLE_BUTTON_STYLE);
+      star1.setTextFill(TEXT_FILL);
+      star1.setOnMouseEntered(e -> star1.setStyle(HOVERED_BUTTON_STYLE));
+      star1.setOnMouseExited(e -> star1.setStyle(IDLE_BUTTON_STYLE));
+
+      star2.setStyle(IDLE_BUTTON_STYLE);
+      star2.setTextFill(TEXT_FILL);
+      star2.setOnMouseEntered(e -> star2.setStyle(HOVERED_BUTTON_STYLE));
+      star2.setOnMouseExited(e -> star2.setStyle(IDLE_BUTTON_STYLE));
+
+      star3.setStyle(IDLE_BUTTON_STYLE);
+      star3.setTextFill(TEXT_FILL);
+      star3.setOnMouseEntered(e -> star3.setStyle(HOVERED_BUTTON_STYLE));
+      star3.setOnMouseExited(e -> star3.setStyle(IDLE_BUTTON_STYLE));
+
+      star4.setStyle(IDLE_BUTTON_STYLE);
+      star4.setTextFill(TEXT_FILL);
+      star4.setOnMouseEntered(e -> star4.setStyle(HOVERED_BUTTON_STYLE));
+      star4.setOnMouseExited(e -> star4.setStyle(IDLE_BUTTON_STYLE));
+
+      star5.setStyle(IDLE_BUTTON_STYLE);
+      star5.setTextFill(TEXT_FILL);
+      star5.setOnMouseEntered(e -> star5.setStyle(HOVERED_BUTTON_STYLE));
+      star5.setOnMouseExited(e -> star5.setStyle(IDLE_BUTTON_STYLE));
+
       setUpMovieDetails();
 
     } catch (IOException e) {
@@ -73,6 +120,8 @@ public class altMovieScene {
    */
   private void setUpMovieDetails() {
     movie_name.setText(movie.getMovieName());
+    movie_name.setTextFill(TEXT_FILL);
+    movie_name.setFont(Font.font("Berlin Sans FB Demi", 24));
     movie_desc.setText(movie.getMoviePlot());
     director.setText(movie.getMovieDirector());
     release_date.setText(movie.getMovieReleaseDate());

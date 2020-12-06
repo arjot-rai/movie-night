@@ -6,37 +6,43 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ProfileScene">
+<AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ProfileScene">
    <children>
-      <HBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #cde3f1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="156.0">
                <children>
                   <ImageView fx:id="profile_picture" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true" />
                   <Pane prefHeight="141.0" prefWidth="133.0" />
-                  <Label prefHeight="17.0" prefWidth="136.0" text="Attending:">
+                  <Label prefHeight="17.0" prefWidth="136.0" style="-fx-text-fill: #008;" text="Attending:">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="Berlin Sans FB Demi Bold" size="14.0" />
                      </font>
                   </Label>
                   <Button mnemonicParsing="false" prefWidth="40.0" text="Yes">
                      <VBox.margin>
                         <Insets bottom="15.0" top="15.0" />
                      </VBox.margin>
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="12.0" />
+                     </font>
                   </Button>
-                  <Button mnemonicParsing="false" prefWidth="40.0" text="No" />
+                  <Button mnemonicParsing="false" prefWidth="40.0" text="No">
+                     <font>
+                        <Font name="Berlin Sans FB Demi Bold" size="12.0" />
+                     </font></Button>
                </children>
             </VBox>
-            <VBox prefHeight="400.0" prefWidth="170.0" spacing="10.0">
+            <VBox prefHeight="400.0" prefWidth="192.0" spacing="10.0">
                <children>
-                  <Label fx:id="event_name" prefHeight="35.0" prefWidth="445.0" text="Event Name" underline="true">
+                  <Label fx:id="event_name" alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="191.0" style="-fx-text-fill: #008;" text="Event Name" textAlignment="CENTER" underline="true">
                      <font>
-                        <Font size="30.0" />
+                        <Font name="Berlin Sans FB Demi Bold" size="30.0" />
                      </font>
                   </Label>
-                  <Label prefHeight="17.0" prefWidth="445.0" text="Attendees:">
+                  <Label prefHeight="17.0" prefWidth="445.0" style="-fx-text-fill: #008;" text="Attendees:">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="Berlin Sans FB Demi Bold" size="14.0" />
                      </font>
                   </Label>
                   <TextArea fx:id="attendees_Text" prefHeight="36.0" prefWidth="422.0">
@@ -44,21 +50,21 @@
                         <Insets bottom="5.0" top="5.0" />
                      </VBox.margin>
                   </TextArea>
-                  <Label prefHeight="17.0" prefWidth="441.0" text="Date">
+                  <Label prefHeight="17.0" prefWidth="441.0" style="-fx-text-fill: #008;" text="Date:">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="Berlin Sans FB Demi Bold" size="14.0" />
                      </font>
                   </Label>
                   <TextArea fx:id="date_Text" prefHeight="36.0" prefWidth="170.0" />
-                  <Label text="Location">
+                  <Label style="-fx-text-fill: #008;" text="Location:">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="Berlin Sans FB Demi Bold" size="14.0" />
                      </font>
                   </Label>
                   <TextArea fx:id="location_Text" prefHeight="36.0" prefWidth="170.0" />
-                  <Label text="Streaming Services">
+                  <Label style="-fx-text-fill: #008;" text="Streaming Services:">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="Berlin Sans FB Demi Bold" size="14.0" />
                      </font>
                   </Label>
                   <TextArea prefHeight="47.0" prefWidth="170.0" />
