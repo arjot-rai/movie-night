@@ -42,11 +42,14 @@ public class EventScene {
 
   private ArrayList<Button> voteButtonList;
 
+  private ArrayList<Label> voteLabelList;
+
   public EventScene(Model newModel, Event newEvent) {
     model = newModel;
     thisEvent = newEvent;
     apiQuery = new ApiQuery();
     voteButtonList = new ArrayList<>();
+    voteLabelList = new ArrayList<>();
     try {
       FXMLLoader loader = new FXMLLoader(getClass().getResource("EventScene.fxml"));
       loader.setController(this);
@@ -179,6 +182,7 @@ public class EventScene {
       voteButton.setOnAction(e -> { pressedVoteButton(movie);});
     }
     Label voteLabel = new Label();
+    voteLabelList.add(voteLabel);
     String votes = Server.getEventMovies(thisEvent.getEventID()).get(movie.getMovieName()).get("vote").toString();
     voteLabel.setText("Votes: " + votes);
 
@@ -196,6 +200,9 @@ public class EventScene {
     //Update labels/buttons
     for (Button button : voteButtonList) {
       button.setDisable(true);
+    }
+    for (Label label : voteLabelList) {
+      label.setText(Server.getEventMovies(thisEvent.getEventID()).get(movie.getMovieName()).get("vote").toString());
     }
   }
 
