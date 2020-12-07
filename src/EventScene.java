@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -163,29 +166,59 @@ public class EventScene {
 
   /**
    * Create the VBox
+   *
    * @param movie The movie to create the VBox for
    * @return returns the VBox with the movie picture, vote button and vote total
    */
   private VBox createVotingBox(Movie movie, String userVote) {
-    Image image = new Image(movie.getMoviePosterUrl(), 92, 142, false, false);
-    ImageView movieImage = new ImageView(image);
+    Image image;
+    ImageView movieImage = new ImageView();
+    try {
+      image =
+          new Image(movie.getMoviePosterUrl(), 92, 142, false, false);
+      movieImage = new ImageView(image);
+    } catch (Exception e) {
+      String filePath = "";
+      try{
+        filePath = new File(ApiQuery.class.getProtectionDomain().getCodeSource().getLocation()
+            .toURI()).getParentFile().getPath();
+        System.out.println(filePath);
+      }
+      catch(Exception ignored){
+
+      }
+      FileInputStream inputstream;
+      try {
+        // use placeholder image if failed to retrieve from url
+        inputstream = new FileInputStream(filePath + "/placeholder.png");
+        image = new Image(inputstream, 92, 142, false, false);
+        movieImage = new ImageView(image);
+      } catch (FileNotFoundException fnfe) {
+        image = null;
+      }
+    }
 
     VBox vBox = new VBox();
     vBox.getChildren().add(movieImage);
-
 
     Button voteButton = new Button("Vote");
     voteButtonList.add(voteButton);
     if (!userVote.equals("no")) {
       voteButton.setDisable(true);
     } else {
-      voteButton.setOnAction(e -> { pressedVoteButton(movie);});
+      voteButton.setOnAction(
+          e -> {
+            pressedVoteButton(movie);
+          });
     }
     Label voteLabel = new Label();
     voteLabelList.add(voteLabel);
-    String votes = Server.getEventMovies(thisEvent.getEventID()).get(movie.getMovieName()).get("vote").toString();
+    String votes =
+        Server.getEventMovies(thisEvent.getEventID())
+            .get(movie.getMovieName())
+            .get("vote")
+            .toString();
     voteLabel.setText("Votes: " + votes);
-
 
     HBox hBox = new HBox();
     hBox.getChildren().addAll(voteButton, voteLabel);

@@ -181,11 +181,19 @@ public class SearchScene {
             }
 
           } catch (Exception e) {
-            String filePath = new File("").getAbsolutePath();
+            String filePath = "";
+            try{
+              filePath = new File(ApiQuery.class.getProtectionDomain().getCodeSource().getLocation()
+                  .toURI()).getParentFile().getPath();
+              System.out.println(filePath);
+            }
+            catch(Exception ignored){
+
+            }
             FileInputStream inputstream;
             try {
               // use placeholder image if failed to retrieve from url
-              inputstream = new FileInputStream(filePath + "/img/placeholder.png");
+              inputstream = new FileInputStream(filePath + "/placeholder.png");
             } catch (FileNotFoundException fnfe) {
               break;
             }
