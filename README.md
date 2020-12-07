@@ -1,4 +1,4 @@
-Compilation Instructions:
+**Compilation Instructions:**
 
 To run the JAR file, you must be running Java 15.
 The moviecache folder and placeholder image file must be in the same directory as the JAR file.
@@ -15,7 +15,7 @@ To compile from the source, you must install the libraries above in IntelliJ. Ad
 
 The OMDb API is used for movie data, but is a REST API and requires no installation.
 
-Running the project:
+**Running the project:**
 
 There are two ways to run this:
 
@@ -24,7 +24,7 @@ There are two ways to run this:
 2. Through IntelliJ: In order to run the project this way, user needs to run the Main class. 
 
 
-Running tests:
+**Running tests:**
 
 After making a pull from gitlab, all the tests can be run by running each test file separately. The test files are as follows:
 
