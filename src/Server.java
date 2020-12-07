@@ -64,7 +64,6 @@ public class Server {
    * and if it was all the attributes along side it
    */
   public static LogInReturn attemptLogIn(String username, String password){
-    System.out.println(password + " " + username);
       try(Session session = driver.session()){
         Result result = session.run("MATCH (a:Person) WHERE toLower(a.username)=$x1" +
             " RETURN properties(a)",

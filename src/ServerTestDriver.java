@@ -5,6 +5,24 @@ import org.junit.Test;
 
 public class ServerTestDriver {
 
+  /**
+   *
+   *
+   *
+   *
+   *
+   *
+   * RUNNING THIS SERVER TEST WILL DELETE ALL THE CURRENT NODES IN THE SERVER, DO NOT RUN IF ANYONE ELSE IS TESTING
+   * OUR PROJECT, AS WELL AS DO NOT EXPECT ANYTHING TO BE HELD IN THE SERVER FROM BEFORE THIS TEST
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   *
+   */
 
   @Before
   public void serverTestSetUp(){
