@@ -68,7 +68,7 @@ public class EventScene {
   private void setUpFields() {
     event_name.setText(thisEvent.getEventName());
     StringBuilder guestText = new StringBuilder();
-    for (String guestID : thisEvent.getEventGuestList()) {
+    for (String guestID : getAttendeesFromServer()) {
       guestText.append(guestID).append("\n");
     }
     attendees_text.setText(guestText.toString());
@@ -87,6 +87,9 @@ public class EventScene {
     if (!thisEvent.getEventOrganizer().equals(User.getUserName())) {
       add_attendee_button.setDisable(true);
     }
+    if (getAttendeesFromServer().contains(User.getUserName())) {
+      yes_attending.setDisable(true);
+    }
   }
 
   public void pressedInviteButton(ActionEvent e) throws IOException {
@@ -97,16 +100,29 @@ public class EventScene {
 
 
   public void pressedYesAttending(ActionEvent e) throws IOException {
-    if (!User.getEventList().confirmedEvents.contains(thisEvent)) {
-      Server.acceptEventInvite(User.getUserName(), thisEvent.getEventID());
-      //TODO: Change these buttons to Accepted or something like that
-    }
+    Server.acceptEventInvite(User.getUserName(), thisEvent.getEventID());
+    User.getEventList().acceptInvite(thisEvent);
+    yes_attending.setDisable(true);
   }
 
+  /**
+   * If you press no, if you're the organizer, delete the event, if you're invited, reject the invite,
+   * and if you're an attendee, remove the event from your list
+   * @param e IDK FXML stuff
+   * @throws IOException ditto
+   */
   public void pressedNoAttending(ActionEvent e) throws IOException {
-    if (User.getEventList().confirmedEvents.contains(thisEvent)) {
+    if (User.getUserName().equals(thisEvent.getEventOrganizer())) {
+      Server.removeEvent(thisEvent.getEventID());
+      User.getEventList().removeEvent(thisEvent.getEventID());
+    } else if (Server.getEventInvitedAttendees(thisEvent.getEventID()).containsKey(User.getUserName())) {
       Server.removeEventInvite(User.getUserName(), thisEvent.getEventID());
+      User.getEventList().rejectInvite(thisEvent);
+    } else if (Server.getEventInvitedAttendees(thisEvent.getEventID()).containsKey(User.getUserName())) {
+      Server.removeAttendingEvent(User.getUserName(), thisEvent.getEventID());
+      User.getEventList().removeEvent(thisEvent.getEventID());
     }
+    MainScene mainScene = new MainScene(model);
   }
 
   public void pressedBackButton(ActionEvent e) throws IOException {
@@ -117,8 +133,6 @@ public class EventScene {
    * Set up the movies in the grid
    */
   public void displayMovies() {
-    //System.out.println(Server.getEventAttendees(thisEvent.getEventID()).get(User.getUserName()).get());
-    //System.out.println(Server.getUsersVotedMovie(User.getUserName(), thisEvent.getEventID()));
     String userVote = Server.getUsersVotedMovie(User.getUserName(), thisEvent.getEventID());
 
     HashMap<String, Map<String, Object>> movieVotes = Server.getEventMovies(thisEvent.getEventID());
@@ -140,8 +154,8 @@ public class EventScene {
 
       }
     }
-    vote_anchorpane.setMinSize(vote_anchorpane.getPrefWidth(), ((1 + (float) movieVotes.size()) / 2 * 155));
-    vote_anchorpane.setMaxSize(vote_anchorpane.getPrefWidth(), ((1 + (float) movieVotes.size()) / 2 * 155));
+    vote_anchorpane.setMinSize(vote_anchorpane.getPrefWidth(), ((2 + (float) movieVotes.size()) / 2 * 155));
+    vote_anchorpane.setMaxSize(vote_anchorpane.getPrefWidth(), ((2 + (float) movieVotes.size()) / 2 * 155));
   }
 
   /**
@@ -185,5 +199,11 @@ public class EventScene {
     }
   }
 
+  private ArrayList<String> getAttendeesFromServer() {
+    HashMap<String, Map<String, Object>> attendeeList = Server.getEventAttendees(thisEvent.getEventID());
+    ArrayList<String> nameList = new ArrayList<>();
+    attendeeList.forEach((k, v) -> { nameList.add(k); });
+    return nameList;
+  }
 
 }
