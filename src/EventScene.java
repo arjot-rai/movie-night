@@ -173,7 +173,7 @@ public class EventScene {
 
     Button voteButton = new Button("Vote");
     voteButtonList.add(voteButton);
-    if (userVote.equals("no")) {
+    if (!userVote.equals("no")) {
       voteButton.setDisable(true);
     } else {
       voteButton.setOnAction(e -> { pressedVoteButton(movie);});
