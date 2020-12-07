@@ -126,6 +126,7 @@ public class MainScene {
     setFriends_scroll_space();
     setRequest_scroll_space();
     setEvents_scroll_space();
+    setPendingEventsScrollSpace();
   }
 
   public void pressedLogoutButton(ActionEvent event) throws IOException {
@@ -238,7 +239,7 @@ public class MainScene {
     for (String friend : confirmedFriends ) {
       Hyperlink hyperlink = new Hyperlink(friend);
       hyperlink.setOnAction(e -> openFriendProfile(model, friend, model.stage.getScene()));
-        friends_scroll_space.getChildren().add(hyperlink);
+      friends_scroll_space.getChildren().add(hyperlink);
     }
   }
 
@@ -257,6 +258,7 @@ public class MainScene {
     for (String friend : requests ) {
       HBox friendRequestBox = new HBox();
       Hyperlink friendLink = new Hyperlink(friend);
+      friendLink.setOnAction(e -> openFriendProfile(model, friend, model.stage.getScene()));
       Button acceptButton = new Button("✓");
       acceptButton.setPadding(new Insets(0, 0, 0, 0));
       acceptButton.setOnAction(event -> onFriendRequestAccept(acceptButton, friend));
@@ -274,7 +276,7 @@ public class MainScene {
     for(Event pEvent : pending){
       HBox pendingEventBox = new HBox();
 
-      Label eventName = new Label();
+      Hyperlink eventName = new Hyperlink();
       eventName.setText(pEvent.getEventName());
 
       Button acceptButton = new Button("✓");
@@ -283,6 +285,8 @@ public class MainScene {
       Button rejectButton = new Button("✗");
       rejectButton.setPadding(new Insets(0, 0, 0, 0));
       rejectButton.setOnAction(event -> onEventRequestReject(rejectButton, pEvent));
+      pendingEventBox.getChildren().addAll(eventName, acceptButton, rejectButton);
+      pending_events_scroll.getChildren().add(pendingEventBox);
     }
   }
 
