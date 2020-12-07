@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -125,7 +128,32 @@ public class altMovieScene {
     movie_desc.setText(movie.getMoviePlot());
     director.setText(movie.getMovieDirector());
     release_date.setText(movie.getMovieReleaseDate());
-    Image image = new Image(movie.getMoviePosterUrl(), 150, 224, false, false);
+    ImageView movieImage;
+    Image image;
+    try {
+        image =
+            new Image(movie.getMoviePosterUrl(), 150, 224, false, false);
+        movieImage = new ImageView(image);
+    } catch (Exception e) {
+      String filePath = "";
+      try{
+        filePath = new File(ApiQuery.class.getProtectionDomain().getCodeSource().getLocation()
+            .toURI()).getParentFile().getPath();
+        System.out.println(filePath);
+      }
+      catch(Exception ignored){
+
+      }
+      FileInputStream inputstream;
+      try {
+        // use placeholder image if failed to retrieve from url
+        inputstream = new FileInputStream(filePath + "/placeholder.png");
+        image = new Image(inputstream, 75, 112, false, false);
+        movieImage = new ImageView(image);
+      } catch (FileNotFoundException fnfe) {
+        image = null;
+      }
+    }
     movie_poster.setImage(image);
     runtime.setText(Integer.toString(movie.getMovieRuntime()) + " mins");
     rating.setText(movie.getMovieRating());

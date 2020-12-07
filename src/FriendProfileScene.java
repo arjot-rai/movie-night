@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -138,8 +141,33 @@ public class FriendProfileScene {
       for (String title : commonTitles) {
         Movie movie = api.getMovie(title);
         HBox movie_collection = new HBox();
-        ImageView movie_poster =
-            new ImageView(new Image(movie.getMoviePosterUrl(), 75, 112, false, false));
+        ImageView movie_poster;
+        Image image;
+        try {
+          image =
+              new Image(movie.getMoviePosterUrl(), 75, 122, false, false);
+          movie_poster = new ImageView(image);
+        } catch (Exception e) {
+          String filePath = "";
+          try{
+            filePath = new File(ApiQuery.class.getProtectionDomain().getCodeSource().getLocation()
+                .toURI()).getParentFile().getPath();
+            System.out.println(filePath);
+          }
+          catch(Exception ignored){
+
+          }
+          FileInputStream inputstream;
+          try {
+            // use placeholder image if failed to retrieve from url
+            inputstream = new FileInputStream(filePath + "/placeholder.png");
+            image = new Image(inputstream, 75, 112, false, false);
+            movie_poster = new ImageView(image);
+          } catch (FileNotFoundException fnfe) {
+            image = null;
+            movie_poster = new ImageView(image);
+          }
+        }
         Button movie_button = new Button();
         movie_button.setGraphic(movie_poster);
         movie_button.setMaxSize(75, 112);
@@ -178,8 +206,33 @@ public class FriendProfileScene {
       Movie movie = api.getMovie(pair.getKey().toString());
 
       HBox movie_collection = new HBox();
-      ImageView movie_poster =
-          new ImageView(new Image(movie.getMoviePosterUrl(), 75, 112, false, false));
+      ImageView movie_poster;
+      Image image;
+      try {
+        image =
+            new Image(movie.getMoviePosterUrl(), 75, 122, false, false);
+        movie_poster = new ImageView(image);
+      } catch (Exception e) {
+        String filePath = "";
+        try{
+          filePath = new File(ApiQuery.class.getProtectionDomain().getCodeSource().getLocation()
+              .toURI()).getParentFile().getPath();
+          System.out.println(filePath);
+        }
+        catch(Exception ignored){
+
+        }
+        FileInputStream inputstream;
+        try {
+          // use placeholder image if failed to retrieve from url
+          inputstream = new FileInputStream(filePath + "/placeholder.png");
+          image = new Image(inputstream, 75, 112, false, false);
+          movie_poster = new ImageView(image);
+        } catch (FileNotFoundException fnfe) {
+          image = null;
+          movie_poster = new ImageView(image);
+        }
+      }
       Button movie_button = new Button();
       movie_button.setGraphic(movie_poster);
       movie_button.setMaxSize(75,112);
@@ -214,8 +267,33 @@ public class FriendProfileScene {
       Map.Entry pair = (Map.Entry) movie_it.next();
       Movie movie = api.getMovie(pair.getKey().toString());
       HBox movie_collection = new HBox();
-      ImageView movie_poster =
-          new ImageView(new Image(movie.getMoviePosterUrl(), 75, 112, false, false));
+      ImageView movie_poster;
+      Image image;
+      try {
+        image =
+            new Image(movie.getMoviePosterUrl(), 75, 122, false, false);
+        movie_poster = new ImageView(image);
+      } catch (Exception e) {
+        String filePath = "";
+        try{
+          filePath = new File(ApiQuery.class.getProtectionDomain().getCodeSource().getLocation()
+              .toURI()).getParentFile().getPath();
+          System.out.println(filePath);
+        }
+        catch(Exception ignored){
+
+        }
+        FileInputStream inputstream;
+        try {
+          // use placeholder image if failed to retrieve from url
+          inputstream = new FileInputStream(filePath + "/placeholder.png");
+          image = new Image(inputstream, 75, 112, false, false);
+          movie_poster = new ImageView(image);
+        } catch (FileNotFoundException fnfe) {
+          image = null;
+          movie_poster = new ImageView(image);
+        }
+      }
       Button movie_button = new Button();
       movie_button.setGraphic(movie_poster);
       movie_button.setMaxSize(75,112);

@@ -1,4 +1,7 @@
 import com.amazonaws.auth.profile.internal.Profile;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -185,8 +188,33 @@ public class ProfileScene {
       Movie movie = api.getMovie(pair.getKey().toString());
 
       HBox movie_collection = new HBox();
-      ImageView movie_poster =
-          new ImageView(new Image(movie.getMoviePosterUrl(), 75, 112, false, false));
+      ImageView movie_poster;
+      Image image;
+      try {
+        image =
+            new Image(movie.getMoviePosterUrl(), 75, 122, false, false);
+        movie_poster = new ImageView(image);
+      } catch (Exception e) {
+        String filePath = "";
+        try{
+          filePath = new File(ApiQuery.class.getProtectionDomain().getCodeSource().getLocation()
+              .toURI()).getParentFile().getPath();
+          System.out.println(filePath);
+        }
+        catch(Exception ignored){
+
+        }
+        FileInputStream inputstream;
+        try {
+          // use placeholder image if failed to retrieve from url
+          inputstream = new FileInputStream(filePath + "/placeholder.png");
+          image = new Image(inputstream, 75, 112, false, false);
+          movie_poster = new ImageView(image);
+        } catch (FileNotFoundException fnfe) {
+          image = null;
+          movie_poster = new ImageView(image);
+        }
+      }
       Button movie_button = new Button();
       movie_button.setGraphic(movie_poster);
       movie_button.setMaxSize(75,112);
@@ -228,8 +256,33 @@ public class ProfileScene {
       Movie movie = api.getMovie(pair.getKey().toString());
       System.out.println(movie.getMovieName());
       HBox movie_collection = new HBox();
-      ImageView movie_poster =
-          new ImageView(new Image(movie.getMoviePosterUrl(), 75, 112, false, false));
+      ImageView movie_poster;
+      Image image;
+      try {
+        image =
+            new Image(movie.getMoviePosterUrl(), 75, 122, false, false);
+        movie_poster = new ImageView(image);
+      } catch (Exception e) {
+        String filePath = "";
+        try{
+          filePath = new File(ApiQuery.class.getProtectionDomain().getCodeSource().getLocation()
+              .toURI()).getParentFile().getPath();
+          System.out.println(filePath);
+        }
+        catch(Exception ignored){
+
+        }
+        FileInputStream inputstream;
+        try {
+          // use placeholder image if failed to retrieve from url
+          inputstream = new FileInputStream(filePath + "/placeholder.png");
+          image = new Image(inputstream, 75, 112, false, false);
+          movie_poster = new ImageView(image);
+        } catch (FileNotFoundException fnfe) {
+          image = null;
+          movie_poster = new ImageView(image);
+        }
+      }
       Button movie_button = new Button();
       movie_button.setGraphic(movie_poster);
       movie_button.setMaxSize(75,112);
