@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Event {
   private String eventName;
@@ -9,11 +10,13 @@ public class Event {
 
   private String eventOrganizer;
 
-  private ArrayList<Integer> eventGuestList;
+  private ArrayList<String> eventGuestList;
 
   private String eventID;
 
-  private ArrayList<Integer> eventMovies;
+  private ArrayList<String> eventMovies;
+
+  private ArrayList<String> eventStreamingServices;
 
   public Event(String name, String location, String date, String organizer, String id){
     this.eventName = name;
@@ -23,6 +26,7 @@ public class Event {
     this.eventID = id;
     this.eventGuestList = new ArrayList<>();
     this.eventMovies = new ArrayList<>();
+    this.eventStreamingServices = new ArrayList<>();
   }
 
   public String getEventName() {
@@ -65,30 +69,34 @@ public class Event {
     this.eventID = eventID;
   }
 
-  public ArrayList<Integer> getEventMovies(){
+  public ArrayList<String> getEventMovies(){
     return this.eventMovies;
   }
 
-  public void addMovie(int movieID){
-    this.eventMovies.add(movieID);
-  }
+  public void addMovie(String title){ this.eventMovies.add(title); }
 
-  public void removeMovie(int movieID){
+  public void removeMovie(String title){
     // movieID has to be casted to Object, otherwise treated as an index
-    this.eventMovies.remove((Object)movieID);
+    this.eventMovies.remove((Object)title);
   }
 
-  public ArrayList<Integer> getEventGuestList() {
+  public ArrayList<String> getEventGuestList() {
     return eventGuestList;
   }
 
-  public void addEventGuest(int id) {
+  public void addEventGuest(String id) {
     this.eventGuestList.add(id);
   }
 
-  public void removeEventGuest(int id) {
+  public void removeEventGuest(String id) {
     this.eventGuestList.remove(id);
   }
+
+  public ArrayList<String> getEventStreamingServices() { return eventStreamingServices; }
+
+  public void addStreamingService(String service) { this.eventStreamingServices.add(service); }
+
+  public void removeStreamingService(String service) { this.eventStreamingServices.remove(service); }
 
   public static void main(String[] args){
 

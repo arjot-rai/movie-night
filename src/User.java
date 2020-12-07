@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import jdk.jfr.Frequency;
 
 public class User{
@@ -111,27 +112,62 @@ public class User{
     Object[] eventIDs = events.keySet().toArray();
     for (Object id : eventIDs) {
       if (!eventList.containsEvent(id.toString())) {
-        eventList.addEvent(
-            new Event(
-                events.get(id.toString()).get("eventName").toString(),
-                events.get(id.toString()).get("location").toString(),
-                events.get(id.toString()).get("date").toString(),
-                events.get(id.toString()).get("organizer").toString(),
-                events.get(id.toString()).get("id").toString()));
+        Event newEvent = new Event(
+            events.get(id.toString()).get("eventName").toString(),
+            events.get(id.toString()).get("location").toString(),
+            events.get(id.toString()).get("date").toString(),
+            events.get(id.toString()).get("organizer").toString(),
+            events.get(id.toString()).get("id").toString());
+
+          Set<String> movies = Server.getEventMovies(id.toString()).keySet();
+          for (String moviename : movies) {
+              newEvent.addMovie(moviename);
+          }
+
+        eventList.addEvent(newEvent);
+
+      }
+      else{
+        Event event = eventList.getEvent(id.toString());
+        Set<String> movies = Server.getEventMovies(id.toString()).keySet();
+        ArrayList<String> existingMovies = event.getEventMovies();
+        for (String moviename : movies) {
+          if(!existingMovies.contains(moviename)){
+            event.addMovie(moviename);
+          }
+        }
       }
     }
 
     events = Server.getUsersOrganizingEvents(userName);
     eventIDs = events.keySet().toArray();
     for (Object id : eventIDs) {
-      if(!eventList.containsEvent(id.toString())){
-        eventList.addEvent(new Event(events.get(id.toString()).get("eventName").toString(),
+      if (!eventList.containsEvent(id.toString())) {
+        Event newEvent = new Event(
+            events.get(id.toString()).get("eventName").toString(),
             events.get(id.toString()).get("location").toString(),
             events.get(id.toString()).get("date").toString(),
             events.get(id.toString()).get("organizer").toString(),
-            events.get(id.toString()).get("id").toString()));
-      }
+            events.get(id.toString()).get("id").toString());
 
+        Set<String> movies = Server.getEventMovies(id.toString()).keySet();
+        for (String moviename : movies) {
+          newEvent.addMovie(moviename);
+        }
+
+        eventList.addEvent(newEvent);
+
+      }
+      else{
+        Event event = eventList.getEvent(id.toString());
+        Set<String> movies = Server.getEventMovies(id.toString()).keySet();
+        ArrayList<String> existingMovies = event.getEventMovies();
+        for (String moviename : movies) {
+          if(!existingMovies.contains(moviename)){
+            event.addMovie(moviename);
+          }
+        }
+      }
     }
   }
 
