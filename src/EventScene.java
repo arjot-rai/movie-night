@@ -16,11 +16,17 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class EventScene {
   private Model model;
   private Event thisEvent;
   private ApiQuery apiQuery;
+
+  private static final String IDLE_BUTTON_STYLE = "-fx-background-color: #3892C7";
+  private static final String HOVERED_BUTTON_STYLE = "-fx-background-color: #005BFF";
+  private static final Paint TEXT_FILL = Color.web("#384BC7");
 
   @FXML
   private TextArea attendees_text, date_text, location_text, streaming_text;
@@ -58,6 +64,26 @@ public class EventScene {
       User.updateEvents();
       setUpFields();
       displayMovies();
+
+      yes_attending.setStyle(IDLE_BUTTON_STYLE);
+      yes_attending.setTextFill(TEXT_FILL);
+      yes_attending.setOnMouseEntered(e -> yes_attending.setStyle(HOVERED_BUTTON_STYLE));
+      yes_attending.setOnMouseExited(e -> yes_attending.setStyle(IDLE_BUTTON_STYLE));
+
+      no_attending.setStyle(IDLE_BUTTON_STYLE);
+      no_attending.setTextFill(TEXT_FILL);
+      no_attending.setOnMouseEntered(e -> no_attending.setStyle(HOVERED_BUTTON_STYLE));
+      no_attending.setOnMouseExited(e -> no_attending.setStyle(IDLE_BUTTON_STYLE));
+
+      back_button.setStyle(IDLE_BUTTON_STYLE);
+      back_button.setTextFill(TEXT_FILL);
+      back_button.setOnMouseEntered(e -> back_button.setStyle(HOVERED_BUTTON_STYLE));
+      back_button.setOnMouseExited(e -> back_button.setStyle(IDLE_BUTTON_STYLE));
+
+      add_attendee_button.setStyle(IDLE_BUTTON_STYLE);
+      add_attendee_button.setTextFill(TEXT_FILL);
+      add_attendee_button.setOnMouseEntered(e -> add_attendee_button.setStyle(HOVERED_BUTTON_STYLE));
+      add_attendee_button.setOnMouseExited(e -> add_attendee_button.setStyle(IDLE_BUTTON_STYLE));
 
     } catch (IOException e) {
       e.printStackTrace();
