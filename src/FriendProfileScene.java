@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class FriendProfileScene {
   private Scene scene;
   private String name;
   private ApiQuery api;
+  private boolean filtered = false;
 
   private static final String IDLE_BUTTON_STYLE = "-fx-background-color: #3892C7";
   private static final String HOVERED_BUTTON_STYLE = "-fx-background-color: #005BFF";
@@ -32,6 +34,9 @@ public class FriendProfileScene {
 
   @FXML
   private Button profile_back_button;
+
+  @FXML
+  private Button common_filter_button;
 
   @FXML
   private Label username_text;
@@ -76,6 +81,11 @@ public class FriendProfileScene {
       profile_back_button.setOnMouseEntered(e -> profile_back_button.setStyle(HOVERED_BUTTON_STYLE));
       profile_back_button.setOnMouseExited(e -> profile_back_button.setStyle(IDLE_BUTTON_STYLE));
 
+      common_filter_button.setStyle(IDLE_BUTTON_STYLE);
+      common_filter_button.setTextFill(TEXT_FILL);
+      common_filter_button.setOnMouseEntered(e -> common_filter_button.setStyle(HOVERED_BUTTON_STYLE));
+      common_filter_button.setOnMouseExited(e -> common_filter_button.setStyle(IDLE_BUTTON_STYLE));
+
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -98,6 +108,64 @@ public class FriendProfileScene {
     friends_name_textfield.setText(friendInfo.get("first_name").toString() + " " +
         friendInfo.get("last_name").toString() + "'s Profile");
     profile_picture.setImage(ProfilePicture.getProfilePic(name));
+  }
+
+  public void filterToCommon(){
+    System.out.println("pressed, " + filtered);
+    if(filtered){
+      filtered = false;
+      desired_movies_vbox.getChildren().clear();
+      setUpDesiredMovieBox();
+      common_filter_button.setText("Filter to Movies in Common");
+    }
+    else{
+      HashMap<String, Map<String, Object>> fav_movies =
+          Server.getUsersWantToWatchMovies(name);
+
+      HashMap<String, Map<String, Object>> my_fav_movies =
+          Server.getUsersWantToWatchMovies(User.getUserName());
+
+      ArrayList<String> commonTitles = new ArrayList<>();
+
+      for (String title : fav_movies.keySet()) {
+        if (my_fav_movies.containsKey(title)){
+          commonTitles.add(title);
+        }
+      }
+
+      desired_movies_vbox.getChildren().clear();
+
+      for (String title : commonTitles) {
+        Movie movie = api.getMovie(title);
+        HBox movie_collection = new HBox();
+        ImageView movie_poster =
+            new ImageView(new Image(movie.getMoviePosterUrl(), 75, 112, false, false));
+        Button movie_button = new Button();
+        movie_button.setGraphic(movie_poster);
+        movie_button.setMaxSize(75, 112);
+        movie_button.setOnAction(
+            actionEvent -> {
+              altMovieScene movieScene = new altMovieScene(model, movie, model.stage.getScene());
+            });
+        VBox info = new VBox();
+
+        Label movie_title = new Label(title.toString());
+        if (User.getMovieList().movieNames.contains(title)) {
+          movie_title.setStyle("-fx-font-weight: bold");
+        }
+        movie_title.setMinSize(400, 10);
+        movie_title.setFont(new Font(20));
+        info.getChildren().addAll(movie_title);
+
+        movie_collection.getChildren().addAll(movie_button, info);
+
+        anchorDesired.setMinHeight(anchorDesired.getMinHeight() + 120);
+        desired_movies_vbox.setMinHeight(desired_movies_vbox.getMinHeight() + 120);
+        desired_movies_vbox.getChildren().add(movie_collection);
+      }
+      common_filter_button.setText("Unfilter");
+      filtered = true;
+    }
   }
 
   private void setUpMovieRatingsBox(){
@@ -178,4 +246,6 @@ public class FriendProfileScene {
     services.addAll(Server.getUsersStreamingServices(name).keySet());
     services_list.setItems(services);
   }
+
+
 }
