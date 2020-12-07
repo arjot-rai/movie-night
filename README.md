@@ -19,7 +19,7 @@ The OMDb API is used for movie data, but is a REST API and requires no installat
 
 There are two ways to run this:
 
-1. Through the jar file: Simply double-click the jar file(user does not need to install javafx for this).
+1. Through the jar file: After unzipping the [Jar](https://git.cs.usask.ca/CMPT370-01-2020/group8/-/blob/5e76bba1b2283a465ca93b40ee4a264f67608777/group8_jar.zip) folderSimply double-click the jar file(user does not need to install javafx for this).
 
 2. Through IntelliJ: In order to run the project this way, user needs to run the Main class. 
 
